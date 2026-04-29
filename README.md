@@ -1,14 +1,26 @@
-# FTB (Modpack Name) Companion
+# FTB Skies 2: Aero Companion
 
-TODO: Fill me out :D
+The companion mod for the [FTB Skies 2: Aero](https://www.feed-the-beast.com/) modpack. It bundles modpack-specific fixes, content additions, and mixins that exist purely to make the Aero pack play the way we want it to.
 
 ## About `'Companion'` mods
 
-FTB `{Modpack Name}` Companion mods are custom tailored, bespoke mods designed to work hand-in-hand with a specific FTB Modpack. Although these mores are visible source and released to CurseForge, we **do not** recommend the use of these mods inside other modpacks. 
+FTB `Skies 2: Aero` Companion is a custom tailored, bespoke mod designed to work hand-in-hand with FTB Skies 2: Aero. Although it is visible source and released to CurseForge, we **do not** recommend using it inside other modpacks.
 
-Please feel free to contribute to these projects but **always** open an issue first before opening feature specific pull requests.
+Please feel free to contribute to the project but **always** open an issue first before opening feature specific pull requests.
 
-Companion mods are provided `as is`. If you opt to use these mods inside another modpack. We **will not** provide support and any issues opened regarding problems due to use in another modpack will be closed!
+Companion mods are provided `as is`. If you opt to use this mod inside another modpack, we **will not** provide support and any issues opened regarding problems due to use in another modpack will be closed.
+
+## Building
+
+Standard NeoForge / Gradle workflow:
+
+```bash
+./gradlew build       # produce the mod jar in build/libs/
+./gradlew runClient   # launch a dev client
+./gradlew runServer   # launch a dev server
+```
+
+Targets Minecraft 1.21.1 on NeoForge (Java 21).
 
 ## Support
 

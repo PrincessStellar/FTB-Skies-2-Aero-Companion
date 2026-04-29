@@ -28,3 +28,9 @@ eclipse
 run
 .vscode
 runs
+
+# markdown — ignore everything except the root changelog/readme and metadata/
+*.md
+!/CHANGELOG.md
+!/README.md
+!/metadata/**

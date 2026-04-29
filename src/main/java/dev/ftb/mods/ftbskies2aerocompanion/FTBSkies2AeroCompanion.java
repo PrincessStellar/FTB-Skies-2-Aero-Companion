@@ -1,4 +1,4 @@
-package dev.ftb.mods.ftbmodpackcompanion;
+package dev.ftb.mods.ftbskies2aerocompanion;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -12,13 +12,13 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Mod(FTBModpackCompanion.MOD_ID)
-public class FTBModpackCompanion {
-    public static final String MOD_ID = "ftbmodpackcompanion";
+@Mod(FTBSkies2AeroCompanion.MOD_ID)
+public class FTBSkies2AeroCompanion {
+    public static final String MOD_ID = "ftbskies2aerocompanion";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FTBModpackCompanion.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FTBSkies2AeroCompanion.class);
 
-    public FTBModpackCompanion(IEventBus eventBus, ModContainer container) {
+    public FTBSkies2AeroCompanion(IEventBus eventBus, ModContainer container) {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             eventBus.<FMLClientSetupEvent>addListener(event -> clientSetup(event, eventBus));
         }
