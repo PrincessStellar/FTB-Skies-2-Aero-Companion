@@ -107,15 +107,26 @@ repositories {
 			includeGroup("mezz.jei")
 		}
 	}
+
+	maven {
+		url = "https://maven.createmod.net"
+	}
+
+	maven {
+		url = "https://maven.tterrag.com/"
+	}
 }
 
 dependencies {
 	implementation "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
 
-	// JEI: compile against the API only; the full jar is loaded at runtime when JEI is installed
 	compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
 	compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
 	localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+
+	compileOnly "dev.ftb.mods:ftb-essentials-neoforge:${ftb_essentials_version}"
+	compileOnly "dev.architectury:architectury-neoforge:${architectury_version}"
+	compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
 }
 
 tasks.register("sourcesJar", Jar) {

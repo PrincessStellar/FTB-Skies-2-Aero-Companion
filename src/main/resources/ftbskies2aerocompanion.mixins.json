@@ -4,7 +4,9 @@
   "package": "dev.ftb.mods.ftbskies2aerocompanion.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FishingHookMixin"
+    "FishingHookMixin",
+    "HomeManagerAccessor",
+    "SavedTeleportManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
