@@ -1,0 +1,5 @@
+{
+  "type": "ftbskies2aerocompanion:void_conversion",
+  "input": "minecraft:fishing_rod",
+  "output": "ftbskies2aerocompanion:void_fishing_rod"
+}
