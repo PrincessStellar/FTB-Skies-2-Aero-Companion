@@ -5,9 +5,13 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "FishingHookMixin",
+    "FishingRodItemMixin",
     "HomeManagerAccessor",
     "SavedTeleportManagerMixin",
     "ServerPlayerMixin"
+  ],
+  "client": [
+    "client.FishingHookRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

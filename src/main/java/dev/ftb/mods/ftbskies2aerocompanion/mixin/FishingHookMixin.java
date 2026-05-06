@@ -3,7 +3,13 @@ package dev.ftb.mods.ftbskies2aerocompanion.mixin;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.loot.VoidFishingLootTables;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
@@ -44,17 +50,30 @@ public abstract class FishingHookMixin {
     public abstract Player getPlayerOwner();
 
     @Unique
+    private static final double VOID_BOB_AMPLITUDE = 0.08;
+
+    @Unique
+    private static final double VOID_BOB_PERIOD_TICKS = 80.0;
+
+    @Unique
     private boolean ftbskies2aero$voidFishing = false;
 
     @Unique
     private double ftbskies2aero$voidFishY = 0.0;
+
+    @Unique
+    private double ftbskies2aero$voidBobY() {
+        FishingHook self = (FishingHook) (Object) this;
+        double phase = (self.tickCount * 2.0 * Math.PI) / VOID_BOB_PERIOD_TICKS;
+        return ftbskies2aero$voidFishY + Math.sin(phase) * VOID_BOB_AMPLITUDE;
+    }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void ftbskies2aero$detectAndLock(CallbackInfo ci) {
         FishingHook self = (FishingHook) (Object) this;
 
         if (ftbskies2aero$voidFishing) {
-            self.setPos(self.getX(), ftbskies2aero$voidFishY, self.getZ());
+            self.setPos(self.getX(), ftbskies2aero$voidBobY(), self.getZ());
             self.setDeltaMovement(Vec3.ZERO);
             return;
         }
@@ -77,8 +96,23 @@ public abstract class FishingHookMixin {
 
         ftbskies2aero$voidFishing = true;
         ftbskies2aero$voidFishY = targetY;
-        self.setPos(self.getX(), targetY, self.getZ());
+        self.setPos(self.getX(), ftbskies2aero$voidBobY(), self.getZ());
         self.setDeltaMovement(Vec3.ZERO);
+        ftbskies2aero$emitVoidLockOn(self);
+    }
+
+    @Unique
+    private static void ftbskies2aero$emitVoidLockOn(FishingHook self) {
+        if (self.level() instanceof ServerLevel sl) {
+            sl.sendParticles(ParticleTypes.SOUL_FIRE_FLAME,
+                    self.getX(), self.getY() + 0.1, self.getZ(),
+                    14, 0.25, 0.05, 0.25, 0.02);
+            sl.sendParticles(ParticleTypes.SOUL,
+                    self.getX(), self.getY() + 0.1, self.getZ(),
+                    6, 0.2, 0.05, 0.2, 0.01);
+            sl.playSound(null, self.getX(), self.getY(), self.getZ(),
+                    SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL, 0.6F, 0.85F);
+        }
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
@@ -87,7 +121,7 @@ public abstract class FishingHookMixin {
             return;
         }
         FishingHook self = (FishingHook) (Object) this;
-        self.setPos(self.getX(), ftbskies2aero$voidFishY, self.getZ());
+        self.setPos(self.getX(), ftbskies2aero$voidBobY(), self.getZ());
         self.setDeltaMovement(Vec3.ZERO);
     }
 
@@ -114,6 +148,31 @@ public abstract class FishingHookMixin {
         if (ftbskies2aero$voidFishing) {
             cir.setReturnValue(true);
         }
+    }
+
+    @ModifyArg(method = {"tick", "catchingFish"},
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"),
+            index = 0,
+            require = 0)
+    private ParticleOptions ftbskies2aero$swapParticle(ParticleOptions original) {
+        if (!ftbskies2aero$voidFishing) return original;
+        if (original == ParticleTypes.BUBBLE) return ParticleTypes.SOUL_FIRE_FLAME;
+        if (original == ParticleTypes.SPLASH) return ParticleTypes.SOUL;
+        if (original == ParticleTypes.FISHING) return ParticleTypes.SOUL_FIRE_FLAME;
+        return original;
+    }
+
+    @ModifyArg(method = {"tick", "catchingFish"},
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;playSound(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"),
+            index = 4,
+            require = 0)
+    private SoundEvent ftbskies2aero$swapSound(SoundEvent original) {
+        if (ftbskies2aero$voidFishing && original == SoundEvents.FISHING_BOBBER_SPLASH) {
+            return SoundEvents.SOUL_ESCAPE.value();
+        }
+        return original;
     }
 
     @ModifyArg(method = "retrieve",

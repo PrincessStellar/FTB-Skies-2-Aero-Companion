@@ -12,7 +12,7 @@ public final class ModItems {
 
     public static final DeferredItem<FishingRodItem> VOID_FISHING_ROD = ITEMS.register(
             "void_fishing_rod",
-            () -> new FishingRodItem(new Item.Properties().durability(64).stacksTo(1))
+            () -> new FishingRodItem(new Item.Properties().durability(256).stacksTo(1))
     );
 
     private ModItems() {}
