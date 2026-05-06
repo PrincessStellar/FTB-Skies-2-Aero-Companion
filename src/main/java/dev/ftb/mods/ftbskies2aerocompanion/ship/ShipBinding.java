@@ -14,7 +14,8 @@ public record ShipBinding(
         ResourceKey<Level> shipDimension,
         Vec3 localOffset,
         float yaw,
-        float pitch
+        float pitch,
+        Vec3 lastKnownPos
 ) {
     public CompoundTag write() {
         CompoundTag tag = new CompoundTag();
@@ -25,16 +26,23 @@ public record ShipBinding(
         tag.putDouble("z", localOffset.z);
         tag.putFloat("yaw", yaw);
         tag.putFloat("pitch", pitch);
+        tag.putDouble("lkx", lastKnownPos.x);
+        tag.putDouble("lky", lastKnownPos.y);
+        tag.putDouble("lkz", lastKnownPos.z);
         return tag;
     }
 
     public static ShipBinding read(CompoundTag tag) {
+        Vec3 lastKnown = tag.contains("lkx")
+                ? new Vec3(tag.getDouble("lkx"), tag.getDouble("lky"), tag.getDouble("lkz"))
+                : Vec3.ZERO;
         return new ShipBinding(
                 tag.getUUID("ship"),
                 ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("dim"))),
                 new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z")),
                 tag.getFloat("yaw"),
-                tag.getFloat("pitch")
+                tag.getFloat("pitch"),
+                lastKnown
         );
     }
 }

@@ -1,0 +1,5 @@
+{
+  "type": "ftbskies2aerocompanion:void_conversion",
+  "input": "minecraft:coarse_dirt",
+  "output": "minecraft:dirt"
+}

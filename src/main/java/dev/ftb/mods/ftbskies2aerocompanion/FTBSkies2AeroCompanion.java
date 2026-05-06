@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion;
 
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
+import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +29,7 @@ public class FTBSkies2AeroCompanion {
 
     public FTBSkies2AeroCompanion(IEventBus eventBus, ModContainer container) {
         ModItems.register(eventBus);
+        ModRecipes.register(eventBus);
         eventBus.addListener(FTBSkies2AeroCompanion::onBuildCreativeTabs);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {

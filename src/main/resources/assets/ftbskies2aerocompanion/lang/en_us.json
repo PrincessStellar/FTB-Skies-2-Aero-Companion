@@ -5,5 +5,8 @@
   "jei.ftbskies2aerocompanion.void_fishing.pool": "Pool: %s",
   "jei.ftbskies2aerocompanion.void_fishing.weight": "Weight: %s",
   "jei.ftbskies2aerocompanion.void_fishing.chance": "Chance: %s%%",
-  "jei.ftbskies2aerocompanion.void_fishing.biomes": "Biome restrictions:"
+  "jei.ftbskies2aerocompanion.void_fishing.biomes": "Biome restrictions:",
+
+  "jei.ftbskies2aerocompanion.void_conversion.title": "Void Conversion",
+  "jei.ftbskies2aerocompanion.void_conversion.y_level": "Drop below Y %s"
 }

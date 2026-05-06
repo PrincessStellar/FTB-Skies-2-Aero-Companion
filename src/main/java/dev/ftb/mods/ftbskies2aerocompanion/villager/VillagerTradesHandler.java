@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,10 @@ public final class VillagerTradesHandler {
         VillagerProfession profession = event.getType();
         ResourceLocation profKey = BuiltInRegistries.VILLAGER_PROFESSION.getKey(profession);
         Int2ObjectMap<List<ItemListing>> trades = event.getTrades();
+
+        // Some tier lists arrive immutable (NeoForge or earlier listeners may swap in ImmutableList);
+        // upgrade them in-place so removeIf/add don't throw UnsupportedOperationException.
+        ensureMutableTiers(trades);
 
         // Roots silver_ingot is unavailable in this pack — strip those trades from every profession.
         for (List<ItemListing> tier : trades.values()) {
@@ -103,6 +108,15 @@ public final class VillagerTradesHandler {
         l2.removeIf(l -> outputMatches(l, "minecraft:emerald"));
         l2.add(emeraldForItems("ae2:charged_certus_quartz_crystal", 3, 12, 10));
         l2.add(emeraldForItems("ftbmaterials:silicon_gem", 5, 12, 10));
+    }
+
+    private static void ensureMutableTiers(Int2ObjectMap<List<ItemListing>> trades) {
+        for (Int2ObjectMap.Entry<List<ItemListing>> entry : trades.int2ObjectEntrySet()) {
+            List<ItemListing> tier = entry.getValue();
+            if (!(tier instanceof ArrayList)) {
+                entry.setValue(new ArrayList<>(tier));
+            }
+        }
     }
 
     // -- listing factories --

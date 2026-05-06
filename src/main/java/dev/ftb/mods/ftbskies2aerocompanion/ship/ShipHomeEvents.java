@@ -1,7 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.ship;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import dev.ftb.mods.ftbessentials.util.TeleportPos;
 import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -9,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerSetSpawnEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
@@ -49,19 +47,5 @@ public final class ShipHomeEvents {
         Vec3 worldPos = newSpawn.getCenter();
         ShipBinding binding = ShipBindings.capture(ship.get(), worldPos, player.getYRot(), player.getXRot());
         data.setBed(player.getUUID(), binding);
-    }
-
-    @SubscribeEvent
-    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.isEndConquered()) return;
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        MinecraftServer server = player.getServer();
-        if (server == null) return;
-        ShipHomeData data = ShipHomeData.get(server);
-        Optional<ShipBinding> binding = data.getBed(player.getUUID());
-        if (binding.isEmpty()) return;
-        TeleportPos target = ShipBindings.resolve(server, binding.get())
-                .orElseGet(() -> ShipBindings.worldSpawnFallback(server));
-        target.teleport(player);
     }
 }
