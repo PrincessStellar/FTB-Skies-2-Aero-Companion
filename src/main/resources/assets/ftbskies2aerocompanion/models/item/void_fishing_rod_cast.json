@@ -1,0 +1,6 @@
+{
+  "parent": "ftbskies2aerocompanion:item/void_fishing_rod",
+  "textures": {
+    "layer0": "ftbskies2aerocompanion:item/void_fishing_rod_cast"
+  }
+}

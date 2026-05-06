@@ -1,0 +1,9 @@
+{
+  "item.ftbskies2aerocompanion.void_fishing_rod": "Void Fishing Rod",
+
+  "jei.ftbskies2aerocompanion.void_fishing.title": "Void Fishing",
+  "jei.ftbskies2aerocompanion.void_fishing.pool": "Pool: %s",
+  "jei.ftbskies2aerocompanion.void_fishing.weight": "Weight: %s",
+  "jei.ftbskies2aerocompanion.void_fishing.chance": "Chance: %s%%",
+  "jei.ftbskies2aerocompanion.void_fishing.biomes": "Biome restrictions:"
+}

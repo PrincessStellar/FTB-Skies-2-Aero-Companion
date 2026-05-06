@@ -19,3 +19,13 @@ mandatory = true
 versionRange = "${mod_loader_range}"
 ordering = "NONE"
 side="BOTH"
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId = "jei"
+type = "optional"
+versionRange = "[19.0.0,)"
+ordering = "AFTER"
+side = "CLIENT"

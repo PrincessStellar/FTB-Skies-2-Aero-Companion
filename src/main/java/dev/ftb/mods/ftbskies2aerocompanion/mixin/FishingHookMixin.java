@@ -1,0 +1,151 @@
+package dev.ftb.mods.ftbskies2aerocompanion.mixin;
+
+import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
+import dev.ftb.mods.ftbskies2aerocompanion.loot.VoidFishingLootTables;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+/**
+ * Lets the {@link ModItems#VOID_FISHING_ROD void fishing rod} catch fish over the void.
+ *
+ * <p>Only fires when the bobber's owner is wielding a void fishing rod at the moment
+ * the conditions are first met — vanilla fishing rods cast a normal hook with normal
+ * physics. When a void-rod bobber descends to or below {@code playerY - 1} with an
+ * unbroken column of air all the way down past the world floor, this mixin pins it at
+ * that height and spoofs the fluid checks vanilla uses to gate fishing. Vanilla then
+ * transitions the hook to BOBBING and runs the normal {@code catchingFish} loop, so
+ * loot, lure speed, luck, and rod retrieve all behave exactly as they do over water.
+ */
+@Mixin(FishingHook.class)
+public abstract class FishingHookMixin {
+    @Shadow
+    public abstract Player getPlayerOwner();
+
+    @Unique
+    private boolean ftbskies2aero$voidFishing = false;
+
+    @Unique
+    private double ftbskies2aero$voidFishY = 0.0;
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void ftbskies2aero$detectAndLock(CallbackInfo ci) {
+        FishingHook self = (FishingHook) (Object) this;
+
+        if (ftbskies2aero$voidFishing) {
+            self.setPos(self.getX(), ftbskies2aero$voidFishY, self.getZ());
+            self.setDeltaMovement(Vec3.ZERO);
+            return;
+        }
+
+        Player owner = getPlayerOwner();
+        if (owner == null) {
+            return;
+        }
+        if (!ftbskies2aero$ownerWieldsVoidRod(owner)) {
+            return;
+        }
+
+        double targetY = owner.getY() - 1.0;
+        if (self.getY() > targetY) {
+            return;
+        }
+        if (!ftbskies2aero$columnClearToVoid(self.level(), self.blockPosition())) {
+            return;
+        }
+
+        ftbskies2aero$voidFishing = true;
+        ftbskies2aero$voidFishY = targetY;
+        self.setPos(self.getX(), targetY, self.getZ());
+        self.setDeltaMovement(Vec3.ZERO);
+    }
+
+    @Inject(method = "tick", at = @At("RETURN"))
+    private void ftbskies2aero$relock(CallbackInfo ci) {
+        if (!ftbskies2aero$voidFishing) {
+            return;
+        }
+        FishingHook self = (FishingHook) (Object) this;
+        self.setPos(self.getX(), ftbskies2aero$voidFishY, self.getZ());
+        self.setDeltaMovement(Vec3.ZERO);
+    }
+
+    @Redirect(method = "tick", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z"))
+    private boolean ftbskies2aero$forceWaterTag(FluidState state, TagKey<Fluid> tag) {
+        if (ftbskies2aero$voidFishing && tag == FluidTags.WATER) {
+            return true;
+        }
+        return state.is(tag);
+    }
+
+    @Redirect(method = "tick", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/level/material/FluidState;getHeight(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F"))
+    private float ftbskies2aero$forceWaterHeight(FluidState state, BlockGetter getter, BlockPos pos) {
+        if (ftbskies2aero$voidFishing) {
+            return 1.0F;
+        }
+        return state.getHeight(getter, pos);
+    }
+
+    @Inject(method = "calculateOpenWater", at = @At("HEAD"), cancellable = true)
+    private void ftbskies2aero$forceOpenWater(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        if (ftbskies2aero$voidFishing) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @ModifyArg(method = "retrieve",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/server/ReloadableServerRegistries$Holder;getLootTable(Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/storage/loot/LootTable;"))
+    private ResourceKey<LootTable> ftbskies2aero$swapLootTable(ResourceKey<LootTable> original) {
+        if (ftbskies2aero$voidFishing && original == BuiltInLootTables.FISHING) {
+            return VoidFishingLootTables.FISHING;
+        }
+        return original;
+    }
+
+    @Unique
+    private static boolean ftbskies2aero$ownerWieldsVoidRod(Player owner) {
+        ItemStack main = owner.getMainHandItem();
+        ItemStack off = owner.getOffhandItem();
+        return main.is(ModItems.VOID_FISHING_ROD.get()) || off.is(ModItems.VOID_FISHING_ROD.get());
+    }
+
+    @Unique
+    private boolean ftbskies2aero$columnClearToVoid(Level level, BlockPos hookPos) {
+        int x = hookPos.getX();
+        int z = hookPos.getZ();
+        int minY = level.getMinBuildHeight();
+        BlockPos.MutableBlockPos mut = new BlockPos.MutableBlockPos();
+        for (int y = hookPos.getY(); y >= minY; y--) {
+            mut.set(x, y, z);
+            BlockState state = level.getBlockState(mut);
+            if (!state.isAir()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

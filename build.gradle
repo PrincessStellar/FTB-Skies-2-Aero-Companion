@@ -100,10 +100,22 @@ repositories {
 			includeGroup("dev.architectury")
 		}
 	}
+
+	maven {
+		url = "https://maven.blamejared.com"
+		content {
+			includeGroup("mezz.jei")
+		}
+	}
 }
 
 dependencies {
 	implementation "dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}"
+
+	// JEI: compile against the API only; the full jar is loaded at runtime when JEI is installed
+	compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+	compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+	localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
 tasks.register("sourcesJar", Jar) {
