@@ -3,46 +3,61 @@ package dev.ftb.mods.ftbskies2aerocompanion.mixin;
 import dev.ftb.mods.ftbskies2aerocompanion.ship.ShipBinding;
 import dev.ftb.mods.ftbskies2aerocompanion.ship.ShipBindings;
 import dev.ftb.mods.ftbskies2aerocompanion.ship.ShipHomeData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
-/**
- * Redirects bed-respawn directly to a ship-bound location when the player has a ship binding,
- * so the player materialises on the ship in a single step instead of vanilla teleporting them
- * to the (now empty) bed pos and a follow-up handler porting them again.
- */
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin {
+    @Unique
+    private static final Logger ftbskies2aero$LOG = LoggerFactory.getLogger("ShipHome");
 
-    @Inject(method = "findRespawnPositionAndUseSpawnBlock", at = @At("HEAD"), cancellable = true)
-    private void ftbskies2aero$shipAwareRespawn(boolean isAlive, DimensionTransition.PostDimensionTransition post,
-                                                CallbackInfoReturnable<DimensionTransition> cir) {
+    @Inject(method = "setRespawnPosition", at = @At("HEAD"))
+    private void ftbskies2aero$captureBedBinding(ResourceKey<Level> dimension, BlockPos position, float angle,
+                                                 boolean forced, boolean broadcast, CallbackInfo ci) {
         ServerPlayer self = (ServerPlayer) (Object) this;
         MinecraftServer server = self.getServer();
         if (server == null) return;
-
         ShipHomeData data = ShipHomeData.get(server);
-        Optional<ShipBinding> bindingOpt = data.getBed(self.getUUID());
-        if (bindingOpt.isEmpty()) return;
-        ShipBinding binding = bindingOpt.get();
 
-        Optional<Vec3> shipWorld = ShipBindings.resolveWorldPos(server, binding);
-        if (shipWorld.isPresent()) {
-            ServerLevel shipLevel = server.getLevel(binding.shipDimension());
-            cir.setReturnValue(new DimensionTransition(
-                    shipLevel, shipWorld.get(), Vec3.ZERO, binding.yaw(), binding.pitch(), post));
+        if (position == null) {
+            data.clearBed(self.getUUID());
+            ftbskies2aero$LOG.debug("[setBed] {} cleared (null position)", self.getName().getString());
             return;
         }
 
-        cir.setReturnValue(DimensionTransition.missingRespawnBlock(server.overworld(), self, post));
+        ServerLevel targetLevel = server.getLevel(dimension);
+        if (targetLevel == null) {
+            data.clearBed(self.getUUID());
+            return;
+        }
+
+        Vec3 worldPos = self.position();
+        ShipBindings.dumpDiagnostics("setBed", self);
+        ftbskies2aero$LOG.debug("[setBed] {} bed BlockPos arg={} player world pos={} (using player pos for capture, since on a sub-level the bed BlockPos is storage coords)",
+                self.getName().getString(), position, worldPos);
+        Optional<ShipBinding> binding = ShipBindings.captureForPlayer(self, worldPos, angle, self.getXRot());
+        if (binding.isEmpty()) {
+            data.clearBed(self.getUUID());
+            ftbskies2aero$LOG.debug("[setBed] {} no sub-level/contraption — vanilla BlockPos only",
+                    self.getName().getString());
+            return;
+        }
+        data.setBed(self.getUUID(), binding.get());
+        ftbskies2aero$LOG.debug("[setBed] {} captured anchor={} localOffset={}",
+                self.getName().getString(), binding.get().shipUuid(), binding.get().localOffset());
     }
 }
