@@ -163,14 +163,13 @@ public abstract class FishingHookMixin {
         return original;
     }
 
-    @ModifyArg(method = {"tick", "catchingFish"},
+    @ModifyArg(method = "catchingFish",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/Level;playSound(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"),
-            index = 4,
-            require = 0)
+                    target = "Lnet/minecraft/world/entity/projectile/FishingHook;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"),
+            index = 0)
     private SoundEvent ftbskies2aero$swapSound(SoundEvent original) {
         if (ftbskies2aero$voidFishing && original == SoundEvents.FISHING_BOBBER_SPLASH) {
-            return SoundEvents.SOUL_ESCAPE.value();
+            return SoundEvents.ENDERMAN_TELEPORT;
         }
         return original;
     }

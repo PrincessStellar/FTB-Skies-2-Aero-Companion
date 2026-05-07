@@ -14,10 +14,6 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-/**
- * Swaps the cast/throw sound of the {@link ModItems#VOID_FISHING_ROD void fishing rod}
- * for a wind-charge whoosh, leaving vanilla and other-mod rods untouched.
- */
 @Mixin(FishingRodItem.class)
 public abstract class FishingRodItemMixin {
 
