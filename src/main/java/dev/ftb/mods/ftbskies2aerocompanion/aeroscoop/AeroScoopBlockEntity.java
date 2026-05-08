@@ -1,0 +1,229 @@
+package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop;
+
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.recipe.AeroScoopRecipe;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
+
+import java.util.List;
+
+public class AeroScoopBlockEntity extends BlockEntity {
+    public static final int OUTPUT_SLOTS = 9;
+
+    public final ItemStackHandler filterHandler = new ItemStackHandler(1) {
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return stack.getItem() instanceof MeshItem;
+        }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
+    };
+
+    public final ItemStackHandler outputHandler = new ItemStackHandler(OUTPUT_SLOTS) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+        }
+    };
+
+    private final OutputOnlyWrapper externalView = new OutputOnlyWrapper(outputHandler);
+
+    private BlockPos lastPolledPos;
+    private int tickCounter;
+
+    public AeroScoopBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.AIR_FILTER_BE.get(), pos, state);
+        this.lastPolledPos = pos;
+    }
+
+    public ItemStack getFilter() {
+        return filterHandler.getStackInSlot(0);
+    }
+
+    public BlockPos getLastPolledPos() {
+        return lastPolledPos;
+    }
+
+    public void setLastPolledPos(BlockPos pos) {
+        this.lastPolledPos = pos;
+        setChanged();
+    }
+
+    public Direction getIntakeFacing() {
+        BlockState state = getBlockState();
+        DirectionProperty prop = AeroScoopBlock.FACING;
+        return state.hasProperty(prop) ? state.getValue(prop) : Direction.NORTH;
+    }
+
+    public IItemHandler getOutputHandlerExternal() {
+        return externalView;
+    }
+
+    public void serverTick(Level level, BlockPos pos, BlockState state) {
+        tickCounter++;
+        if (tickCounter < 20) {
+            // try to push outputs to neighbours every tick
+            pushOutputs(level, pos, state);
+            return;
+        }
+        tickCounter = 0;
+
+        ItemStack filter = getFilter();
+        if (filter.isEmpty()) return;
+        if (filter.isDamageableItem() && filter.getDamageValue() >= filter.getMaxDamage() - 1) return;
+        Direction intake = getIntakeFacing();
+        if (!AeroScoopTickLogic.isIntakeClear(level, pos, intake)) return;
+
+        if (lastPolledPos != null && lastPolledPos.equals(pos)) {
+            // Stationary BE: no movement signal. Just refresh and skip.
+            lastPolledPos = pos;
+            return;
+        }
+
+        AeroScoopRecipe recipe = AeroScoopTickLogic.pickRecipe(level, pos, filter, level.random);
+        if (recipe == null) {
+            lastPolledPos = pos;
+            return;
+        }
+
+        MeshTier tier = MeshTier.of(filter);
+        if (tier == null) {
+            lastPolledPos = pos;
+            return;
+        }
+
+        if (level.random.nextFloat() >= tier.efficiency) {
+            lastPolledPos = pos;
+            return;
+        }
+
+        List<ItemStack> rolled = AeroScoopTickLogic.rollResults(recipe, level.random);
+        List<ItemStack> overflow = AeroScoopTickLogic.insertAll(outputHandler, rolled);
+        for (ItemStack stack : overflow) {
+            Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
+        }
+
+        if (!tier.unbreakable() && filter.isDamageableItem()) {
+            int cost = AeroScoopTickLogic.durabilityCostFor(level.dimension());
+            int newDamage = Math.min(filter.getMaxDamage(), filter.getDamageValue() + cost);
+            filter.setDamageValue(newDamage);
+        }
+        lastPolledPos = pos;
+        pushOutputs(level, pos, state);
+        setChanged();
+    }
+
+    private void pushOutputs(Level level, BlockPos pos, BlockState state) {
+        for (Direction dir : Direction.values()) {
+            BlockPos neighbour = pos.relative(dir);
+            IItemHandler target = level.getCapability(Capabilities.ItemHandler.BLOCK, neighbour, dir.getOpposite());
+            if (target == null) continue;
+            for (int slot = 0; slot < outputHandler.getSlots(); slot++) {
+                ItemStack stack = outputHandler.getStackInSlot(slot);
+                if (stack.isEmpty()) continue;
+                ItemStack toMove = stack.copy();
+                ItemStack leftover = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(target, toMove, false);
+                int moved = stack.getCount() - leftover.getCount();
+                if (moved > 0) {
+                    outputHandler.extractItem(slot, moved, false);
+                }
+            }
+        }
+    }
+
+    public void dropContents(Level level, BlockPos pos) {
+        NonNullList<ItemStack> drops = NonNullList.create();
+        for (int i = 0; i < filterHandler.getSlots(); i++) {
+            ItemStack s = filterHandler.getStackInSlot(i);
+            if (!s.isEmpty()) drops.add(s);
+        }
+        for (int i = 0; i < outputHandler.getSlots(); i++) {
+            ItemStack s = outputHandler.getStackInSlot(i);
+            if (!s.isEmpty()) drops.add(s);
+        }
+        Containers.dropContents(level, pos, drops);
+    }
+
+    public boolean tryInsertFilter(Player player, ItemStack heldStack) {
+        if (!getFilter().isEmpty()) {
+            ItemStack existing = filterHandler.extractItem(0, 1, false);
+            if (!existing.isEmpty()) {
+                if (!player.getInventory().add(existing)) {
+                    player.drop(existing, false);
+                }
+                return true;
+            }
+            return false;
+        }
+        if (heldStack.getItem() instanceof MeshItem) {
+            ItemStack one = heldStack.copyWithCount(1);
+            ItemStack remainder = filterHandler.insertItem(0, one, false);
+            if (remainder.isEmpty()) {
+                if (!player.getAbilities().instabuild) {
+                    heldStack.shrink(1);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("Filter")) {
+            filterHandler.deserializeNBT(registries, tag.getCompound("Filter"));
+        }
+        if (tag.contains("Output")) {
+            outputHandler.deserializeNBT(registries, tag.getCompound("Output"));
+        }
+        if (tag.contains("LastPolledPos")) {
+            long packed = tag.getLong("LastPolledPos");
+            lastPolledPos = BlockPos.of(packed);
+        }
+        tickCounter = tag.getInt("Tick");
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.put("Filter", filterHandler.serializeNBT(registries));
+        tag.put("Output", outputHandler.serializeNBT(registries));
+        if (lastPolledPos != null) {
+            tag.putLong("LastPolledPos", lastPolledPos.asLong());
+        }
+        tag.putInt("Tick", tickCounter);
+    }
+
+    public static final BlockCapability<IItemHandler, Direction> OUTPUT_CAPABILITY = Capabilities.ItemHandler.BLOCK;
+
+    /** Output-only IItemHandler view: extraction allowed, insertion denied. */
+    private static final class OutputOnlyWrapper extends CombinedInvWrapper {
+        OutputOnlyWrapper(IItemHandlerModifiable wrapped) {
+            super(wrapped);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            return stack;
+        }
+    }
+}

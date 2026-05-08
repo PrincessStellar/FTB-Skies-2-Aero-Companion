@@ -1,5 +1,10 @@
 package dev.ftb.mods.ftbskies2aerocompanion;
 
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.CreateIntegration;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModAeroRecipes;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlockEntities;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlocks;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -15,7 +20,10 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 import org.slf4j.Logger;
@@ -29,12 +37,30 @@ public class FTBSkies2AeroCompanion {
 
     public FTBSkies2AeroCompanion(IEventBus eventBus, ModContainer container) {
         ModItems.register(eventBus);
+        ModBlocks.register(eventBus);
+        ModBlockEntities.register(eventBus);
         ModRecipes.register(eventBus);
+        ModAeroRecipes.register(eventBus);
+
         eventBus.addListener(FTBSkies2AeroCompanion::onBuildCreativeTabs);
+        eventBus.addListener(FTBSkies2AeroCompanion::onRegisterCapabilities);
+        eventBus.addListener(FTBSkies2AeroCompanion::onCommonSetup);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             eventBus.<FMLClientSetupEvent>addListener(event -> clientSetup(event, eventBus));
         }
+    }
+
+    private static void onCommonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(CreateIntegration::register);
+    }
+
+    private static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.AIR_FILTER_BE.get(),
+                (be, side) -> be.getOutputHandlerExternal()
+        );
     }
 
     private void clientSetup(FMLClientSetupEvent event, IEventBus eventBus) {
@@ -61,6 +87,14 @@ public class FTBSkies2AeroCompanion {
     private static void onBuildCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(new ItemStack(ModItems.VOID_FISHING_ROD.get()));
+            event.accept(new ItemStack(ModItems.AIR_FILTER_ITEM.get()));
+            for (MeshTier tier : MeshTier.values()) {
+                event.accept(new ItemStack(ModItems.MESHES.get(tier).get()));
+            }
+            event.accept(new ItemStack(ModItems.IRON_DUST.get()));
+            event.accept(new ItemStack(ModItems.GOLD_DUST.get()));
+            event.accept(new ItemStack(ModItems.DIAMOND_DUST.get()));
+            event.accept(new ItemStack(ModItems.BLAZING_DUST.get()));
         }
     }
 

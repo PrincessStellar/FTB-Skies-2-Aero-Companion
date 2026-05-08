@@ -1,6 +1,9 @@
 {
   "item.ftbskies2aerocompanion.void_fishing_rod": "Void Fishing Rod",
 
+  "block.ftbskies2aerocompanion.air_filter": "AeroScoop",
+  "item.ftbskies2aerocompanion.air_filter": "AeroScoop",
+
   "jei.ftbskies2aerocompanion.void_fishing.title": "Void Fishing",
   "jei.ftbskies2aerocompanion.void_fishing.pool": "Pool: %s",
   "jei.ftbskies2aerocompanion.void_fishing.weight": "Weight: %s",
@@ -8,5 +11,9 @@
   "jei.ftbskies2aerocompanion.void_fishing.biomes": "Biome restrictions:",
 
   "jei.ftbskies2aerocompanion.void_conversion.title": "Void Conversion",
-  "jei.ftbskies2aerocompanion.void_conversion.y_level": "Drop below Y %s"
+  "jei.ftbskies2aerocompanion.void_conversion.y_level": "Drop below Y %s",
+
+  "jei.ftbskies2aerocompanion.aeroscoop.title": "AeroScooping",
+  "jei.ftbskies2aerocompanion.aeroscoop.biome": "Biome: %s",
+  "jei.ftbskies2aerocompanion.aeroscoop.chance": "Chance: %s"
 }

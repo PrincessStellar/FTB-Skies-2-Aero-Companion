@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SIS",
+    "ICI",
+    "SIS"
+  ],
+  "key": {
+    "C": {
+      "tag": "c:strings"
+    },
+    "I": {
+      "tag": "c:rods/blaze"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "result": {
+    "id": "ftb:blazing_mesh",
+    "count": 1
+  }
+}

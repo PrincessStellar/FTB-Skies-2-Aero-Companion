@@ -1,6 +1,9 @@
 package dev.ftb.mods.ftbskies2aerocompanion.compat.jei;
 
 import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModAeroRecipes;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.recipe.AeroScoopRecipe;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.VoidConversionRecipe;
@@ -29,6 +32,11 @@ public class JEIPlugin implements IModPlugin {
             VoidConversionRecipe.class
     );
 
+    public static final RecipeType<AeroScoopRecipe> AEROSCOOP_TYPE = new RecipeType<>(
+            ResourceLocation.fromNamespaceAndPath(FTBSkies2AeroCompanion.MOD_ID, "aeroscoop"),
+            AeroScoopRecipe.class
+    );
+
     private static final ResourceLocation PLUGIN_ID = FTBSkies2AeroCompanion.id("jei");
 
     @Override
@@ -40,7 +48,8 @@ public class JEIPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(
                 new VoidFishingCategory(registration.getJeiHelpers().getGuiHelper()),
-                new VoidConversionCategory(registration.getJeiHelpers().getGuiHelper())
+                new VoidConversionCategory(registration.getJeiHelpers().getGuiHelper()),
+                new AeroScoopJEICategory(registration.getJeiHelpers().getGuiHelper())
         );
     }
 
@@ -58,6 +67,13 @@ public class JEIPlugin implements IModPlugin {
                     .map(RecipeHolder::value)
                     .toList();
             registration.addRecipes(VOID_CONVERSION_TYPE, conversions);
+
+            List<AeroScoopRecipe> aeroscoops = Minecraft.getInstance().level.getRecipeManager()
+                    .getAllRecipesFor(ModAeroRecipes.AEROSCOOP_TYPE.get())
+                    .stream()
+                    .map(RecipeHolder::value)
+                    .toList();
+            registration.addRecipes(AEROSCOOP_TYPE, aeroscoops);
         }
     }
 
@@ -71,6 +87,11 @@ public class JEIPlugin implements IModPlugin {
                     .forEach(holder -> registration.addRecipeCatalyst(
                             new ItemStack(holder.value().input()), VOID_CONVERSION_TYPE
                     ));
+        }
+
+        registration.addRecipeCatalyst(new ItemStack(ModItems.AIR_FILTER_ITEM.get()), AEROSCOOP_TYPE);
+        for (MeshTier tier : MeshTier.values()) {
+            registration.addRecipeCatalyst(new ItemStack(ModItems.MESHES.get(tier).get()), AEROSCOOP_TYPE);
         }
     }
 }

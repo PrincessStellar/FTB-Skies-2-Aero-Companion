@@ -1,0 +1,29 @@
+{
+  "type": "ftbskies2aerocompanion:aeroscoop",
+  "mesh": {
+    "item": "ftb:diamond_mesh"
+  },
+  "biome": "ANY",
+  "results": [
+    {
+      "item": "ftb:diamond_dust",
+      "count": 1,
+      "chance": 1.0
+    },
+    {
+      "item": "ftb:gold_dust",
+      "count": 1,
+      "chance": 0.3
+    },
+    {
+      "item": "ftb:iron_dust",
+      "count": 1,
+      "chance": 0.3
+    },
+    {
+      "item": "ftbstuff:dust",
+      "count": 1,
+      "chance": 0.3
+    }
+  ]
+}

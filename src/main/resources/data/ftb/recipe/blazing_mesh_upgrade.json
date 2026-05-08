@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "MBM",
+    " M "
+  ],
+  "key": {
+    "B": {
+      "item": "ftb:diamond_mesh"
+    },
+    "M": {
+      "tag": "c:rods/blaze"
+    }
+  },
+  "result": {
+    "id": "ftb:blazing_mesh",
+    "count": 1
+  }
+}

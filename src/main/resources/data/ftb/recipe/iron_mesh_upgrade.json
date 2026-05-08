@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "MBM",
+    " M "
+  ],
+  "key": {
+    "B": {
+      "item": "ftb:cloth_mesh"
+    },
+    "M": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "result": {
+    "id": "ftb:iron_mesh",
+    "count": 1
+  }
+}

@@ -43,3 +43,10 @@ type = "required"
 versionRange = "[6.0,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "createsifter"
+type = "required"
+versionRange = "[2.2,)"
+ordering = "AFTER"
+side = "BOTH"

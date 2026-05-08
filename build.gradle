@@ -133,6 +133,7 @@ dependencies {
 	compileOnly "dev.architectury:architectury-neoforge:${architectury_version}"
 	compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
 	compileOnly "curse.maven:sable-1312371:8007005"
+	compileOnly "curse.maven:create-sifting-661938:7329807"
 	compileOnly fileTree(dir: 'libs', include: '*.jar')
 }
 
