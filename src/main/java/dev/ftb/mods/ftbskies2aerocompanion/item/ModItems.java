@@ -1,7 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.item;
 
 import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
-import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.DustItem;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshItem;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlocks;
@@ -37,10 +36,14 @@ public final class ModItems {
         }
     }
 
-    public static final DeferredItem<DustItem> IRON_DUST = FTB_ITEMS.register("iron_dust", DustItem::new);
-    public static final DeferredItem<DustItem> GOLD_DUST = FTB_ITEMS.register("gold_dust", DustItem::new);
-    public static final DeferredItem<DustItem> DIAMOND_DUST = FTB_ITEMS.register("diamond_dust", DustItem::new);
-    public static final DeferredItem<DustItem> BLAZING_DUST = FTB_ITEMS.register("blazing_dust", DustItem::new);
+    public static final DeferredItem<BlockItem> IRON_DUST = FTB_ITEMS.register(
+            "iron_dust", () -> new BlockItem(ModBlocks.IRON_DUST.get(), new Item.Properties()));
+    public static final DeferredItem<BlockItem> GOLD_DUST = FTB_ITEMS.register(
+            "gold_dust", () -> new BlockItem(ModBlocks.GOLD_DUST.get(), new Item.Properties()));
+    public static final DeferredItem<BlockItem> DIAMOND_DUST = FTB_ITEMS.register(
+            "diamond_dust", () -> new BlockItem(ModBlocks.DIAMOND_DUST.get(), new Item.Properties()));
+    public static final DeferredItem<BlockItem> BLAZING_DUST = FTB_ITEMS.register(
+            "blazing_dust", () -> new BlockItem(ModBlocks.BLAZING_DUST.get(), new Item.Properties()));
 
     private ModItems() {}
 

@@ -6,10 +6,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -34,6 +38,7 @@ public class AeroScoopBlockEntity extends BlockEntity {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
+            syncToClients();
         }
     };
 
@@ -211,6 +216,36 @@ public class AeroScoopBlockEntity extends BlockEntity {
             tag.putLong("LastPolledPos", lastPolledPos.asLong());
         }
         tag.putInt("Tick", tickCounter);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        tag.put("Filter", filterHandler.serializeNBT(registries));
+        tag.put("Output", outputHandler.serializeNBT(registries));
+        return tag;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+        if (tag.contains("Filter")) {
+            filterHandler.deserializeNBT(registries, tag.getCompound("Filter"));
+        }
+        if (tag.contains("Output")) {
+            outputHandler.deserializeNBT(registries, tag.getCompound("Output"));
+        }
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    private void syncToClients() {
+        if (level != null && !level.isClientSide) {
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(getBlockPos(), state, state, Block.UPDATE_CLIENTS);
+        }
     }
 
     public static final BlockCapability<IItemHandler, Direction> OUTPUT_CAPABILITY = Capabilities.ItemHandler.BLOCK;

@@ -5,6 +5,7 @@ import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModAeroRecipes;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlockEntities;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlocks;
+import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.client.AeroScoopBlockEntityRenderer;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -24,6 +25,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 import org.slf4j.Logger;
@@ -48,7 +50,12 @@ public class FTBSkies2AeroCompanion {
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             eventBus.<FMLClientSetupEvent>addListener(event -> clientSetup(event, eventBus));
+            eventBus.addListener(FTBSkies2AeroCompanion::onRegisterRenderers);
         }
+    }
+
+    private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.AIR_FILTER_BE.get(), AeroScoopBlockEntityRenderer::new);
     }
 
     private static void onCommonSetup(FMLCommonSetupEvent event) {

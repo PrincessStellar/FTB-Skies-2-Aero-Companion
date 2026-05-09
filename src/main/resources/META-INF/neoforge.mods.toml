@@ -47,6 +47,6 @@ side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "createsifter"
 type = "required"
-versionRange = "[2.2,)"
+versionRange = "[0,)"
 ordering = "AFTER"
 side = "BOTH"

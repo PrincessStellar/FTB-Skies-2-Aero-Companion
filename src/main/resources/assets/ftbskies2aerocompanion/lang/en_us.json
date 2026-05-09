@@ -15,5 +15,11 @@
 
   "jei.ftbskies2aerocompanion.aeroscoop.title": "AeroScooping",
   "jei.ftbskies2aerocompanion.aeroscoop.biome": "Biome: %s",
-  "jei.ftbskies2aerocompanion.aeroscoop.chance": "Chance: %s"
+  "jei.ftbskies2aerocompanion.aeroscoop.chance": "Chance: %s",
+
+  "jade.ftbskies2aerocompanion.aeroscoop.no_filter": "No filter installed",
+  "jade.ftbskies2aerocompanion.aeroscoop.efficiency": "Efficiency: %s",
+  "jade.ftbskies2aerocompanion.aeroscoop.durability": "Durability: %d / %d",
+  "jade.ftbskies2aerocompanion.aeroscoop.empty_buffer": "Output buffer empty",
+  "jade.ftbskies2aerocompanion.aeroscoop.buffer_header": "Buffered output (%d items)"
 }
