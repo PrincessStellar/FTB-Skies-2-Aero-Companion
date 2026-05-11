@@ -4,6 +4,7 @@ import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshItem;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlocks;
+import dev.ftb.mods.ftbskies2aerocompanion.bucket.WoodenBucketItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.Item;
@@ -28,6 +29,11 @@ public final class ModItems {
             () -> new BlockItem(ModBlocks.AIR_FILTER.get(), new Item.Properties())
     );
 
+    public static final DeferredItem<WoodenBucketItem> WOODEN_BUCKET = ITEMS.register(
+            "wooden_bucket",
+            () -> new WoodenBucketItem(new Item.Properties().stacksTo(1))
+    );
+
     public static final Map<MeshTier, DeferredItem<MeshItem>> MESHES = new EnumMap<>(MeshTier.class);
 
     static {
@@ -35,15 +41,6 @@ public final class ModItems {
             MESHES.put(tier, FTB_ITEMS.register(tier.idSuffix(), () -> new MeshItem(tier)));
         }
     }
-
-    public static final DeferredItem<BlockItem> IRON_DUST = FTB_ITEMS.register(
-            "iron_dust", () -> new BlockItem(ModBlocks.IRON_DUST.get(), new Item.Properties()));
-    public static final DeferredItem<BlockItem> GOLD_DUST = FTB_ITEMS.register(
-            "gold_dust", () -> new BlockItem(ModBlocks.GOLD_DUST.get(), new Item.Properties()));
-    public static final DeferredItem<BlockItem> DIAMOND_DUST = FTB_ITEMS.register(
-            "diamond_dust", () -> new BlockItem(ModBlocks.DIAMOND_DUST.get(), new Item.Properties()));
-    public static final DeferredItem<BlockItem> BLAZING_DUST = FTB_ITEMS.register(
-            "blazing_dust", () -> new BlockItem(ModBlocks.BLAZING_DUST.get(), new Item.Properties()));
 
     private ModItems() {}
 

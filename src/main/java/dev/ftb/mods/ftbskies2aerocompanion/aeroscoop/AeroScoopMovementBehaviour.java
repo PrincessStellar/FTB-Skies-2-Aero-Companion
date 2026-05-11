@@ -50,7 +50,6 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
 
         ItemStack filter = filterHandler.getStackInSlot(0);
         if (filter.isEmpty()) return;
-        if (filter.isDamageableItem() && filter.getDamageValue() >= filter.getMaxDamage() - 1) return;
 
         Vec3 worldPos = context.position;
         if (worldPos == null) return;
@@ -76,8 +75,16 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
 
         if (!tier.unbreakable() && filter.isDamageableItem()) {
             int cost = AeroScoopTickLogic.durabilityCostFor(level.dimension());
-            int newDamage = Math.min(filter.getMaxDamage(), filter.getDamageValue() + cost);
-            filter.setDamageValue(newDamage);
+            int newDamage = filter.getDamageValue() + cost;
+            if (newDamage >= filter.getMaxDamage()) {
+                filterHandler.setStackInSlot(0, ItemStack.EMPTY);
+                level.playSound(null, BlockPos.containing(worldPos),
+                        net.minecraft.sounds.SoundEvents.ITEM_BREAK,
+                        net.minecraft.sounds.SoundSource.BLOCKS,
+                        0.8F, 0.8F + level.random.nextFloat() * 0.4F);
+            } else {
+                filter.setDamageValue(newDamage);
+            }
         }
 
         beData.put("Filter", filterHandler.serializeNBT(registries));

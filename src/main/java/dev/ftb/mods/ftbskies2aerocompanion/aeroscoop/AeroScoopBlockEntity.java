@@ -51,25 +51,14 @@ public class AeroScoopBlockEntity extends BlockEntity {
 
     private final OutputOnlyWrapper externalView = new OutputOnlyWrapper(outputHandler);
 
-    private BlockPos lastPolledPos;
     private int tickCounter;
 
     public AeroScoopBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.AIR_FILTER_BE.get(), pos, state);
-        this.lastPolledPos = pos;
     }
 
     public ItemStack getFilter() {
         return filterHandler.getStackInSlot(0);
-    }
-
-    public BlockPos getLastPolledPos() {
-        return lastPolledPos;
-    }
-
-    public void setLastPolledPos(BlockPos pos) {
-        this.lastPolledPos = pos;
-        setChanged();
     }
 
     public Direction getIntakeFacing() {
@@ -93,32 +82,22 @@ public class AeroScoopBlockEntity extends BlockEntity {
 
         ItemStack filter = getFilter();
         if (filter.isEmpty()) return;
-        if (filter.isDamageableItem() && filter.getDamageValue() >= filter.getMaxDamage() - 1) return;
         Direction intake = getIntakeFacing();
         if (!AeroScoopTickLogic.isIntakeClear(level, pos, intake)) return;
 
-        if (lastPolledPos != null && lastPolledPos.equals(pos)) {
-            // Stationary BE: no movement signal. Just refresh and skip.
-            lastPolledPos = pos;
+        // Stationary placement does not scoop — air must be moving past the intake.
+        // Create contraptions use AeroScoopMovementBehaviour; here we cover Sable sub-levels (ships).
+        if (!SableMovementCheck.isOnMovingShip(this)) {
             return;
         }
 
         AeroScoopRecipe recipe = AeroScoopTickLogic.pickRecipe(level, pos, filter, level.random);
-        if (recipe == null) {
-            lastPolledPos = pos;
-            return;
-        }
+        if (recipe == null) return;
 
         MeshTier tier = MeshTier.of(filter);
-        if (tier == null) {
-            lastPolledPos = pos;
-            return;
-        }
+        if (tier == null) return;
 
-        if (level.random.nextFloat() >= tier.efficiency) {
-            lastPolledPos = pos;
-            return;
-        }
+        if (level.random.nextFloat() >= tier.efficiency) return;
 
         List<ItemStack> rolled = AeroScoopTickLogic.rollResults(recipe, level.random);
         List<ItemStack> overflow = AeroScoopTickLogic.insertAll(outputHandler, rolled);
@@ -128,10 +107,18 @@ public class AeroScoopBlockEntity extends BlockEntity {
 
         if (!tier.unbreakable() && filter.isDamageableItem()) {
             int cost = AeroScoopTickLogic.durabilityCostFor(level.dimension());
-            int newDamage = Math.min(filter.getMaxDamage(), filter.getDamageValue() + cost);
-            filter.setDamageValue(newDamage);
+            int newDamage = filter.getDamageValue() + cost;
+            if (newDamage >= filter.getMaxDamage()) {
+                filterHandler.setStackInSlot(0, ItemStack.EMPTY);
+                level.playSound(null, pos,
+                        net.minecraft.sounds.SoundEvents.ITEM_BREAK,
+                        net.minecraft.sounds.SoundSource.BLOCKS,
+                        0.8F, 0.8F + level.random.nextFloat() * 0.4F);
+            } else {
+                filter.setDamageValue(newDamage);
+                syncToClients();
+            }
         }
-        lastPolledPos = pos;
         pushOutputs(level, pos, state);
         setChanged();
     }
@@ -200,10 +187,6 @@ public class AeroScoopBlockEntity extends BlockEntity {
         if (tag.contains("Output")) {
             outputHandler.deserializeNBT(registries, tag.getCompound("Output"));
         }
-        if (tag.contains("LastPolledPos")) {
-            long packed = tag.getLong("LastPolledPos");
-            lastPolledPos = BlockPos.of(packed);
-        }
         tickCounter = tag.getInt("Tick");
     }
 
@@ -212,9 +195,6 @@ public class AeroScoopBlockEntity extends BlockEntity {
         super.saveAdditional(tag, registries);
         tag.put("Filter", filterHandler.serializeNBT(registries));
         tag.put("Output", outputHandler.serializeNBT(registries));
-        if (lastPolledPos != null) {
-            tag.putLong("LastPolledPos", lastPolledPos.asLong());
-        }
         tag.putInt("Tick", tickCounter);
     }
 

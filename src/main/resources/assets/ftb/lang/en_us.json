@@ -4,10 +4,5 @@
   "item.ftb.gold_mesh": "Mechanical Gold Mesh",
   "item.ftb.diamond_mesh": "Mechanical Diamond Mesh",
   "item.ftb.blazing_mesh": "Mechanical Blazing Mesh",
-  "item.ftb.creative_mesh": "Creative Mesh",
-
-  "block.ftb.iron_dust": "Iron Dust",
-  "block.ftb.gold_dust": "Gold Dust",
-  "block.ftb.diamond_dust": "Diamond Dust",
-  "block.ftb.blazing_dust": "Blazing Dust"
+  "item.ftb.creative_mesh": "Creative Mesh"
 }

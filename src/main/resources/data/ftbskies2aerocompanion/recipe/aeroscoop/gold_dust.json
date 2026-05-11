@@ -6,19 +6,9 @@
   "biome": "ANY",
   "results": [
     {
-      "item": "ftb:gold_dust",
-      "count": 1,
-      "chance": 1.0
-    },
-    {
-      "item": "ftb:iron_dust",
-      "count": 1,
-      "chance": 0.3
-    },
-    {
       "item": "ftbstuff:dust",
       "count": 1,
-      "chance": 0.3
+      "chance": 1.0
     }
   ]
 }
