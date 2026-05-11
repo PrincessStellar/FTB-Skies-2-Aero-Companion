@@ -8,7 +8,8 @@
     "FishingRodItemMixin",
     "HomeManagerAccessor",
     "SavedTeleportManagerMixin",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "compat.bucketlib.BucketLibEnchantmentMixin"
   ],
   "client": [
     "client.FishingHookRendererMixin"
