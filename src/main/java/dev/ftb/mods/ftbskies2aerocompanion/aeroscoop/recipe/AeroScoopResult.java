@@ -28,7 +28,7 @@ public record AeroScoopResult(Item item, int count, double chance) {
     public ItemStack roll(RandomSource rng) {
         int guaranteed = (int) Math.floor(chance);
         double bonus = chance - guaranteed;
-        int multiplier = guaranteed + (rng.nextFloat() < bonus ? 1 : 0);
+        int multiplier = guaranteed + (rng.nextDouble() < bonus ? 1 : 0);
         if (multiplier <= 0) {
             return ItemStack.EMPTY;
         }

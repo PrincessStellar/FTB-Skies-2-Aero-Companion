@@ -105,11 +105,28 @@ public class AeroScoopJEICategory implements IRecipeCategory<AeroScoopRecipe> {
         if (chance >= 1.0) {
             int guaranteed = (int) Math.floor(chance);
             double bonus = chance - guaranteed;
-            if (bonus <= 0.0001) {
+            if (bonus < 1.0e-6) {
                 return guaranteed + "x";
             }
-            return String.format(Locale.ROOT, "%dx +%.0f%% bonus", guaranteed, bonus * 100.0);
+            return guaranteed + "x +" + formatPercent(bonus) + " bonus";
         }
-        return String.format(Locale.ROOT, "%.1f%%", chance * 100.0);
+        return formatPercent(chance);
+    }
+
+    private static String formatPercent(double frac) {
+        double pct = frac * 100.0;
+        String s;
+        if (pct >= 1.0) {
+            s = String.format(Locale.ROOT, "%.2f", pct);
+        } else if (pct >= 0.01) {
+            s = String.format(Locale.ROOT, "%.4f", pct);
+        } else {
+            s = String.format(Locale.ROOT, "%.6f", pct);
+        }
+        if (s.contains(".")) {
+            s = s.replaceAll("0+$", "");
+            s = s.replaceAll("\\.$", "");
+        }
+        return s + "%";
     }
 }
