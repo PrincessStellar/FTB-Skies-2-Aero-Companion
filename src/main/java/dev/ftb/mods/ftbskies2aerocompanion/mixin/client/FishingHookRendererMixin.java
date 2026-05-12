@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class FishingHookRendererMixin {
     @Unique
     private static final ResourceLocation FTBSKIES2AERO$VOID_TEXTURE =
-            FTBSkies2AeroCompanion.id("textures/entity/void_fishing_hook.png");
+            ResourceLocation.withDefaultNamespace("textures/item/ender_pearl.png");
 
     @Unique
     private static volatile RenderType ftbskies2aero$voidRenderType;

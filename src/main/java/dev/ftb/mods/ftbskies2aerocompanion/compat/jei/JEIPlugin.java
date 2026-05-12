@@ -13,10 +13,13 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.List;
 
@@ -39,9 +42,37 @@ public class JEIPlugin implements IModPlugin {
 
     private static final ResourceLocation PLUGIN_ID = FTBSkies2AeroCompanion.id("jei");
 
+    private static IJeiRuntime runtime;
+    private static VoidFishingRecipe currentVoidFishingRecipe;
+
     @Override
     public ResourceLocation getPluginUid() {
         return PLUGIN_ID;
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        runtime = jeiRuntime;
+        // Refresh the void-fishing list once the player joins a singleplayer world — that's when the
+        // integrated server's reloadable registries (with all datapack overrides) become available.
+        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingIn event) -> refreshVoidFishing());
+    }
+
+    @Override
+    public void onRuntimeUnavailable() {
+        runtime = null;
+    }
+
+    private static void refreshVoidFishing() {
+        if (runtime == null) return;
+        List<VoidFishingDrop> drops = LootTableLoader.load();
+        if (drops.isEmpty()) return;
+        VoidFishingRecipe updated = new VoidFishingRecipe(drops);
+        if (currentVoidFishingRecipe != null) {
+            runtime.getRecipeManager().hideRecipes(VOID_FISHING_TYPE, List.of(currentVoidFishingRecipe));
+        }
+        runtime.getRecipeManager().addRecipes(VOID_FISHING_TYPE, List.of(updated));
+        currentVoidFishingRecipe = updated;
     }
 
     @Override
@@ -57,7 +88,8 @@ public class JEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         List<VoidFishingDrop> drops = LootTableLoader.load();
         if (!drops.isEmpty()) {
-            registration.addRecipes(VOID_FISHING_TYPE, List.of(new VoidFishingRecipe(drops)));
+            currentVoidFishingRecipe = new VoidFishingRecipe(drops);
+            registration.addRecipes(VOID_FISHING_TYPE, List.of(currentVoidFishingRecipe));
         }
 
         if (Minecraft.getInstance().level != null) {

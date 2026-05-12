@@ -14,11 +14,12 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.JadeIds;
 import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElementHelper;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -33,6 +34,14 @@ public class AeroScoopJadePlugin implements IWailaPlugin {
         registration.registerBlockComponent(new OutputProvider(), AeroScoopBlock.class);
         registration.addConfig(FILTER_UID, true);
         registration.addConfig(OUTPUT_UID, true);
+
+        // The AeroScoop exposes its buffer as an IItemHandler capability so pipes/hoppers can extract.
+        // Jade's universal item-storage component picks that up too, producing a duplicate list — strip it.
+        registration.addTooltipCollectedCallback((box, accessor) -> {
+            if (accessor instanceof BlockAccessor ba && ba.getBlock() instanceof AeroScoopBlock) {
+                box.getTooltip().remove(JadeIds.UNIVERSAL_ITEM_STORAGE);
+            }
+        });
     }
 
     private static final class FilterProvider implements IBlockComponentProvider {
@@ -83,7 +92,8 @@ public class AeroScoopJadePlugin implements IWailaPlugin {
         @Override
         public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
             if (!(accessor.getBlockEntity() instanceof AeroScoopBlockEntity be)) return;
-            Map<ItemStack, Integer> totals = new HashMap<>();
+            // LinkedHashMap so the visible order matches first-seen slot order — prevents tick-to-tick cycling.
+            Map<ItemStack, Integer> totals = new LinkedHashMap<>();
             int totalCount = 0;
             for (int i = 0; i < be.outputHandler.getSlots(); i++) {
                 ItemStack slotStack = be.outputHandler.getStackInSlot(i);

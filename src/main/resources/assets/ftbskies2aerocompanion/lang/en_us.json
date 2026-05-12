@@ -25,5 +25,13 @@
   "jade.ftbskies2aerocompanion.aeroscoop.efficiency": "Efficiency: %s",
   "jade.ftbskies2aerocompanion.aeroscoop.durability": "Durability: %d / %d",
   "jade.ftbskies2aerocompanion.aeroscoop.empty_buffer": "Output buffer empty",
-  "jade.ftbskies2aerocompanion.aeroscoop.buffer_header": "Buffered output (%d items)"
+  "jade.ftbskies2aerocompanion.aeroscoop.buffer_header": "Buffered output (%d items)",
+
+  "ftbskies2aerocompanion.ponder.aeroscoop.header": "Scooping the skies with the AeroScoop",
+  "ftbskies2aerocompanion.ponder.aeroscoop.text_1": "The AeroScoop pulls items out of the air as it moves.",
+  "ftbskies2aerocompanion.ponder.aeroscoop.text_2": "Right-click to install a mesh filter — higher tiers scoop faster and last longer.",
+  "ftbskies2aerocompanion.ponder.aeroscoop.text_3": "By itself, sitting still, no air moves past it...",
+  "ftbskies2aerocompanion.ponder.aeroscoop.text_4": "Mount it on a moving contraption — a bearing, a windmill, or a Sable ship.",
+  "ftbskies2aerocompanion.ponder.aeroscoop.text_5": "As the contraption moves, the AeroScoop fills its internal buffer with random drops.",
+  "ftbskies2aerocompanion.ponder.aeroscoop.text_6": "Any inventory on the contraption — a chest, a vault, a barrel — receives the drops automatically."
 }

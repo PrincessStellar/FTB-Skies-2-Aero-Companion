@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
@@ -20,6 +21,9 @@ public final class ClientBootstrap {
     public static void init(IEventBus eventBus) {
         eventBus.addListener(ClientBootstrap::onClientSetup);
         eventBus.addListener(ClientBootstrap::onRegisterRenderers);
+        if (ModList.get().isLoaded("create")) {
+            AeroScoopPonderBoot.register();
+        }
     }
 
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {

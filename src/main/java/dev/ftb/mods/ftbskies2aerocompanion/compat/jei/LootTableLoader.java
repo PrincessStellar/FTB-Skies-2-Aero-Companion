@@ -4,10 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.JsonOps;
 import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -15,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Reads our void-fishing loot tables from the mod jar at runtime, expands sub-table references,
@@ -44,19 +51,54 @@ public final class LootTableLoader {
     private LootTableLoader() {}
 
     public static List<VoidFishingDrop> load() {
-        JsonObject root = readJson(ROOT);
+        Function<String, JsonObject> resolver = createResolver();
+        String rootRef = FTBSkies2AeroCompanion.MOD_ID + ":gameplay/void_fishing";
+        JsonObject root = resolver.apply(rootRef);
         if (root == null) {
-            LOGGER.warn("Void fishing loot table missing at {}", ROOT);
+            LOGGER.warn("Void fishing loot table missing for {}", rootRef);
             return List.of();
         }
         List<VoidFishingDrop> drops = new ArrayList<>();
-        walkTable(root, 1.0, "Root", List.of(), drops);
+        walkTable(root, 1.0, "Root", List.of(), drops, resolver);
         drops.sort(Comparator.comparing(VoidFishingDrop::pool)
                 .thenComparingDouble((VoidFishingDrop d) -> -d.chance()));
         return drops;
     }
 
-    private static void walkTable(JsonObject table, double parentChance, String poolName, List<ResourceLocation> biomes, List<VoidFishingDrop> out) {
+    /**
+     * Prefer the integrated server's live loot tables (so datapack overrides show up in JEI). Fall back to
+     * the jar-baked JSON when no integrated server is running — that's the JEI-startup state before any world
+     * has been entered, and also covers multiplayer where the client has no access to server-side loot tables.
+     */
+    private static Function<String, JsonObject> createResolver() {
+        Minecraft mc = Minecraft.getInstance();
+        IntegratedServer server = mc != null ? mc.getSingleplayerServer() : null;
+        if (server != null) {
+            return id -> readFromServer(server, id);
+        }
+        return id -> readJson(toResourcePath(id));
+    }
+
+    private static JsonObject readFromServer(IntegratedServer server, String id) {
+        try {
+            ResourceLocation loc = ResourceLocation.parse(id);
+            ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, loc);
+            LootTable table = server.reloadableRegistries().getLootTable(key);
+            if (table == LootTable.EMPTY) return null;
+            DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
+            return LootTable.DIRECT_CODEC.encodeStart(ops, table).result()
+                    .filter(JsonElement::isJsonObject)
+                    .map(JsonElement::getAsJsonObject)
+                    .orElse(null);
+        } catch (Exception e) {
+            LOGGER.warn("Failed reading live loot table {}", id, e);
+            return null;
+        }
+    }
+
+    private static void walkTable(JsonObject table, double parentChance, String poolName,
+                                  List<ResourceLocation> biomes, List<VoidFishingDrop> out,
+                                  Function<String, JsonObject> resolver) {
         JsonArray pools = table.getAsJsonArray("pools");
         if (pools == null) {
             return;
@@ -83,9 +125,9 @@ public final class LootTableLoader {
                 switch (type) {
                     case "minecraft:loot_table" -> {
                         String value = entry.get("value").getAsString();
-                        JsonObject sub = readJson(toResourcePath(value));
+                        JsonObject sub = resolver.apply(value);
                         if (sub != null) {
-                            walkTable(sub, entryChance, prettyPoolName(value), entryBiomes, out);
+                            walkTable(sub, entryChance, prettyPoolName(value), entryBiomes, out, resolver);
                         }
                     }
                     case "minecraft:item" -> {

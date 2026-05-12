@@ -11,6 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.List;
@@ -28,13 +30,6 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
         if (context.world.isClientSide) return;
         if (context.disabled) return;
 
-        int tick = context.data.getInt(TICK_KEY) + 1;
-        if (tick < 20) {
-            context.data.putInt(TICK_KEY, tick);
-            return;
-        }
-        context.data.putInt(TICK_KEY, 0);
-
         Level level = context.world;
         HolderLookup.Provider registries = level.registryAccess();
         CompoundTag beData = context.blockEntityData != null ? context.blockEntityData : new CompoundTag();
@@ -48,23 +43,60 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
             outputHandler.deserializeNBT(registries, beData.getCompound("Output"));
         }
 
+        boolean dirty = pushToContraption(context, outputHandler);
+
+        int tick = context.data.getInt(TICK_KEY) + 1;
+        if (tick < 20) {
+            context.data.putInt(TICK_KEY, tick);
+            if (dirty) {
+                beData.put("Output", outputHandler.serializeNBT(registries));
+                context.blockEntityData = beData;
+            }
+            return;
+        }
+        context.data.putInt(TICK_KEY, 0);
+
         ItemStack filter = filterHandler.getStackInSlot(0);
-        if (filter.isEmpty()) return;
+        if (filter.isEmpty()) {
+            if (dirty) {
+                beData.put("Output", outputHandler.serializeNBT(registries));
+                context.blockEntityData = beData;
+            }
+            return;
+        }
 
         Vec3 worldPos = context.position;
         if (worldPos == null) return;
         BlockPos pos = BlockPos.containing(worldPos);
 
         Direction intake = rotatedFacing(context);
-        if (!AeroScoopTickLogic.isIntakeClear(level, pos, intake)) return;
+        if (!AeroScoopTickLogic.isIntakeClear(level, pos, intake)) {
+            if (dirty) {
+                beData.put("Output", outputHandler.serializeNBT(registries));
+                context.blockEntityData = beData;
+            }
+            return;
+        }
 
         AeroScoopRecipe recipe = AeroScoopTickLogic.pickRecipe(level, pos, filter, level.random);
-        if (recipe == null) return;
+        if (recipe == null) {
+            if (dirty) {
+                beData.put("Output", outputHandler.serializeNBT(registries));
+                context.blockEntityData = beData;
+            }
+            return;
+        }
 
         MeshTier tier = MeshTier.of(filter);
         if (tier == null) return;
 
-        if (level.random.nextFloat() >= tier.efficiency) return;
+        if (level.random.nextFloat() >= tier.efficiency) {
+            if (dirty) {
+                beData.put("Output", outputHandler.serializeNBT(registries));
+                context.blockEntityData = beData;
+            }
+            return;
+        }
 
         List<ItemStack> rolled = AeroScoopTickLogic.rollResults(recipe, level.random);
         List<ItemStack> overflow = AeroScoopTickLogic.insertAll(outputHandler, rolled);
@@ -87,9 +119,30 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
             }
         }
 
+        // Push again after producing so freshly-rolled items can flow this tick instead of sitting one cycle.
+        pushToContraption(context, outputHandler);
+
         beData.put("Filter", filterHandler.serializeNBT(registries));
         beData.put("Output", outputHandler.serializeNBT(registries));
         context.blockEntityData = beData;
+    }
+
+    private static boolean pushToContraption(MovementContext context, ItemStackHandler outputHandler) {
+        if (context.contraption == null) return false;
+        IItemHandler target = context.contraption.getStorage().getAllItems();
+        if (target == null) return false;
+        boolean moved = false;
+        for (int slot = 0; slot < outputHandler.getSlots(); slot++) {
+            ItemStack stack = outputHandler.getStackInSlot(slot);
+            if (stack.isEmpty()) continue;
+            ItemStack leftover = ItemHandlerHelper.insertItemStacked(target, stack.copy(), false);
+            int delta = stack.getCount() - leftover.getCount();
+            if (delta > 0) {
+                outputHandler.extractItem(slot, delta, false);
+                moved = true;
+            }
+        }
+        return moved;
     }
 
     @Override

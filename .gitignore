@@ -34,3 +34,5 @@ runs
 !/CHANGELOG.md
 !/README.md
 !/metadata/**
+
+*.py

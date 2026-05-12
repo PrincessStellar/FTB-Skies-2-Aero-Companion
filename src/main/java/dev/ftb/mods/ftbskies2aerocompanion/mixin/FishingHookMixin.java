@@ -12,6 +12,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
@@ -182,6 +184,52 @@ public abstract class FishingHookMixin {
             return VoidFishingLootTables.FISHING;
         }
         return original;
+    }
+
+    /**
+     * Vanilla constructs the loot ItemEntity at {@code this.getX/Y/Z()} — i.e. the hook position, which over the void
+     * is below the player and the items end up flying along a parabola back into the abyss. Teleporting the hook to
+     * the player right before {@code retrieve} runs makes vanilla spawn the items on top of the player instead.
+     */
+    @Inject(method = "retrieve", at = @At("HEAD"))
+    private void ftbskies2aero$snapHookToPlayer(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+        if (!ftbskies2aero$voidFishing) return;
+        FishingHook self = (FishingHook) (Object) this;
+        if (self.level().isClientSide) return;
+        Player owner = getPlayerOwner();
+        if (owner == null) return;
+        self.setPos(owner.getX(), owner.getY(), owner.getZ());
+    }
+
+    /**
+     * Vanilla shoots the loot ItemEntity from the hook (down in the void) up toward the player along a parabola —
+     * over the void that means the item flies once, misses, and falls back into the abyss. For void fishing,
+     * deposit the loot directly into the player's inventory; if it doesn't fit, drop the remainder at their feet.
+     */
+    @Redirect(method = "retrieve",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))
+    private boolean ftbskies2aero$deliverLootToPlayer(Level level, Entity entity) {
+        if (!ftbskies2aero$voidFishing || !(entity instanceof ItemEntity itemEntity)) {
+            return level.addFreshEntity(entity);
+        }
+        Player owner = getPlayerOwner();
+        if (owner == null) {
+            return level.addFreshEntity(entity);
+        }
+        ItemStack stack = itemEntity.getItem();
+        owner.getInventory().add(stack);
+        if (stack.isEmpty()) {
+            level.playSound(null, owner.getX(), owner.getY(), owner.getZ(),
+                    SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
+                    0.2F, 1.5F + level.random.nextFloat() * 0.4F);
+            return true;
+        }
+        itemEntity.setItem(stack);
+        itemEntity.setPos(owner.getX(), owner.getY(), owner.getZ());
+        itemEntity.setDeltaMovement(Vec3.ZERO);
+        itemEntity.setPickUpDelay(0);
+        return level.addFreshEntity(itemEntity);
     }
 
     @Unique
