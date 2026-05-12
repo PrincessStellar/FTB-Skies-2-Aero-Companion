@@ -80,7 +80,8 @@ public class AeroScoopJEICategory implements IRecipeCategory<AeroScoopRecipe> {
             int col = idx % RESULTS_PER_ROW;
             int x = RESULT_START_X + col * RESULT_GAP;
             int y = RESULT_START_Y + row * RESULT_GAP;
-            ItemStack baseStack = new ItemStack(result.item(), Math.max(1, result.count()));
+            ItemStack baseStack = result.stack().copy();
+            baseStack.setCount(Math.max(1, result.count()));
             String chanceLine = formatChance(result.chance());
             builder.addSlot(RecipeIngredientRole.OUTPUT, x, y)
                     .addItemStack(baseStack)
