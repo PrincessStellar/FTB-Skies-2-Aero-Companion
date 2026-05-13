@@ -1,11 +1,13 @@
 package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.recipe;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModAeroRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -21,29 +23,34 @@ public final class AeroScoopRecipe implements Recipe<SingleRecipeInput> {
     public static final MapCodec<AeroScoopRecipe> CODEC = RecordCodecBuilder.mapCodec(b -> b.group(
             Ingredient.CODEC.fieldOf("mesh").forGetter(r -> r.mesh),
             BiomeCriterion.CODEC.optionalFieldOf("biome", BiomeCriterion.ANY).forGetter(r -> r.biome),
-            AeroScoopResult.CODEC.listOf().fieldOf("results").forGetter(r -> r.results)
+            AeroScoopResult.CODEC.listOf().fieldOf("results").forGetter(r -> r.results),
+            Codec.BOOL.optionalFieldOf("hidden", false).forGetter(r -> r.hidden)
     ).apply(b, AeroScoopRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AeroScoopRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC, r -> r.mesh,
             BiomeCriterion.STREAM_CODEC, r -> r.biome,
-            AeroScoopResult.STREAM_CODEC.apply(net.minecraft.network.codec.ByteBufCodecs.list()), r -> r.results,
+            AeroScoopResult.STREAM_CODEC.apply(ByteBufCodecs.list()), r -> r.results,
+            ByteBufCodecs.BOOL, r -> r.hidden,
             AeroScoopRecipe::new
     );
 
     private final Ingredient mesh;
     private final BiomeCriterion biome;
     private final List<AeroScoopResult> results;
+    private final boolean hidden;
 
-    public AeroScoopRecipe(Ingredient mesh, BiomeCriterion biome, List<AeroScoopResult> results) {
+    public AeroScoopRecipe(Ingredient mesh, BiomeCriterion biome, List<AeroScoopResult> results, boolean hidden) {
         this.mesh = mesh;
         this.biome = biome;
         this.results = List.copyOf(results);
+        this.hidden = hidden;
     }
 
     public Ingredient mesh() { return mesh; }
     public BiomeCriterion biome() { return biome; }
     public List<AeroScoopResult> results() { return results; }
+    public boolean hidden() { return hidden; }
 
     public boolean matchesMesh(ItemStack stack) {
         return mesh.test(stack);

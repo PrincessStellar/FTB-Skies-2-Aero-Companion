@@ -55,12 +55,28 @@ public class JEIPlugin implements IModPlugin {
         runtime = jeiRuntime;
         // Refresh the void-fishing list once the player joins a singleplayer world — that's when the
         // integrated server's reloadable registries (with all datapack overrides) become available.
-        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingIn event) -> refreshVoidFishing());
+        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingIn event) -> {
+            refreshVoidFishing();
+            hideHiddenAeroScoopRecipes();
+        });
     }
 
     @Override
     public void onRuntimeUnavailable() {
         runtime = null;
+    }
+
+    private static void hideHiddenAeroScoopRecipes() {
+        if (runtime == null || Minecraft.getInstance().level == null) return;
+        List<AeroScoopRecipe> hidden = Minecraft.getInstance().level.getRecipeManager()
+                .getAllRecipesFor(ModAeroRecipes.AEROSCOOP_TYPE.get())
+                .stream()
+                .map(RecipeHolder::value)
+                .filter(AeroScoopRecipe::hidden)
+                .toList();
+        if (!hidden.isEmpty()) {
+            runtime.getRecipeManager().hideRecipes(AEROSCOOP_TYPE, hidden);
+        }
     }
 
     private static void refreshVoidFishing() {
@@ -104,6 +120,7 @@ public class JEIPlugin implements IModPlugin {
                     .getAllRecipesFor(ModAeroRecipes.AEROSCOOP_TYPE.get())
                     .stream()
                     .map(RecipeHolder::value)
+                    .filter(r -> !r.hidden())
                     .toList();
             registration.addRecipes(AEROSCOOP_TYPE, aeroscoops);
         }
