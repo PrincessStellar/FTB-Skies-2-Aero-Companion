@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +27,7 @@ import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 
 import java.util.List;
 
-public class AeroScoopBlockEntity extends BlockEntity {
+public class AeroScoopBlockEntity extends BlockEntity implements Clearable {
     public static final int OUTPUT_SLOTS = 9;
 
     public final ItemStackHandler filterHandler = new ItemStackHandler(1) {
@@ -152,6 +153,19 @@ public class AeroScoopBlockEntity extends BlockEntity {
             if (!s.isEmpty()) drops.add(s);
         }
         Containers.dropContents(level, pos, drops);
+        clearContent();
+    }
+
+    // Sable picks up blocks via sub-levels and calls Clearable.tryClear to take their contents.
+    // Without this, items remain in the BE's NBT and dupe. Mirrors Create PR #10352 for Item Drain.
+    @Override
+    public void clearContent() {
+        for (int i = 0; i < filterHandler.getSlots(); i++) {
+            filterHandler.setStackInSlot(i, ItemStack.EMPTY);
+        }
+        for (int i = 0; i < outputHandler.getSlots(); i++) {
+            outputHandler.setStackInSlot(i, ItemStack.EMPTY);
+        }
     }
 
     public boolean tryInsertFilter(Player player, ItemStack heldStack) {

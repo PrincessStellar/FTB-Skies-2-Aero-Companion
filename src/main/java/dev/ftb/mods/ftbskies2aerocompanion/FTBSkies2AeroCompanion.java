@@ -1,27 +1,26 @@
 package dev.ftb.mods.ftbskies2aerocompanion;
 
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.CreateIntegration;
-import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModAeroRecipes;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlockEntities;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlocks;
 import dev.ftb.mods.ftbskies2aerocompanion.bucket.ModBucketComponents;
 import dev.ftb.mods.ftbskies2aerocompanion.bucket.WoodenBucketFluidHandler;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
+import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.ModSkyboundAnchorBlocks;
+import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.SkyboundAnchorConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 @Mod(FTBSkies2AeroCompanion.MOD_ID)
 public class FTBSkies2AeroCompanion {
@@ -31,11 +30,14 @@ public class FTBSkies2AeroCompanion {
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         ModBlockEntities.register(eventBus);
+        ModSkyboundAnchorBlocks.register(eventBus);
         ModRecipes.register(eventBus);
         ModAeroRecipes.register(eventBus);
         ModBucketComponents.register(eventBus);
+        ModCreativeTabs.register(eventBus);
 
-        eventBus.addListener(FTBSkies2AeroCompanion::onBuildCreativeTabs);
+        container.registerConfig(ModConfig.Type.SERVER, SkyboundAnchorConfig.SPEC);
+
         eventBus.addListener(FTBSkies2AeroCompanion::onRegisterCapabilities);
         eventBus.addListener(FTBSkies2AeroCompanion::onCommonSetup);
 
@@ -59,17 +61,6 @@ public class FTBSkies2AeroCompanion {
                 (stack, ctx) -> new WoodenBucketFluidHandler(stack),
                 ModItems.WOODEN_BUCKET.get()
         );
-    }
-
-    private static void onBuildCreativeTabs(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(new ItemStack(ModItems.VOID_FISHING_ROD.get()));
-            event.accept(new ItemStack(ModItems.AIR_FILTER_ITEM.get()));
-            event.accept(new ItemStack(ModItems.WOODEN_BUCKET.get()));
-            for (MeshTier tier : MeshTier.values()) {
-                event.accept(new ItemStack(ModItems.MESHES.get(tier).get()));
-            }
-        }
     }
 
     public static ResourceLocation id(String path) {

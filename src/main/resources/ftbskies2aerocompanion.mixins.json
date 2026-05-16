@@ -9,7 +9,8 @@
     "HomeManagerAccessor",
     "SavedTeleportManagerMixin",
     "ServerPlayerMixin",
-    "compat.bucketlib.BucketLibEnchantmentMixin"
+    "compat.bucketlib.BucketLibEnchantmentMixin",
+    "compat.integrateddynamics.BlockEntityCableConnectableInventoryMixin"
   ],
   "client": [
     "client.FishingHookRendererMixin"

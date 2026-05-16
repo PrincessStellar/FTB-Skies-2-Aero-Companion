@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "ftbskies2aerocompanion:block/skybound_anchor/top",
+    "bottom":   "ftbskies2aerocompanion:block/skybound_anchor/top",
+    "top":      "ftbskies2aerocompanion:block/skybound_anchor/top",
+    "side":     "ftbskies2aerocompanion:block/skybound_anchor/side"
+  }
+}
