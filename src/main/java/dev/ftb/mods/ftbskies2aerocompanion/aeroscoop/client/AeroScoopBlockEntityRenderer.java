@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.AeroScoopBlock;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.AeroScoopBlockEntity;
 import net.minecraft.client.Minecraft;
@@ -32,12 +33,12 @@ public class AeroScoopBlockEntityRenderer implements BlockEntityRenderer<AeroSco
 
         // orient the mesh perpendicular to the intake face (the mesh sits inside, facing forward)
         switch (facing) {
-            case UP:    pose.mulPose(com.mojang.math.Axis.XP.rotationDegrees(90));  break;
-            case DOWN:  pose.mulPose(com.mojang.math.Axis.XP.rotationDegrees(-90)); break;
-            case NORTH:                                                              break;
-            case SOUTH: pose.mulPose(com.mojang.math.Axis.YP.rotationDegrees(180)); break;
-            case EAST:  pose.mulPose(com.mojang.math.Axis.YP.rotationDegrees(-90)); break;
-            case WEST:  pose.mulPose(com.mojang.math.Axis.YP.rotationDegrees(90));  break;
+            case UP:    pose.mulPose(Axis.XP.rotationDegrees(90));  break;
+            case DOWN:  pose.mulPose(Axis.XP.rotationDegrees(-90)); break;
+            case NORTH:                                             break;
+            case SOUTH: pose.mulPose(Axis.YP.rotationDegrees(180)); break;
+            case EAST:  pose.mulPose(Axis.YP.rotationDegrees(-90)); break;
+            case WEST:  pose.mulPose(Axis.YP.rotationDegrees(90));  break;
         }
 
         // pull the mesh inward from the intake face by ~0.18 of a block

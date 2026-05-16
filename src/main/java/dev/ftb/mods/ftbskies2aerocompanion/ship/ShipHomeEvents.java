@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion.ship;
 
 import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +50,7 @@ public final class ShipHomeEvents {
         Optional<ShipBindings.Resolved> resolved = ShipBindings.resolveAnchor(server, binding.get());
         if (resolved.isEmpty()) {
             ServerLevel overworld = server.overworld();
-            net.minecraft.core.BlockPos spawn = overworld.getSharedSpawnPos();
+            BlockPos spawn = overworld.getSharedSpawnPos();
             LOGGER.warn("[respawnEvent] FALLBACK INVOKED — anchor uuid={} could not be resolved, sending player to world spawn {} (note: in this pack, world spawn is the FTB Team Bases lobby)",
                     binding.get().shipUuid(), spawn);
             event.setDimensionTransition(new DimensionTransition(

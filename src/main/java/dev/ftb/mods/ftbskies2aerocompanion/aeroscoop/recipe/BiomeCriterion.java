@@ -3,6 +3,7 @@ package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -51,7 +52,7 @@ public sealed interface BiomeCriterion permits BiomeCriterion.Any, BiomeCriterio
         if (s.startsWith("#")) {
             ResourceLocation rl = ResourceLocation.tryParse(s.substring(1));
             if (rl == null) return DataResult.error(() -> "Invalid biome tag: " + s);
-            return DataResult.success(new Tag(TagKey.create(net.minecraft.core.registries.Registries.BIOME, rl)));
+            return DataResult.success(new Tag(TagKey.create(Registries.BIOME, rl)));
         }
         ResourceLocation rl = ResourceLocation.tryParse(s);
         if (rl == null) return DataResult.error(() -> "Invalid biome id: " + s);

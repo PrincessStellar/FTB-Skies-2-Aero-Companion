@@ -9,6 +9,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +24,7 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
 
@@ -112,8 +115,8 @@ public class AeroScoopBlockEntity extends BlockEntity implements Clearable {
             if (newDamage >= filter.getMaxDamage()) {
                 filterHandler.setStackInSlot(0, ItemStack.EMPTY);
                 level.playSound(null, pos,
-                        net.minecraft.sounds.SoundEvents.ITEM_BREAK,
-                        net.minecraft.sounds.SoundSource.BLOCKS,
+                        SoundEvents.ITEM_BREAK,
+                        SoundSource.BLOCKS,
                         0.8F, 0.8F + level.random.nextFloat() * 0.4F);
             } else {
                 filter.setDamageValue(newDamage);
@@ -133,7 +136,7 @@ public class AeroScoopBlockEntity extends BlockEntity implements Clearable {
                 ItemStack stack = outputHandler.getStackInSlot(slot);
                 if (stack.isEmpty()) continue;
                 ItemStack toMove = stack.copy();
-                ItemStack leftover = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(target, toMove, false);
+                ItemStack leftover = ItemHandlerHelper.insertItemStacked(target, toMove, false);
                 int moved = stack.getCount() - leftover.getCount();
                 if (moved > 0) {
                     outputHandler.extractItem(slot, moved, false);

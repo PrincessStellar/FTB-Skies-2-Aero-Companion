@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop;
 
 import com.oierbravo.createsifter.content.contraptions.components.meshes.Mesh;
+import net.minecraft.world.item.ItemStack;
 
 public class MeshItem extends Mesh {
     public final MeshTier tier;
@@ -19,12 +20,12 @@ public class MeshItem extends Mesh {
     }
 
     @Override
-    public boolean isBarVisible(net.minecraft.world.item.ItemStack stack) {
+    public boolean isBarVisible(ItemStack stack) {
         return !tier.unbreakable() && super.isBarVisible(stack);
     }
 
     @Override
-    public boolean isEnchantable(net.minecraft.world.item.ItemStack stack) {
+    public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 }

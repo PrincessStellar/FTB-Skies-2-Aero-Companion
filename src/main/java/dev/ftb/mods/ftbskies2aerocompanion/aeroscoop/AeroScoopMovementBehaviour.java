@@ -7,6 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -102,7 +105,7 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
         List<ItemStack> overflow = AeroScoopTickLogic.insertAll(outputHandler, rolled);
         for (ItemStack stack : overflow) {
             // Drop overflow at the world position of the moving scoop.
-            net.minecraft.world.Containers.dropItemStack(level, worldPos.x, worldPos.y, worldPos.z, stack);
+            Containers.dropItemStack(level, worldPos.x, worldPos.y, worldPos.z, stack);
         }
 
         if (!tier.unbreakable() && filter.isDamageableItem()) {
@@ -111,8 +114,8 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
             if (newDamage >= filter.getMaxDamage()) {
                 filterHandler.setStackInSlot(0, ItemStack.EMPTY);
                 level.playSound(null, BlockPos.containing(worldPos),
-                        net.minecraft.sounds.SoundEvents.ITEM_BREAK,
-                        net.minecraft.sounds.SoundSource.BLOCKS,
+                        SoundEvents.ITEM_BREAK,
+                        SoundSource.BLOCKS,
                         0.8F, 0.8F + level.random.nextFloat() * 0.4F);
             } else {
                 filter.setDamageValue(newDamage);
