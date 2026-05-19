@@ -10,7 +10,13 @@
     "SavedTeleportManagerMixin",
     "ServerPlayerMixin",
     "compat.bucketlib.BucketLibEnchantmentMixin",
-    "compat.integrateddynamics.BlockEntityCableConnectableInventoryMixin"
+    "compat.integrateddynamics.BlockEntityCableConnectableInventoryMixin",
+    "compat.mi.MISteamHelperMixin",
+    "compat.mi.MISteamHeaterComponentMixin",
+    "compat.mi.MIBoilerMachineBlockEntityMixin",
+    "compat.mi.MISteamWaterPumpBlockEntityMixin",
+    "compat.mi.MISingleBlockCraftingMachinesMixin",
+    "compat.mi.MIEuProductionMapBuilderMixin"
   ],
   "client": [
     "client.FishingHookRendererMixin"
