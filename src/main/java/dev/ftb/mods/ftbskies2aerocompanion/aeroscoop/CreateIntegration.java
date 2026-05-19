@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop;
 
+import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import net.neoforged.fml.ModList;
 import org.slf4j.Logger;
@@ -17,9 +18,10 @@ public final class CreateIntegration {
         }
         try {
             MovementBehaviour.REGISTRY.register(ModBlocks.AIR_FILTER.get(), new AeroScoopMovementBehaviour());
-            LOGGER.info("Registered AeroScoop MovementBehaviour for Create contraptions.");
+            MovingInteractionBehaviour.REGISTRY.register(ModBlocks.AIR_FILTER.get(), new AeroScoopMovingInteraction());
+            LOGGER.info("Registered AeroScoop MovementBehaviour and MovingInteractionBehaviour for Create contraptions.");
         } catch (Throwable t) {
-            LOGGER.error("Failed to register AeroScoop MovementBehaviour", t);
+            LOGGER.error("Failed to register AeroScoop Create integrations", t);
         }
     }
 }
