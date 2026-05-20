@@ -32,7 +32,6 @@ public final class AeroScoopScenes {
         BlockPos chassisPos = util.grid().at(2, 2, 2);
         BlockPos chestPos = util.grid().at(3, 2, 2);
 
-        // --- 1. Introduce the AeroScoop alone ---
         scene.world().showSection(util.select().position(aeroScoopPos), Direction.DOWN);
         scene.idle(15);
         scene.overlay().showText(70)
@@ -42,7 +41,6 @@ public final class AeroScoopScenes {
                 .text("The AeroScoop pulls items out of the air as it moves.");
         scene.idle(80);
 
-        // --- 2. Mesh filter install ---
         ItemStack mesh = new ItemStack(ModItems.MESHES.get(MeshTier.CLOTH).get());
         scene.overlay().showControls(util.vector().topOf(aeroScoopPos), Pointing.DOWN, 60)
                 .rightClick()
@@ -56,7 +54,6 @@ public final class AeroScoopScenes {
                 .text("Right-click to install a mesh filter — higher tiers scoop faster and last longer.");
         scene.idle(90);
 
-        // --- 3. Without movement, nothing happens ---
         scene.overlay().showText(80)
                 .attachKeyFrame()
                 .placeNearTarget()
@@ -65,7 +62,6 @@ public final class AeroScoopScenes {
                 .text("By itself, sitting still, no air moves past it...");
         scene.idle(90);
 
-        // --- 4. Reveal the contraption and merge the scoop into it ---
         scene.world().hideSection(util.select().position(aeroScoopPos), Direction.UP);
         scene.idle(10);
 
@@ -83,7 +79,6 @@ public final class AeroScoopScenes {
                 .text("Mount it on a moving contraption — a bearing, a windmill, or a Sable ship.");
         scene.idle(80);
 
-        // --- 5. Spin and produce items ---
         scene.world().rotateBearing(bearingPos, 360, 120);
         scene.world().rotateSection(contraption, 0, 360, 0, 120);
         scene.idle(20);
@@ -106,7 +101,6 @@ public final class AeroScoopScenes {
         }
         scene.idle(40);
 
-        // --- 6. Items flow into the chest ---
         scene.overlay().showText(80)
                 .attachKeyFrame()
                 .placeNearTarget()

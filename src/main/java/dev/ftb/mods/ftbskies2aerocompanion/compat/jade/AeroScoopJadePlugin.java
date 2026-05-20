@@ -34,15 +34,11 @@ public class AeroScoopJadePlugin implements IWailaPlugin {
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(new FilterProvider(), AeroScoopBlock.class);
         registration.registerBlockComponent(new OutputProvider(), AeroScoopBlock.class);
-        registration.addConfig(FILTER_UID, true);
-        registration.addConfig(OUTPUT_UID, true);
 
         registration.registerEntityComponent(new AeroScoopContraptionProvider.FilterComponent(),
                 AbstractContraptionEntity.class);
         registration.registerEntityComponent(new AeroScoopContraptionProvider.OutputComponent(),
                 AbstractContraptionEntity.class);
-        registration.addConfig(AeroScoopContraptionProvider.FILTER_UID, true);
-        registration.addConfig(AeroScoopContraptionProvider.OUTPUT_UID, true);
 
         // The AeroScoop exposes its buffer as an IItemHandler capability so pipes/hoppers can extract.
         // Jade's universal item-storage component picks that up too, producing a duplicate list — strip it.

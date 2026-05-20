@@ -35,14 +35,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-/**
- * Side-agnostic walker that expands the void-fishing loot table into flat {@link VoidFishingDrop} entries.
- *
- * <p>Callers provide a resolver that maps a {@code "namespace:path"} loot-table id to its JSON representation.
- * Two resolvers are bundled: {@link #serverResolver} reads from a {@link MinecraftServer}'s live reloadable
- * registries (so datapack overrides are honoured), and {@link #jarResolver} reads the static JSON shipped
- * in the mod jar.
- */
 public final class VoidFishingDropResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(VoidFishingDropResolver.class);
     public static final String ROOT_ID = FTBSkies2AeroCompanion.MOD_ID + ":gameplay/void_fishing";

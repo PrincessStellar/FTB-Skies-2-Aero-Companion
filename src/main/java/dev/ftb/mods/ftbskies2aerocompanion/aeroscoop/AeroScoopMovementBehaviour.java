@@ -104,7 +104,6 @@ public class AeroScoopMovementBehaviour implements MovementBehaviour {
         List<ItemStack> rolled = AeroScoopTickLogic.rollResults(recipe, level.random);
         List<ItemStack> overflow = AeroScoopTickLogic.insertAll(outputHandler, rolled);
         for (ItemStack stack : overflow) {
-            // Drop overflow at the world position of the moving scoop.
             Containers.dropItemStack(level, worldPos.x, worldPos.y, worldPos.z, stack);
         }
 

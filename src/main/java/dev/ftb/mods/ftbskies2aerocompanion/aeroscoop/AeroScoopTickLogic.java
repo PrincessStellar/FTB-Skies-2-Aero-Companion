@@ -66,9 +66,6 @@ public final class AeroScoopTickLogic {
         return 1;
     }
 
-    /**
-     * Push leftover stacks into the given handler. Anything that doesn't fit is returned.
-     */
     public static List<ItemStack> insertAll(IItemHandler handler, List<ItemStack> stacks) {
         if (stacks.isEmpty()) return Collections.emptyList();
         List<ItemStack> overflow = new ArrayList<>();

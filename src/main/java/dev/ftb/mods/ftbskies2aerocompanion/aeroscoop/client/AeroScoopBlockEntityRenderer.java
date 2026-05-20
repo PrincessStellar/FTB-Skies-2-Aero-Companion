@@ -28,10 +28,8 @@ public class AeroScoopBlockEntityRenderer implements BlockEntityRenderer<AeroSco
         Direction facing = state.hasProperty(AeroScoopBlock.FACING) ? state.getValue(AeroScoopBlock.FACING) : Direction.NORTH;
 
         pose.pushPose();
-        // center of the block
         pose.translate(0.5, 0.5, 0.5);
 
-        // orient the mesh perpendicular to the intake face (the mesh sits inside, facing forward)
         switch (facing) {
             case UP:    pose.mulPose(Axis.XP.rotationDegrees(90));  break;
             case DOWN:  pose.mulPose(Axis.XP.rotationDegrees(-90)); break;
@@ -41,9 +39,7 @@ public class AeroScoopBlockEntityRenderer implements BlockEntityRenderer<AeroSco
             case WEST:  pose.mulPose(Axis.YP.rotationDegrees(90));  break;
         }
 
-        // pull the mesh inward from the intake face by ~0.18 of a block
         pose.translate(0.0, 0.0, -0.18);
-        // scale the mesh down so it fits inside the casing
         pose.scale(0.6F, 0.6F, 0.6F);
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();

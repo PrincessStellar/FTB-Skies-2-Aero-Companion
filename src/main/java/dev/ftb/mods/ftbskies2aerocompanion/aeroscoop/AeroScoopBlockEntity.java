@@ -78,7 +78,6 @@ public class AeroScoopBlockEntity extends BlockEntity implements Clearable {
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         tickCounter++;
         if (tickCounter < 20) {
-            // try to push outputs to neighbours every tick
             pushOutputs(level, pos, state);
             return;
         }
@@ -247,7 +246,6 @@ public class AeroScoopBlockEntity extends BlockEntity implements Clearable {
 
     public static final BlockCapability<IItemHandler, Direction> OUTPUT_CAPABILITY = Capabilities.ItemHandler.BLOCK;
 
-    /** Output-only IItemHandler view: extraction allowed, insertion denied. */
     private static final class OutputOnlyWrapper extends CombinedInvWrapper {
         OutputOnlyWrapper(IItemHandlerModifiable wrapped) {
             super(wrapped);
