@@ -120,6 +120,26 @@ repositories {
 		url = "https://www.cursemaven.com"
 		content { includeGroup "curse.maven" }
 	}
+
+	maven {
+		url = "https://modmaven.dev/"
+		content { includeGroup "mekanism" }
+	}
+
+	maven {
+		url = "https://api.modrinth.com/maven"
+		content { includeGroup "maven.modrinth" }
+	}
+
+	maven {
+		url = "https://jitpack.io"
+		content { includeGroup "com.github.cech12.BucketLib" }
+	}
+
+	maven {
+		url = "https://maven.ryanhcode.dev/releases"
+		content { includeGroup "dev.ryanhcode.sable-companion" }
+	}
 }
 
 dependencies {
@@ -136,7 +156,15 @@ dependencies {
 	compileOnly "curse.maven:sable-1312371:8007005"
 	compileOnly "curse.maven:create-sifting-661938:7329807"
 	compileOnly "curse.maven:jade-324717:7545219"
-	compileOnly fileTree(dir: 'libs', include: '*.jar')
+
+	compileOnly "mekanism:Mekanism:${mekanism_version}"
+	compileOnly "maven.modrinth:modern-industrialization:${modern_industrialization_version}"
+	compileOnly "com.github.cech12.BucketLib:neoforge:${bucketlib_version}"
+	compileOnly "dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:${sable_companion_version}"
+
+	compileOnly "curse.maven:cyclops-core-232758:8006281"
+	compileOnly "curse.maven:integrated-dynamics-236307:8039124"
+	compileOnly "curse.maven:sky-archipelago-1528077:8115192"
 }
 
 tasks.register("sourcesJar", Jar) {
