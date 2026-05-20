@@ -53,12 +53,11 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         runtime = jeiRuntime;
-        // Refresh the void-fishing list once the player joins a singleplayer world — that's when the
-        // integrated server's reloadable registries (with all datapack overrides) become available.
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingIn event) -> {
             refreshVoidFishing();
             hideHiddenAeroScoopRecipes();
         });
+        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> LootTableLoader.clearSyncedDrops());
     }
 
     @Override
@@ -79,7 +78,7 @@ public class JEIPlugin implements IModPlugin {
         }
     }
 
-    private static void refreshVoidFishing() {
+    static void refreshVoidFishing() {
         if (runtime == null) return;
         List<VoidFishingDrop> drops = LootTableLoader.load();
         if (drops.isEmpty()) return;

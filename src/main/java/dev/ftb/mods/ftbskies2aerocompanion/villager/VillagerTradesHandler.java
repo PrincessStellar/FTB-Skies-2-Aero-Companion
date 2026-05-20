@@ -21,18 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Pack-specific villager trade adjustments. Ported from the previous KubeJS
- * {@code villager_trades.js} so the pack can drop its MoreJS dependency.
- *
- * <p>Covers four cases:
- * <ul>
- *   <li>Vanilla cartographer treasure-map trades (crash-prone) → replaced with a hang glider trade.</li>
- *   <li>Roots {@code silver_ingot} trades (item not present in this pack) → removed everywhere.</li>
- *   <li>Modern Industrialization {@code industrialist} levels 1-4 → MI ingots/gears swapped for FTB Materials equivalents.</li>
- *   <li>AE2 {@code fluix_researcher} level 2 → the vanilla emerald trade is replaced with two AE2-flavoured ones.</li>
- * </ul>
- */
 @EventBusSubscriber(modid = FTBSkies2AeroCompanion.MOD_ID)
 public final class VillagerTradesHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(VillagerTradesHandler.class);
@@ -119,8 +107,6 @@ public final class VillagerTradesHandler {
         }
     }
 
-    // -- listing factories --
-
     private static ItemListing itemsForEmeralds(String outputId, int outputCount, int emeraldCost, int maxUses, int xp) {
         return new VillagerTrades.ItemsForEmeralds(lookup(outputId), emeraldCost, outputCount, maxUses, xp);
     }
@@ -136,8 +122,6 @@ public final class VillagerTradesHandler {
         }
         return item;
     }
-
-    // -- match helpers --
 
     private static boolean outputMatches(ItemListing listing, String id) {
         ItemStack out = probeOutput(listing);
