@@ -4,11 +4,15 @@ import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.CreateIntegration;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModAeroRecipes;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlockEntities;
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.ModBlocks;
+import dev.ftb.mods.ftbskies2aerocompanion.basebuffer.BaseExclusionConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.bucket.ModBucketComponents;
 import dev.ftb.mods.ftbskies2aerocompanion.bucket.WoodenBucketFluidHandler;
+import dev.ftb.mods.ftbskies2aerocompanion.client.ClientBootstrap;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
+import dev.ftb.mods.ftbskies2aerocompanion.network.ModPayloads;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.ModSkyboundAnchorBlocks;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.SkyboundAnchorConfig;
+import dev.ftb.mods.ftbskies2aerocompanion.worldgen.registry.ModFeatures;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import net.minecraft.resources.ResourceLocation;
 
@@ -21,6 +25,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(FTBSkies2AeroCompanion.MOD_ID)
 public class FTBSkies2AeroCompanion {
@@ -35,14 +40,19 @@ public class FTBSkies2AeroCompanion {
         ModAeroRecipes.register(eventBus);
         ModBucketComponents.register(eventBus);
         ModCreativeTabs.register(eventBus);
+        ModFeatures.register(eventBus);
 
         container.registerConfig(ModConfig.Type.SERVER, SkyboundAnchorConfig.SPEC);
+        container.registerConfig(ModConfig.Type.SERVER, BaseExclusionConfig.SPEC, "ftbskies2aerocompanion-base-exclusion.toml");
 
         eventBus.addListener(FTBSkies2AeroCompanion::onRegisterCapabilities);
         eventBus.addListener(FTBSkies2AeroCompanion::onCommonSetup);
+        eventBus.addListener(ModPayloads::register);
+
+        NeoForge.EVENT_BUS.addListener(ModPayloads::onPlayerLoggedIn);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            dev.ftb.mods.ftbskies2aerocompanion.client.ClientBootstrap.init(eventBus);
+            ClientBootstrap.init(eventBus);
         }
     }
 
