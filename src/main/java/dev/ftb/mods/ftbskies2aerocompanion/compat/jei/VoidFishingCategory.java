@@ -80,8 +80,10 @@ public class VoidFishingCategory implements IRecipeCategory<VoidFishingRecipe> {
         tooltip.add(Component.empty());
         tooltip.add(Component.translatable("jei.ftbskies2aerocompanion.void_fishing.pool", drop.pool())
                 .withStyle(ChatFormatting.AQUA));
-        tooltip.add(Component.translatable("jei.ftbskies2aerocompanion.void_fishing.weight", drop.weight())
-                .withStyle(ChatFormatting.GRAY));
+        if (drop.weight() > 0) {
+            tooltip.add(Component.translatable("jei.ftbskies2aerocompanion.void_fishing.weight", drop.weight())
+                    .withStyle(ChatFormatting.GRAY));
+        }
         tooltip.add(Component.translatable("jei.ftbskies2aerocompanion.void_fishing.chance",
                         String.format("%.2f", drop.chance() * 100.0))
                 .withStyle(ChatFormatting.GRAY));

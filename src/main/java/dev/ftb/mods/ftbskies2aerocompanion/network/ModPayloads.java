@@ -27,7 +27,7 @@ public final class ModPayloads {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         MinecraftServer server = player.getServer();
         if (server == null) return;
-        List<VoidFishingDrop> drops = VoidFishingDropResolver.resolve(VoidFishingDropResolver.serverResolver(server));
+        List<VoidFishingDrop> drops = VoidFishingDropResolver.resolveAll(server);
         if (drops.isEmpty()) return;
         PacketDistributor.sendToPlayer(player, new SyncVoidFishingDropsPayload(drops));
     }

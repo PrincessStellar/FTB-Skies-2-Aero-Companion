@@ -18,7 +18,7 @@ public final class LootTableLoader {
         }
         IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
         if (server != null) {
-            return VoidFishingDropResolver.resolve(VoidFishingDropResolver.serverResolver(server));
+            return VoidFishingDropResolver.resolveAll(server);
         }
         return VoidFishingDropResolver.resolve(VoidFishingDropResolver.jarResolver());
     }

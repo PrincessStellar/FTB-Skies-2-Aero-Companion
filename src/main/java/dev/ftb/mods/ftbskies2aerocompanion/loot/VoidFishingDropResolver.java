@@ -54,6 +54,14 @@ public final class VoidFishingDropResolver {
         return drops;
     }
 
+    public static List<VoidFishingDrop> resolveAll(MinecraftServer server) {
+        List<VoidFishingDrop> drops = new ArrayList<>(resolve(serverResolver(server)));
+        drops.addAll(PBBeeFishingDrops.resolve(server));
+        drops.sort(Comparator.comparing(VoidFishingDrop::pool)
+                .thenComparingDouble((VoidFishingDrop d) -> -d.chance()));
+        return drops;
+    }
+
     public static Function<String, JsonObject> serverResolver(MinecraftServer server) {
         DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, server.registryAccess());
         return id -> {

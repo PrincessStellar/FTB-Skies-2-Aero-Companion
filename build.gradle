@@ -165,6 +165,7 @@ dependencies {
 	compileOnly "curse.maven:cyclops-core-232758:8006281"
 	compileOnly "curse.maven:integrated-dynamics-236307:8039124"
 	compileOnly "curse.maven:sky-archipelago-1528077:8115192"
+	compileOnly "curse.maven:productivebees-377897:8022994"
 }
 
 tasks.register("sourcesJar", Jar) {
