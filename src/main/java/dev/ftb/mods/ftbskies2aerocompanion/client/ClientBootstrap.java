@@ -7,8 +7,10 @@ import dev.ftb.mods.ftbskies2aerocompanion.bucket.ModBucketComponents;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -32,22 +34,24 @@ public final class ClientBootstrap {
 
     private static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ItemProperties.register(
-                    ModItems.VOID_FISHING_ROD.get(),
-                    FTBSkies2AeroCompanion.id("cast"),
-                    (ClampedItemPropertyFunction) (stack, level, entity, seed) -> {
-                        if (entity == null) {
-                            return 0.0F;
-                        }
-                        boolean mainHand = entity.getMainHandItem() == stack;
-                        boolean offHand = entity.getOffhandItem() == stack;
-                        if (entity.getMainHandItem().getItem() instanceof FishingRodItem) {
-                            offHand = false;
-                        }
-                        Player player = entity instanceof Player p ? p : null;
-                        return (mainHand || offHand) && player != null && player.fishing != null ? 1.0F : 0.0F;
-                    }
-            );
+            ResourceLocation castId = FTBSkies2AeroCompanion.id("cast");
+            ClampedItemPropertyFunction castFn = (stack, level, entity, seed) -> {
+                if (entity == null) {
+                    return 0.0F;
+                }
+                boolean mainHand = entity.getMainHandItem() == stack;
+                boolean offHand = entity.getOffhandItem() == stack;
+                if (entity.getMainHandItem().getItem() instanceof FishingRodItem) {
+                    offHand = false;
+                }
+                Player player = entity instanceof Player p ? p : null;
+                return (mainHand || offHand) && player != null && player.fishing != null ? 1.0F : 0.0F;
+            };
+            ItemProperties.register(ModItems.VOID_FISHING_ROD.get(), castId, castFn);
+            for (var rod : ModItems.TIERED_VOID_FISHING_RODS.values()) {
+                Item item = rod.get();
+                ItemProperties.register(item, castId, castFn);
+            }
 
             ItemProperties.register(
                     ModItems.WOODEN_BUCKET.get(),

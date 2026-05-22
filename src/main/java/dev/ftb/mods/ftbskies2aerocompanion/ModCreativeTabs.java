@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbskies2aerocompanion;
 
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
+import dev.ftb.mods.ftbskies2aerocompanion.item.VoidFishingRodTier;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.ModSkyboundAnchorBlocks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -22,6 +23,9 @@ public final class ModCreativeTabs {
                     .icon(() -> new ItemStack(ModSkyboundAnchorBlocks.SKYBOUND_ANCHOR_ITEM.get()))
                     .displayItems((params, output) -> {
                         output.accept(ModItems.VOID_FISHING_ROD.get());
+                        for (VoidFishingRodTier tier : VoidFishingRodTier.values()) {
+                            output.accept(ModItems.TIERED_VOID_FISHING_RODS.get(tier).get());
+                        }
                         output.accept(ModItems.AIR_FILTER_ITEM.get());
                         output.accept(ModSkyboundAnchorBlocks.SKYBOUND_ANCHOR_ITEM.get());
                         output.accept(ModItems.WOODEN_BUCKET.get());

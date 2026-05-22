@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,10 +27,18 @@ public abstract class FishingRodItemMixin {
                                          @Local(argsOnly = true) Player user,
                                          @Local(argsOnly = true) InteractionHand hand) {
         if (sound == SoundEvents.FISHING_BOBBER_THROW
-                && user.getItemInHand(hand).is(ModItems.VOID_FISHING_ROD.get())) {
+                && ftbskies2aero$isAnyVoidRod(user.getItemInHand(hand))) {
             level.playSound(null, x, y, z, SoundEvents.WIND_CHARGE_THROW, src, vol, 0.65F);
         } else {
             op.call(level, target, x, y, z, sound, src, vol, pitch);
         }
+    }
+
+    private static boolean ftbskies2aero$isAnyVoidRod(ItemStack stack) {
+        if (stack.is(ModItems.VOID_FISHING_ROD.get())) return true;
+        for (var rod : ModItems.TIERED_VOID_FISHING_RODS.values()) {
+            if (stack.is(rod.get())) return true;
+        }
+        return false;
     }
 }

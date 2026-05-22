@@ -128,6 +128,9 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModItems.VOID_FISHING_ROD.get()), VOID_FISHING_TYPE);
+        for (var rod : ModItems.TIERED_VOID_FISHING_RODS.values()) {
+            registration.addRecipeCatalyst(new ItemStack(rod.get()), VOID_FISHING_TYPE);
+        }
 
         if (Minecraft.getInstance().level != null) {
             Minecraft.getInstance().level.getRecipeManager()

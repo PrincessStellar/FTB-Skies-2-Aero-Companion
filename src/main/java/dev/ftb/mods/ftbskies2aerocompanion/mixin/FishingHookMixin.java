@@ -234,9 +234,17 @@ public abstract class FishingHookMixin {
 
     @Unique
     private static boolean ftbskies2aero$ownerWieldsVoidRod(Player owner) {
-        ItemStack main = owner.getMainHandItem();
-        ItemStack off = owner.getOffhandItem();
-        return main.is(ModItems.VOID_FISHING_ROD.get()) || off.is(ModItems.VOID_FISHING_ROD.get());
+        return ftbskies2aero$isAnyVoidRod(owner.getMainHandItem())
+                || ftbskies2aero$isAnyVoidRod(owner.getOffhandItem());
+    }
+
+    @Unique
+    private static boolean ftbskies2aero$isAnyVoidRod(ItemStack stack) {
+        if (stack.is(ModItems.VOID_FISHING_ROD.get())) return true;
+        for (var rod : ModItems.TIERED_VOID_FISHING_RODS.values()) {
+            if (stack.is(rod.get())) return true;
+        }
+        return false;
     }
 
     @Unique

@@ -1,0 +1,11 @@
+{
+  "type": "ftbskies2aerocompanion:void_conversion",
+  "input": "mysticalagriculture:awakened_supremium_fishing_rod",
+  "output": "ftbskies2aerocompanion:awakened_supremium_void_fishing_rod",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mysticalagriculture"
+    }
+  ]
+}

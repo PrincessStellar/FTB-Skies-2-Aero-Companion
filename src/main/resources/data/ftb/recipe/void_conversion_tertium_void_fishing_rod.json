@@ -1,0 +1,11 @@
+{
+  "type": "ftbskies2aerocompanion:void_conversion",
+  "input": "mysticalagriculture:tertium_fishing_rod",
+  "output": "ftbskies2aerocompanion:tertium_void_fishing_rod",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mysticalagriculture"
+    }
+  ]
+}

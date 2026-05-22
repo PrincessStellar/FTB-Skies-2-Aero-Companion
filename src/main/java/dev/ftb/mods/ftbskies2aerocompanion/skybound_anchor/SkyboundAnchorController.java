@@ -1,9 +1,13 @@
 package dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor;
 
+import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
 import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.physics.mass.MassData;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.joml.Matrix3dc;
 import org.joml.Quaterniondc;
 import org.joml.Vector3d;
@@ -12,6 +16,7 @@ import org.joml.Vector3dc;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@EventBusSubscriber(modid = FTBSkies2AeroCompanion.MOD_ID)
 public final class SkyboundAnchorController {
     private static final Map<ServerSubLevel, SkyboundAnchorController> INSTANCES = new ConcurrentHashMap<>();
     private static final Vector3dc WORLD_UP = new Vector3d(0.0, 1.0, 0.0);
@@ -38,6 +43,11 @@ public final class SkyboundAnchorController {
 
     static void detach(ServerSubLevel subLevel) {
         INSTANCES.remove(subLevel);
+    }
+
+    @SubscribeEvent
+    public static void onServerStopped(ServerStoppedEvent event) {
+        INSTANCES.clear();
     }
 
     public void tick(double partialPhysicsTick, RigidBodyHandle body, double dt) {

@@ -1,0 +1,14 @@
+{
+  "parent": "item/handheld_rod",
+  "textures": {
+    "layer0": "ftbskies2aerocompanion:item/awakened_supremium_void_fishing_rod"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "ftbskies2aerocompanion:cast": 1
+      },
+      "model": "ftbskies2aerocompanion:item/awakened_supremium_void_fishing_rod_cast"
+    }
+  ]
+}
