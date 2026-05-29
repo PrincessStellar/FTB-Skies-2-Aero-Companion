@@ -80,9 +80,17 @@ public abstract class SavedTeleportManagerMixin {
     }
 
     @Unique
+    private static final UUID ftbskies2aero$WARP_OWNER = new UUID(0L, 0L);
+
+    @Unique
     private UUID ftbskies2aero$ownerUuid() {
         Object self = this;
-        if (!(self instanceof SavedTeleportManager.HomeManager hm)) return null;
-        return ((HomeManagerAccessor) hm).ftbskies2aero$getPlayerData().getUuid();
+        if (self instanceof SavedTeleportManager.HomeManager hm) {
+            return ((HomeManagerAccessor) hm).ftbskies2aero$getPlayerData().getUuid();
+        }
+        if (self instanceof SavedTeleportManager.WarpManager) {
+            return ftbskies2aero$WARP_OWNER;
+        }
+        return null;
     }
 }

@@ -9,17 +9,23 @@
     "HomeManagerAccessor",
     "SavedTeleportManagerMixin",
     "ServerPlayerMixin",
+    "TeleportPosShipMixin",
     "compat.bucketlib.BucketLibEnchantmentMixin",
     "compat.integrateddynamics.BlockEntityCableConnectableInventoryMixin",
+    "compat.integrateddynamics.VoxelShapeComponentsSubLevelMixin",
+    "compat.jade.BlockAccessorImplSubLevelMixin",
+    "compat.sable.SubLevelAssemblyHelperCableNetworkMixin",
     "compat.mi.MISteamHelperMixin",
     "compat.mi.MISteamHeaterComponentMixin",
     "compat.mi.MIBoilerMachineBlockEntityMixin",
     "compat.mi.MISteamWaterPumpBlockEntityMixin",
     "compat.mi.MISingleBlockCraftingMachinesMixin",
-    "compat.mi.MIEuProductionMapBuilderMixin"
+    "compat.mi.MIEuProductionMapBuilderMixin",
+    "compat.sg_economy.SGEconomyServerConfigMixin"
   ],
   "client": [
-    "client.FishingHookRendererMixin"
+    "client.FishingHookRendererMixin",
+    "compat.tropicraft.CocktailItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

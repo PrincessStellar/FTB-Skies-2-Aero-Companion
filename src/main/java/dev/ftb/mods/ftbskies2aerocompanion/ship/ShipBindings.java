@@ -140,7 +140,9 @@ public final class ShipBindings {
     public static Optional<TeleportPos> resolve(MinecraftServer server, ShipBinding binding) {
         return resolveAnchor(server, binding).map(r -> {
             ServerLevel level = server.getLevel(binding.shipDimension());
-            return new TeleportPos(level.dimension(), BlockPos.containing(r.worldPos()), r.yaw(), r.pitch());
+            TeleportPos pos = new TeleportPos(level.dimension(), BlockPos.containing(r.worldPos()), r.yaw(), r.pitch());
+            ((ShipBoundTeleport) (Object) pos).ftbskies2aero$setBinding(binding);
+            return pos;
         });
     }
 
