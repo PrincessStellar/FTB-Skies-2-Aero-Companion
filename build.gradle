@@ -166,6 +166,7 @@ dependencies {
 	compileOnly "curse.maven:integrated-dynamics-236307:8039124"
 	compileOnly "curse.maven:sky-archipelago-1528077:8115192"
 	compileOnly "curse.maven:productivebees-377897:8022994"
+	compileOnly "maven.modrinth:enderio:v8.2.10-beta"
 }
 
 tasks.register("sourcesJar", Jar) {
