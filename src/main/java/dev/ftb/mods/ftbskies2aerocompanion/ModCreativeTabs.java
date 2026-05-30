@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion;
 
 import dev.ftb.mods.ftbskies2aerocompanion.aeroscoop.MeshTier;
+import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddon;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.item.VoidFishingRodTier;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.ModSkyboundAnchorBlocks;
@@ -32,6 +33,7 @@ public final class ModCreativeTabs {
                         for (MeshTier tier : MeshTier.values()) {
                             output.accept(ModItems.MESHES.get(tier).get());
                         }
+                        CnaAddon.addToCreativeTab(output);
                     })
                     .build()
     );

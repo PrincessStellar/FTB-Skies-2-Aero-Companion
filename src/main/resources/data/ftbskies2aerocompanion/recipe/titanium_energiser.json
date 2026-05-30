@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SES",
+    " R ",
+    " R "
+  ],
+  "key": {
+    "S": {
+      "item": "ftbskies2aerocompanion:overcharged_titanium_sheet"
+    },
+    "E": {
+      "item": "ftbskies2aerocompanion:platinum_energiser"
+    },
+    "R": {
+      "item": "minecraft:lightning_rod"
+    }
+  },
+  "result": {
+    "id": "ftbskies2aerocompanion:titanium_energiser",
+    "count": 1
+  }
+}

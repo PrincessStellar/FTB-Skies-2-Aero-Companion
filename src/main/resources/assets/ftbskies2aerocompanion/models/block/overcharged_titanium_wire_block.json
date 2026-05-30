@@ -1,0 +1,6 @@
+{
+  "parent": "create_new_age:block/wire_block",
+  "textures": {
+    "0": "ftbskies2aerocompanion:block/overcharged_titanium_wire_block"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "create_new_age:energising",
+  "energy_needed": 64000,
+  "ingredients": [
+    {
+      "tag": "c:plates/titanium"
+    }
+  ],
+  "results": [
+    {
+      "id": "ftbskies2aerocompanion:overcharged_titanium_sheet"
+    }
+  ]
+}

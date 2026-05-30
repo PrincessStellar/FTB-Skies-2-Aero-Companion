@@ -1,0 +1,15 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "ftbskies2aerocompanion:overcharged_platinum_sheet"
+    }
+  ],
+  "processing_time": 100,
+  "results": [
+    {
+      "count": 4,
+      "id": "ftbskies2aerocompanion:overcharged_platinum_wire"
+    }
+  ]
+}

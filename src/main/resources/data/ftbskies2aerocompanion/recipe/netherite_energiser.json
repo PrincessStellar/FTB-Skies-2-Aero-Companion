@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SES",
+    " R ",
+    " R "
+  ],
+  "key": {
+    "S": {
+      "item": "ftbskies2aerocompanion:overcharged_netherite_sheet"
+    },
+    "E": {
+      "item": "create_new_age:reinforced_energiser"
+    },
+    "R": {
+      "item": "minecraft:lightning_rod"
+    }
+  },
+  "result": {
+    "id": "ftbskies2aerocompanion:netherite_energiser",
+    "count": 1
+  }
+}
