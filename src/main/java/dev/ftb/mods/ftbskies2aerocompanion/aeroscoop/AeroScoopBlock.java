@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop;
 
 import com.mojang.serialization.MapCodec;
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class AeroScoopBlock extends DirectionalBlock implements EntityBlock {
+public class AeroScoopBlock extends DirectionalBlock implements EntityBlock, IWrenchable {
     public static final MapCodec<AeroScoopBlock> CODEC = simpleCodec(AeroScoopBlock::new);
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
@@ -46,7 +47,7 @@ public class AeroScoopBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return defaultBlockState().setValue(FACING, ctx.getNearestLookingDirection().getOpposite());
+        return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
     @Override
