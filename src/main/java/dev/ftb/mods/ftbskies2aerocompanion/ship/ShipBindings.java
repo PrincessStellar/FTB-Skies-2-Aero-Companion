@@ -1,7 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.ship;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import dev.ftb.mods.ftbessentials.util.TeleportPos;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
@@ -135,22 +134,6 @@ public final class ShipBindings {
         LOGGER.warn("[resolveAnchor] anchor uuid={} unresolved (sub-level missing from active container, holding chunk map, and AbstractContraption) — caller will use world-spawn fallback",
                 binding.shipUuid());
         return Optional.empty();
-    }
-
-    public static Optional<TeleportPos> resolve(MinecraftServer server, ShipBinding binding) {
-        return resolveAnchor(server, binding).map(r -> {
-            ServerLevel level = server.getLevel(binding.shipDimension());
-            TeleportPos pos = new TeleportPos(level.dimension(), BlockPos.containing(r.worldPos()), r.yaw(), r.pitch());
-            ((ShipBoundTeleport) (Object) pos).ftbskies2aero$setBinding(binding);
-            return pos;
-        });
-    }
-
-    public static TeleportPos worldSpawnFallback(MinecraftServer server) {
-        ServerLevel overworld = server.overworld();
-        BlockPos spawn = overworld.getSharedSpawnPos();
-        ensureChunkLoaded(overworld, spawn);
-        return new TeleportPos(overworld.dimension(), spawn, 0f, 0f);
     }
 
     public static void ensureChunkLoaded(ServerLevel level, BlockPos pos) {

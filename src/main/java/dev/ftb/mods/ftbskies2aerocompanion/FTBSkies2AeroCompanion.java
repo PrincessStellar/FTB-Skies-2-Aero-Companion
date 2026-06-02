@@ -12,6 +12,7 @@ import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddon;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddonConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.network.ModPayloads;
+import dev.ftb.mods.ftbskies2aerocompanion.ship.ShipSavedTeleportHooks;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.ModSkyboundAnchorBlocks;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.SkyboundAnchorConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.registry.ModFeatures;
@@ -62,6 +63,7 @@ public class FTBSkies2AeroCompanion {
 
     private static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(CreateIntegration::register);
+        ShipSavedTeleportHooks.register();
     }
 
     private static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {

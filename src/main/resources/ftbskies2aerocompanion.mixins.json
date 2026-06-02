@@ -6,8 +6,6 @@
   "mixins": [
     "FishingHookMixin",
     "FishingRodItemMixin",
-    "HomeManagerAccessor",
-    "SavedTeleportManagerMixin",
     "ServerPlayerMixin",
     "TeleportPosShipMixin",
     "compat.bucketlib.BucketLibEnchantmentMixin",

@@ -1,5 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.mixin;
 
+import dev.ftb.mods.ftbessentials.api.TeleportResult;
 import dev.ftb.mods.ftbessentials.util.TeleportPos;
 import dev.ftb.mods.ftbskies2aerocompanion.ship.ShipBinding;
 import dev.ftb.mods.ftbskies2aerocompanion.ship.ShipBindings;
@@ -26,10 +27,12 @@ import java.util.Optional;
  * floor). When a binding is present the virtual {@code teleport} resolves the current ship
  * position and places precisely.
  *
- * <p>Bindings come from two sources: destinations the player saved on a ship (homes/warps,
- * set explicitly via {@link ShipBoundTeleport}) and any {@code TeleportPos(Entity)} built
- * from an entity standing on a ship — the latter transparently covers {@code /tpa},
- * {@code /tpahere}, {@code /tpaccept} and {@code /back}, which target a live entity.
+ * <p>This is the thin mixin retained until FTBE's {@code TeleportImmediateEvent} is made
+ * result-returning (it currently uses Architectury {@code createLoop}, which discards the
+ * listener's returned {@code Outcome}, so a listener there cannot move the destination).
+ * Saved homes/warps now divert through {@code SavedTeleportEvent.PRE_TELEPORT} instead; this
+ * mixin only covers the {@code TeleportPos(Entity)} path — {@code /tpa}, {@code /tpahere},
+ * {@code /tpaccept} and {@code /back}, which target a live entity standing on a ship.
  */
 @Mixin(TeleportPos.class)
 public abstract class TeleportPosShipMixin implements ShipBoundTeleport {
@@ -56,9 +59,9 @@ public abstract class TeleportPosShipMixin implements ShipBoundTeleport {
     }
 
     @Inject(
-            method = "teleport(Lnet/minecraft/server/level/ServerPlayer;)Ldev/ftb/mods/ftbessentials/util/TeleportPos$TeleportResult;",
+            method = "teleport(Lnet/minecraft/server/level/ServerPlayer;)Ldev/ftb/mods/ftbessentials/api/TeleportResult;",
             at = @At("HEAD"), cancellable = true)
-    private void ftbskies2aero$preciseShipTeleport(ServerPlayer player, CallbackInfoReturnable<TeleportPos.TeleportResult> cir) {
+    private void ftbskies2aero$preciseShipTeleport(ServerPlayer player, CallbackInfoReturnable<TeleportResult> cir) {
         ShipBinding binding = this.ftbskies2aero$binding;
         if (binding == null) {
             return;
@@ -80,6 +83,6 @@ public abstract class TeleportPosShipMixin implements ShipBoundTeleport {
         int experienceLevel = player.experienceLevel;
         player.teleportTo(level, pos.x, pos.y, pos.z, r.yaw(), r.pitch());
         player.setExperienceLevels(experienceLevel);
-        cir.setReturnValue(TeleportPos.TeleportResult.SUCCESS);
+        cir.setReturnValue(TeleportResult.SUCCESS);
     }
 }

@@ -21,6 +21,7 @@ public class ShipHomeData extends SavedData {
 
     private final Map<UUID, ShipBinding> bedBindings = new HashMap<>();
     private final Map<UUID, Map<String, ShipBinding>> homeBindings = new HashMap<>();
+    private final Map<String, ShipBinding> warpBindings = new HashMap<>();
 
     public static void setActiveServer(@Nullable MinecraftServer server) {
         activeServer = server;
@@ -72,6 +73,21 @@ public class ShipHomeData extends SavedData {
         }
     }
 
+    public Optional<ShipBinding> getWarp(String name) {
+        return Optional.ofNullable(warpBindings.get(name));
+    }
+
+    public void setWarp(String name, ShipBinding binding) {
+        warpBindings.put(name, binding);
+        setDirty();
+    }
+
+    public void clearWarp(String name) {
+        if (warpBindings.remove(name) != null) {
+            setDirty();
+        }
+    }
+
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag beds = new ListTag();
@@ -90,6 +106,14 @@ public class ShipHomeData extends SavedData {
             homes.add(e);
         }));
         tag.put("homes", homes);
+
+        ListTag warps = new ListTag();
+        warpBindings.forEach((n, b) -> {
+            CompoundTag e = b.write();
+            e.putString("name", n);
+            warps.add(e);
+        });
+        tag.put("warps", warps);
         return tag;
     }
 
@@ -103,6 +127,10 @@ public class ShipHomeData extends SavedData {
             CompoundTag c = (CompoundTag) t;
             d.homeBindings.computeIfAbsent(c.getUUID("player"), k -> new HashMap<>())
                     .put(c.getString("name"), ShipBinding.read(c));
+        }
+        for (Tag t : tag.getList("warps", Tag.TAG_COMPOUND)) {
+            CompoundTag c = (CompoundTag) t;
+            d.warpBindings.put(c.getString("name"), ShipBinding.read(c));
         }
         return d;
     }
