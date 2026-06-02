@@ -8,7 +8,6 @@ import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddon;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.VoidConversionRecipe;
-import org.antarcticgardens.cna.content.energising.recipe.EnergisingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.recipe.RecipeType;
@@ -147,8 +146,10 @@ public class JEIPlugin implements IModPlugin {
             registration.addRecipeCatalyst(new ItemStack(ModItems.MESHES.get(tier).get()), AEROSCOOP_TYPE);
         }
 
-        RecipeType<EnergisingRecipe> energising = new RecipeType<>(
-                ResourceLocation.fromNamespaceAndPath("create_new_age", "energising"), EnergisingRecipe.class);
+        @SuppressWarnings("unchecked")
+        RecipeType<RecipeHolder<?>> energising = new RecipeType<>(
+                ResourceLocation.fromNamespaceAndPath("create_new_age", "energising"),
+                (Class<RecipeHolder<?>>) (Class<?>) RecipeHolder.class);
         for (CnaAddon.Energiser e : CnaAddon.Energiser.values()) {
             registration.addRecipeCatalyst(new ItemStack(CnaAddon.ENERGISERS.get(e).get()), energising);
         }

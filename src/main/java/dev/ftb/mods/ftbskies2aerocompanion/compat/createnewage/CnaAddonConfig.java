@@ -6,6 +6,7 @@ public final class CnaAddonConfig {
     public static final int TIER_NETHERITE = 4;
     public static final int TIER_PLATINUM = 5;
     public static final int TIER_TITANIUM = 6;
+    public static final int TIER_QUANTUM = 7;
 
     public static final ModConfigSpec SPEC;
 
@@ -20,6 +21,10 @@ public final class CnaAddonConfig {
     public static final ModConfigSpec.IntValue TITANIUM_SPEED;
     public static final ModConfigSpec.LongValue TITANIUM_CAPACITY;
     public static final ModConfigSpec.DoubleValue TITANIUM_STRESS;
+
+    public static final ModConfigSpec.IntValue QUANTUM_SPEED;
+    public static final ModConfigSpec.LongValue QUANTUM_CAPACITY;
+    public static final ModConfigSpec.DoubleValue QUANTUM_STRESS;
 
     public static final ModConfigSpec.LongValue COPPER_WIRE_CONDUCTIVITY;
     public static final ModConfigSpec.LongValue NETHERITE_WIRE_CONDUCTIVITY;
@@ -49,6 +54,12 @@ public final class CnaAddonConfig {
         TITANIUM_STRESS = b.comment("Stress impact in SU").defineInRange("stress", 256.0, 0.0, Double.MAX_VALUE);
         b.pop();
 
+        b.push("quantum");
+        QUANTUM_SPEED = b.comment("FE/t per 10 RPM").defineInRange("speed", 20_000_000, 0, Integer.MAX_VALUE);
+        QUANTUM_CAPACITY = b.comment("FE stored").defineInRange("capacity", 10_000_000_000L, 0L, Long.MAX_VALUE);
+        QUANTUM_STRESS = b.comment("Stress impact in SU").defineInRange("stress", 512.0, 0.0, Double.MAX_VALUE);
+        b.pop();
+
         b.pop();
 
         b.comment("Wire conductivity (max FE/t carried per connection before the conductivity multiplier).").push("wires");
@@ -71,6 +82,7 @@ public final class CnaAddonConfig {
             case TIER_NETHERITE -> NETHERITE_SPEED.get();
             case TIER_PLATINUM -> PLATINUM_SPEED.get();
             case TIER_TITANIUM -> TITANIUM_SPEED.get();
+            case TIER_QUANTUM -> QUANTUM_SPEED.get();
             default -> (int) Math.pow(4, tier);
         };
     }
@@ -83,6 +95,7 @@ public final class CnaAddonConfig {
             case TIER_NETHERITE -> NETHERITE_CAPACITY.get();
             case TIER_PLATINUM -> PLATINUM_CAPACITY.get();
             case TIER_TITANIUM -> TITANIUM_CAPACITY.get();
+            case TIER_QUANTUM -> QUANTUM_CAPACITY.get();
             default -> (long) (Math.pow(10, tier) * 1000);
         };
     }
@@ -95,6 +108,7 @@ public final class CnaAddonConfig {
             case TIER_NETHERITE -> NETHERITE_STRESS.get();
             case TIER_PLATINUM -> PLATINUM_STRESS.get();
             case TIER_TITANIUM -> TITANIUM_STRESS.get();
+            case TIER_QUANTUM -> QUANTUM_STRESS.get();
             default -> 32.0;
         };
     }

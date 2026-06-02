@@ -34,7 +34,8 @@ public final class CnaAddon {
     public enum Energiser {
         NETHERITE("netherite_energiser", CnaAddonConfig.TIER_NETHERITE, MapColor.COLOR_BLACK),
         PLATINUM("platinum_energiser", CnaAddonConfig.TIER_PLATINUM, MapColor.SNOW),
-        TITANIUM("titanium_energiser", CnaAddonConfig.TIER_TITANIUM, MapColor.COLOR_GRAY);
+        TITANIUM("titanium_energiser", CnaAddonConfig.TIER_TITANIUM, MapColor.COLOR_GRAY),
+        QUANTUM("quantum_energiser", CnaAddonConfig.TIER_QUANTUM, MapColor.COLOR_PURPLE);
 
         public final String id;
         public final int tier;
