@@ -75,6 +75,7 @@ public class FTBSkies2AeroCompanion {
                 (stack, ctx) -> new WoodenBucketFluidHandler(stack),
                 ModItems.WOODEN_BUCKET.get()
         );
+        CnaAddon.registerEnergyCapability(event);
     }
 
     public static ResourceLocation id(String path) {

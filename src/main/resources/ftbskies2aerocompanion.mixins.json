@@ -23,6 +23,7 @@
     "compat.jade.BlockAccessorImplSubLevelMixin",
     "compat.sable.SubLevelAssemblyHelperCableNetworkMixin",
     "compat.sable.SubLevelPlayerChunkSenderMixin",
+    "compat.sky_archipelago.ForcedIslandRegistryMixin",
     "compat.mi.MISteamHelperMixin",
     "compat.mi.MISteamHeaterComponentMixin",
     "compat.mi.MIBoilerMachineBlockEntityMixin",

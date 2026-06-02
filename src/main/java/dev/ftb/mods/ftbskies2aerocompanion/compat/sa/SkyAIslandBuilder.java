@@ -39,7 +39,12 @@ public final class SkyAIslandBuilder {
 
         int minRadius = Math.max(8, targetRadius - 2);
         int maxRadius = targetRadius + 2;
-        field.injectForcedHostIsland(center.getX(), center.getY(), center.getZ(), minRadius, maxRadius, seedTag, settings);
+        ForcedArchetypeContext.set(IslandArchetypeSelector.pick(settings, seedTag));
+        try {
+            field.injectForcedHostIsland(center.getX(), center.getY(), center.getZ(), minRadius, maxRadius, seedTag, settings);
+        } finally {
+            ForcedArchetypeContext.clear();
+        }
 
         Holder<Biome> skyBiome = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(biomeKey);
         BlockState topBlockState = BiomeSurfaceResolver.topBlock(skyBiome);

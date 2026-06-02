@@ -13,12 +13,16 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.antarcticgardens.cna.content.electricity.wire.ElectricWireItem;
 import org.antarcticgardens.cna.content.electricity.wire.WireType;
 import org.antarcticgardens.cna.content.energising.EnergisingBlockItem;
+import org.antarcticgardens.cna.content.energising.EnergiserBlockEntity;
+import org.antarcticgardens.esl.neoforge.energy.E2FEnergyStorageAdapter;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -65,6 +69,10 @@ public final class CnaAddon {
             return "overcharged_" + material + "_wire_block";
         }
 
+        public String baseId() {
+            return "overcharged_" + material;
+        }
+
         public String sheetId() {
             return "overcharged_" + material + "_sheet";
         }
@@ -75,9 +83,11 @@ public final class CnaAddon {
     }
 
     public static final Map<Energiser, DeferredBlock<AeroEnergiserBlock>> ENERGISERS = new EnumMap<>(Energiser.class);
+    public static final Map<WireMaterial, DeferredItem<Item>> BASE_ITEMS = new EnumMap<>(WireMaterial.class);
     public static final Map<WireMaterial, DeferredItem<Item>> WIRES = new EnumMap<>(WireMaterial.class);
     public static final Map<WireMaterial, DeferredBlock<RotatedPillarBlock>> WIRE_BLOCKS = new EnumMap<>(WireMaterial.class);
     public static final Map<WireMaterial, DeferredItem<Item>> SHEETS = new EnumMap<>(WireMaterial.class);
+    public static final DeferredItem<Item> DIAMOND_SHEET = ITEMS.register("overcharged_diamond_sheet", () -> new Item(new Item.Properties()));
 
     static {
         for (Energiser e : Energiser.values()) {
@@ -92,6 +102,8 @@ public final class CnaAddon {
         }
 
         for (WireMaterial m : WireMaterial.values()) {
+            BASE_ITEMS.put(m, ITEMS.register(m.baseId(), () -> new Item(new Item.Properties())));
+
             WIRES.put(m, ITEMS.register(m.wireId(), () -> makeWire(m)));
 
             DeferredBlock<RotatedPillarBlock> wireBlock = BLOCKS.register(m.wireBlockId(),
@@ -122,15 +134,28 @@ public final class CnaAddon {
         ITEMS.register(bus);
     }
 
+    public static void registerEnergyCapability(RegisterCapabilitiesEvent event) {
+        for (Energiser e : Energiser.values()) {
+            event.registerBlock(
+                    Capabilities.EnergyStorage.BLOCK,
+                    (level, pos, state, blockEntity, side) -> blockEntity instanceof EnergiserBlockEntity be
+                            ? E2FEnergyStorageAdapter.getOrCreate(be.getEnergyStorage())
+                            : null,
+                    ENERGISERS.get(e).get());
+        }
+    }
+
     public static void addToCreativeTab(CreativeModeTab.Output output) {
         for (Energiser e : Energiser.values()) {
             output.accept(ENERGISERS.get(e).get());
         }
         for (WireMaterial m : WireMaterial.values()) {
+            output.accept(BASE_ITEMS.get(m).get());
+            output.accept(SHEETS.get(m).get());
             output.accept(WIRES.get(m).get());
             output.accept(WIRE_BLOCKS.get(m).get());
-            output.accept(SHEETS.get(m).get());
         }
+        output.accept(DIAMOND_SHEET.get());
     }
 
     public static boolean isAeroWire(String wireTypeName) {
