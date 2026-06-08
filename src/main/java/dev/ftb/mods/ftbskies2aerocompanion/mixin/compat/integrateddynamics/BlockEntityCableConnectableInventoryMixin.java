@@ -21,7 +21,9 @@ import org.spongepowered.asm.mixin.Shadow;
  * delegates to the BE's own {@link SimpleInventory}, which already inherits a
  * working {@code clearContent} via {@code WorldlyContainer} → {@code Container}
  * → {@code Clearable}. One mixin covers every BE that extends this base
- * (Variablestore, DryingBasin, Squeezer, …).
+ * (Variablestore and the mechanical machines: Mechanical Squeezer, Mechanical
+ * Drying Basin, …). The manual Squeezer and Drying Basin extend
+ * {@code CyclopsBlockEntity} directly and are handled by their own mixins.
  *
  * <p>Mirrors Create PR #10352, which applied the same fix to {@code
  * ItemDrainBlockEntity} for the same Sable dupe. Remove once CyclopsMC ships

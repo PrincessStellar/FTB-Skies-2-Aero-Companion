@@ -16,6 +16,8 @@
     "compat.createnewage.WireTypeMixin",
     "compat.enderio.RedstoneConduitMixin",
     "compat.integrateddynamics.BlockEntityCableConnectableInventoryMixin",
+    "compat.integrateddynamics.BlockEntityDryingBasinMixin",
+    "compat.integrateddynamics.BlockEntitySqueezerMixin",
     "compat.integrateddynamics.StructureTemplatePlaceMixin",
     "compat.integrateddynamics.VoxelShapeComponentsSubLevelMixin",
     "compat.jade.BlockAccessorImplSubLevelMixin",
@@ -32,6 +34,7 @@
   ],
   "client": [
     "client.FishingHookRendererMixin",
+    "compat.createsifter.AbstractSifterRendererMeshFlatMixin",
     "compat.tropicraft.CocktailItemRendererMixin"
   ],
   "injectors": {

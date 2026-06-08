@@ -94,7 +94,9 @@ public class AeroScoopBlockEntity extends BlockEntity implements Clearable {
             return;
         }
 
-        AeroScoopRecipe recipe = AeroScoopTickLogic.pickRecipe(level, pos, filter, level.random);
+        BlockPos samplePos = SableMovementCheck.worldSamplePos(this, pos);
+
+        AeroScoopRecipe recipe = AeroScoopTickLogic.pickRecipe(level, samplePos, filter, level.random);
         if (recipe == null) return;
 
         MeshTier tier = MeshTier.of(filter);

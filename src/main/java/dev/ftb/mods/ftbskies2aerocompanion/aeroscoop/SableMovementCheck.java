@@ -3,7 +3,9 @@ package dev.ftb.mods.ftbskies2aerocompanion.aeroscoop;
 import dev.ryanhcode.sable.companion.SableCompanion;
 import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.Pose3dc;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import org.joml.Vector3dc;
 
@@ -29,6 +31,20 @@ public final class SableMovementCheck {
             return (dx * dx + dy * dy + dz * dz) > MOVEMENT_EPSILON_SQ;
         } catch (Throwable ignored) {
             return false;
+        }
+    }
+
+    public static BlockPos worldSamplePos(BlockEntity be, BlockPos fallback) {
+        if (!SABLE_LOADED) return fallback;
+        try {
+            SubLevelAccess sub = SableCompanion.INSTANCE.getContaining(be);
+            if (sub == null) return fallback;
+            Pose3dc pose = sub.logicalPose();
+            if (pose == null) return fallback;
+            Vec3 global = pose.transformPosition(Vec3.atCenterOf(fallback));
+            return BlockPos.containing(global);
+        } catch (Throwable ignored) {
+            return fallback;
         }
     }
 }
