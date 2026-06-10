@@ -16,11 +16,16 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @EventBusSubscriber(modid = FTBSkies2AeroCompanion.MOD_ID)
 public final class ShipHomeEvents {
     private static final Logger LOGGER = LoggerFactory.getLogger("ShipHome");
+
+    private static final Map<UUID, DimensionTransition> VANILLA_RESPAWN = new ConcurrentHashMap<>();
 
     private ShipHomeEvents() {}
 
@@ -32,6 +37,16 @@ public final class ShipHomeEvents {
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) {
         ShipHomeData.setActiveServer(null);
+        VANILLA_RESPAWN.clear();
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void captureVanillaRespawn(PlayerRespawnPositionEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.getRespawnPosition() == null) return;
+        DimensionTransition vanilla = event.getDimensionTransition();
+        if (vanilla == null) return;
+        VANILLA_RESPAWN.put(player.getUUID(), vanilla);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -46,7 +61,16 @@ public final class ShipHomeEvents {
                 event.getDimensionTransition() == null ? "null"
                         : event.getDimensionTransition().newLevel().dimension().location()
                           + "@" + event.getDimensionTransition().pos());
-        if (binding.isEmpty()) return;
+        if (binding.isEmpty()) {
+            DimensionTransition vanilla = VANILLA_RESPAWN.remove(player.getUUID());
+            if (vanilla != null) {
+                LOGGER.debug("[respawnEvent] restoring vanilla bed/anchor respawn for {} -> {}@{} (overriding lobby override)",
+                        player.getName().getString(), vanilla.newLevel().dimension().location(), vanilla.pos());
+                event.setDimensionTransition(vanilla);
+            }
+            return;
+        }
+        VANILLA_RESPAWN.remove(player.getUUID());
         Optional<ShipBindings.Resolved> resolved = ShipBindings.resolveAnchor(server, binding.get());
         if (resolved.isEmpty()) {
             ServerLevel overworld = server.overworld();

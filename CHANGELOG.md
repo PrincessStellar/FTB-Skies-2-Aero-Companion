@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.4]
+
+### Fixed
+- Blaze and Steel now actually lights Nether portals. The pack restricts portal ignition to Irregular Implements' Blaze and Steel (`NetherPortalIgnitionHandler` cancels `PortalSpawnEvent` for any other fire), but `irregular_implements:blaze_fire` was never in the `#minecraft:fire` block tag, so vanilla `PortalShape.findEmptyPortalShape` rejected the frame interior and no portal-spawn was ever attempted — the fire just sat there. Added a `#minecraft:fire` tag entry for `blaze_fire` (`required: false`), so the frame is recognized and the ignition handler allows it through.
+
+## [21.1.3]
+
+### Fixed
+- `ShipHomeEvents`: bed/respawn-anchor respawns set on the ground (not on a ship) are now honored again. FTB Team Bases rewrites every respawn to the lobby at default priority; the companion only re-asserted respawns for beds bound to a Sable sub-level, so a normal base bed was lost and the player woke at the lobby (reported as dying in the Nether returning you to spawn). A HIGHEST-priority listener now snapshots the vanilla bed/anchor transition before Team Bases overrides it, and the existing LOWEST-priority handler restores it for players with a real respawn point set. Players with no respawn point still fall through to the lobby.
+
 ## [21.1.2]
 
 ### Removed
