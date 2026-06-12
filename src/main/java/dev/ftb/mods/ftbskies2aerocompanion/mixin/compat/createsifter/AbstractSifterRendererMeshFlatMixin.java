@@ -20,9 +20,8 @@ public abstract class AbstractSifterRendererMeshFlatMixin {
     )
     private void ftbskies2$flattenMeshPush(PoseStack pose, MultiBufferSource buffer, int light, int overlay, ItemStack stack, AbstractSifterBlockEntity be, CallbackInfo ci) {
         pose.pushPose();
-        pose.translate(0.5D, 0.0D, 0.5D);
+        pose.translate(0.0D, -0.5D, 0.0D);
         pose.mulPose(Axis.XP.rotationDegrees(-90F));
-        pose.translate(-0.5D, 0.0D, -0.5D);
     }
 
     @Inject(
