@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.8]
+
+### Fixed
+- IntegratedDynamics networks now survive ship **disassembly**, not just assembly. The disassembly path (`SimAssemblyHelper.disassembleSubLevel`) is now bracketed with `setRemovingCable` and reforms the network in the parent world afterward, so parts like a steering block reader keep working after a disassemble/reassemble cycle.
+
+## [21.1.7]
+
+### Fixed
+- Breaking an IntegratedDynamics cable/part on an assembled ship no longer kicks the player. The companion now takes over the removal of ID cables on Sable sub-levels, catching the network-teardown exception that ID throws there (the dropped parts/cards are unaffected), removing the block, and reforming the remaining network.
+
+## [21.1.6]
+
+### Fixed
+- `SkyboundAnchorController`: never feed a non-finite (NaN/infinite) torque impulse into the physics engine, which could crash Sable's native Rapier library.
+
+## [21.1.5]
+
+### Added
+- `EntityCollisionGuardMixin`: skips an entity's block-collision sweep when its collision box is non-finite or over 512 blocks on any axis, preventing the server-hang crash from oversized Sable sub-level collisions.
+
 ## [21.1.4]
 
 ### Fixed
