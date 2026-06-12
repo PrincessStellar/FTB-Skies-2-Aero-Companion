@@ -76,6 +76,10 @@ public final class SkyboundAnchorController {
         currentUpWorld.cross(WORLD_UP, errorAxisWorld);
         orientation.transformInverse(errorAxisWorld, errorAxisLocal);
 
+        if (!finite(errorAxisLocal) || !finite(angularVelocityLocal) || !finite(worldUpLocal)) {
+            return;
+        }
+
         double kp = SkyboundAnchorConfig.KP.get();
         double kd = SkyboundAnchorConfig.KD.get();
         double maxAlpha = SkyboundAnchorConfig.MAX_ANGULAR_ACCELERATION.get();
@@ -93,7 +97,10 @@ public final class SkyboundAnchorController {
         restoringImpulseLocal.set(ax, ay, az);
 
         double alphaMag = restoringImpulseLocal.length();
-        if (alphaMag > maxAlpha) {
+        if (!Double.isFinite(alphaMag)) {
+            return;
+        }
+        if (alphaMag > maxAlpha && alphaMag > 0.0) {
             restoringImpulseLocal.mul(maxAlpha / alphaMag);
         }
 
@@ -101,7 +108,15 @@ public final class SkyboundAnchorController {
         inertia.transform(restoringImpulseLocal);
         restoringImpulseLocal.mul(dt);
 
+        if (!finite(restoringImpulseLocal)) {
+            return;
+        }
+
         body.applyTorqueImpulse(restoringImpulseLocal);
+    }
+
+    private static boolean finite(Vector3dc v) {
+        return Double.isFinite(v.x()) && Double.isFinite(v.y()) && Double.isFinite(v.z());
     }
 
     private boolean hasActiveAnchor() {
