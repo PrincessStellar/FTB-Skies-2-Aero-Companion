@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.12]
+
+### Fixed
+- The Integrated Dynamics Squeezer now works on Create: Aeronautics / Sable airships. When a player jumps on a squeezer that sits on a sub-level, its `updateEntityAfterFallOn` was flooring the player's world coordinates and never finding the block in the sub-level plot region. The companion now redirects those coordinate lookups into the sub-level frame (mirroring Sable's own per-block fall-on compat for Create's Basin/Saw/Seat), so jumping squeezes again. {#3877}
+
+## [21.1.11]
+
+### Fixed
+- Guarded against a client crash where a Create block entity is ticked at a position whose block is `void_air` (or air) — an orphaned block entity left behind by a Sable sub-level (airship) teardown. `SmartBlockEntity.tick` now drops the orphaned block entity instead of letting `validateBlockState` throw, and logs the position so the underlying Sable desync can still be reported. Independent of Sable version.
+
 ## [21.1.10]
 
 ### Fixed
