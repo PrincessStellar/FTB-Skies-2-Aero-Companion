@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -39,6 +40,11 @@ public class JEIPlugin implements IModPlugin {
     public static final RecipeType<AeroScoopRecipe> AEROSCOOP_TYPE = new RecipeType<>(
             ResourceLocation.fromNamespaceAndPath(FTBSkies2AeroCompanion.MOD_ID, "aeroscoop"),
             AeroScoopRecipe.class
+    );
+
+    public static final RecipeType<OreGeneratorRecipe> ORE_GENERATOR_TYPE = new RecipeType<>(
+            ResourceLocation.fromNamespaceAndPath(FTBSkies2AeroCompanion.MOD_ID, "ore_generator"),
+            OreGeneratorRecipe.class
     );
 
     private static final ResourceLocation PLUGIN_ID = FTBSkies2AeroCompanion.id("jei");
@@ -98,6 +104,9 @@ public class JEIPlugin implements IModPlugin {
                 new VoidConversionCategory(registration.getJeiHelpers().getGuiHelper()),
                 new AeroScoopJEICategory(registration.getJeiHelpers().getGuiHelper())
         );
+        if (ModList.get().isLoaded(MekanismLasersOreGen.MOD_ID)) {
+            registration.addRecipeCategories(new OreGeneratorCategory(registration.getJeiHelpers().getGuiHelper()));
+        }
     }
 
     @Override
@@ -123,6 +132,10 @@ public class JEIPlugin implements IModPlugin {
                     .filter(r -> !r.hidden())
                     .toList();
             registration.addRecipes(AEROSCOOP_TYPE, aeroscoops);
+        }
+
+        if (ModList.get().isLoaded(MekanismLasersOreGen.MOD_ID)) {
+            registration.addRecipes(ORE_GENERATOR_TYPE, MekanismLasersOreGen.buildRecipes());
         }
     }
 
@@ -152,6 +165,10 @@ public class JEIPlugin implements IModPlugin {
                 (Class<RecipeHolder<?>>) (Class<?>) RecipeHolder.class);
         for (CnaAddon.Energiser e : CnaAddon.Energiser.values()) {
             registration.addRecipeCatalyst(new ItemStack(CnaAddon.ENERGISERS.get(e).get()), energising);
+        }
+
+        if (ModList.get().isLoaded(MekanismLasersOreGen.MOD_ID)) {
+            registration.addRecipeCatalyst(MekanismLasersOreGen.oreGeneratorStack(), ORE_GENERATOR_TYPE);
         }
     }
 }

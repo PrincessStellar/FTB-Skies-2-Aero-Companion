@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.14]
+
+### Added
+- JEI support for the Mekanism Lasers Ore Generator. A new "Ore Generator" category lists every ore the generator can produce (the `#c:ores` pool minus the mod's config blacklist and `mekanism_lasers:ore_blacklist` tag), with the roll chance shown on hover. Looking up uses of the Ore Generator block shows the full list, and looking up any generated ore shows the Ore Generator as a source. Client-side only; gracefully does nothing if Mekanism Lasers isn't installed.
+
 ## [21.1.13]
 
 ### Fixed

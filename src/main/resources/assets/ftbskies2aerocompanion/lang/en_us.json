@@ -11,6 +11,8 @@
   "item.ftbskies2aerocompanion.wooden_bucket": "Wooden Bucket",
   "tooltip.ftbskies2aerocompanion.wooden_bucket.contents": "%s (%d / %d mB)",
   "tooltip.ftbskies2aerocompanion.wooden_bucket.fragile": "Fragile: %s%% chance to break when emptied",
+  "jei.ftbskies2aerocompanion.ore_generator.title": "Ore Generator",
+  "jei.ftbskies2aerocompanion.ore_generator.chance": "Chance: %s%%",
   "jei.ftbskies2aerocompanion.void_fishing.title": "Void Fishing",
   "jei.ftbskies2aerocompanion.void_fishing.pool": "Pool: %s",
   "jei.ftbskies2aerocompanion.void_fishing.weight": "Weight: %s",
