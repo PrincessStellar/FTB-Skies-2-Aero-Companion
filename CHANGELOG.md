@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.9]
+
+### Fixed
+- Fixed a `ConcurrentModificationException` during parallel mod loading: Create: New Age registers sounds into Create's shared `AllSoundEvents.ALL` map from its constructor while Create's own constructor iterates that map in `AllSoundEvents.prepare()`. A mixin now makes `prepare()` iterate a snapshot, so the race is harmless and the pack can run full mod-loading parallelism (`fml.toml` `maxThreads = -1`) without crashing.
+
 ## [21.1.8]
 
 ### Fixed

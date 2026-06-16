@@ -162,7 +162,7 @@ dependencies {
 	compileOnly "dev.architectury:architectury-neoforge:${architectury_version}"
 	compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
 	compileOnly "net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1"
-	compileOnly "curse.maven:sable-1312371:8007005"
+	compileOnly "curse.maven:sable-1312371:8242682"
 	compileOnly "curse.maven:create-sifting-661938:7329807"
 	compileOnly "curse.maven:jade-324717:7545219"
 
