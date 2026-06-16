@@ -22,6 +22,7 @@ public class ShipHomeData extends SavedData {
     private final Map<UUID, ShipBinding> bedBindings = new HashMap<>();
     private final Map<UUID, Map<String, ShipBinding>> homeBindings = new HashMap<>();
     private final Map<String, ShipBinding> warpBindings = new HashMap<>();
+    private final Map<UUID, ShipBinding> compactReturnBindings = new HashMap<>();
 
     public static void setActiveServer(@Nullable MinecraftServer server) {
         activeServer = server;
@@ -88,6 +89,21 @@ public class ShipHomeData extends SavedData {
         }
     }
 
+    public Optional<ShipBinding> getCompactReturn(UUID player) {
+        return Optional.ofNullable(compactReturnBindings.get(player));
+    }
+
+    public void setCompactReturn(UUID player, ShipBinding binding) {
+        compactReturnBindings.put(player, binding);
+        setDirty();
+    }
+
+    public void clearCompactReturn(UUID player) {
+        if (compactReturnBindings.remove(player) != null) {
+            setDirty();
+        }
+    }
+
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag beds = new ListTag();
@@ -114,6 +130,14 @@ public class ShipHomeData extends SavedData {
             warps.add(e);
         });
         tag.put("warps", warps);
+
+        ListTag compactReturns = new ListTag();
+        compactReturnBindings.forEach((uuid, b) -> {
+            CompoundTag e = b.write();
+            e.putUUID("player", uuid);
+            compactReturns.add(e);
+        });
+        tag.put("compact_returns", compactReturns);
         return tag;
     }
 
@@ -131,6 +155,10 @@ public class ShipHomeData extends SavedData {
         for (Tag t : tag.getList("warps", Tag.TAG_COMPOUND)) {
             CompoundTag c = (CompoundTag) t;
             d.warpBindings.put(c.getString("name"), ShipBinding.read(c));
+        }
+        for (Tag t : tag.getList("compact_returns", Tag.TAG_COMPOUND)) {
+            CompoundTag c = (CompoundTag) t;
+            d.compactReturnBindings.put(c.getUUID("player"), ShipBinding.read(c));
         }
         return d;
     }

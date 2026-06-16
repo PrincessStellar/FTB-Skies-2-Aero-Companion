@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.13]
+
+### Fixed
+- Entering a Compact Machine from a moving airship no longer strands you. The companion captures a ship binding when you enter a room from a sub-level (`RoomHelper.teleportPlayerIntoRoom`) and, when you leave the compact dimension back to the ship's dimension, re-ejects you onto the ship's current position instead of the stale entry coordinates — the same ship-aware teleport used for homes/warps/respawn. Persisted across logout, and falls back to the original coordinates if the ship is gone. {#3878}
+
 ## [21.1.12]
 
 ### Fixed
