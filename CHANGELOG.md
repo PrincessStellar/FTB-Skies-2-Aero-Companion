@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.10]
+
+### Fixed
+- Functional Storage drawers now work on Create: Aeronautics / Sable airship sub-levels. Two sub-level-aware mixins: depositing/extracting recomputes the clicked slot from the (already sub-level-correct) hit result instead of FS's world-space re-raytrace that misses ship geometry, and Titanium's container locator (`TileEntityLocatorInstance`) resolves the tile through the player's sub-level so the configuration GUI opens. The Titanium fix also covers other Titanium-based block GUIs on ships.
+
 ## [21.1.9]
 
 ### Fixed
