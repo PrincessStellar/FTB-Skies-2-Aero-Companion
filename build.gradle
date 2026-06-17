@@ -158,7 +158,9 @@ dependencies {
 	compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
 	localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-	compileOnly files('libs/ftb-essentials-neoforge-2101.1.9-20260602.113858-3.jar')
+	compileOnly "dev.ftb.mods:ftb-essentials-neoforge:${ftb_essentials_version}"
+	compileOnly "curse.maven:oritech-1030830:8211754"
+	compileOnly "curse.maven:ars-nouveau-401955:8262663"
 	compileOnly "dev.architectury:architectury-neoforge:${architectury_version}"
 	compileOnly("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
 	compileOnly "net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1"

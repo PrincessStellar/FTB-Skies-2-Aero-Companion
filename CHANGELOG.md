@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.18]
+
+### Added
+- GeOre island conjuring rituals, in the style of Ars Caelum's Geode island ritual. 25 new ritual tablets (registered under the `ars_caelum` namespace as `ritual_conjure_island_<ore>` and `ritual_conjure_island_nether_<ore>`) each conjure a floating island built around that ore's GeOre, using the pack's existing `ftb:geore_island/<ore>` and `ftb:geore_island_nether/<ore>` structure templates. Each `GeoreIslandRitual` extends Ars Nouveau's `StructureRitual` (10000 source, same `-8/-3/-7` offset as the vanilla geode), is registered with `RitualRegistry` at common setup, and names itself from the ritual (no lang files needed). Tablets craft from a purple archwood log, three source blocks, and the matching `geore:<ore>_cluster`, and appear in the Ars Nouveau creative tab alongside the other ritual tablets (registered into the shared `RitualRegistry` item map, the same way Ars Nouveau registers its own tablets). Overworld: aluminum, black quartz, coal, copper, gold, iron, lapis, lead, monazite, nickel, osmium, redstone, ruby, sapphire, silver, tin, topaz, uranium, zinc. Nether: ancient debris, diamond, emerald, platinum, quartz, tungsten. (Amethyst is omitted — it has no distinct artwork and duplicates the vanilla Geode ritual.)
+
+## [21.1.17]
+
+### Added
+- The Oritech Enchantment Catalyst's overenchanting is now capped. Vanilla allows enchantment levels up to 255, and the Catalyst would happily push an item that high one level at a time. A mixin on `EnchantmentCatalystBlockEntity.canProceed()` stops the process once the target item reaches a configurable ceiling (`max_overenchant_level`, default **15**, in `ftbskies2aerocompanion-oritech.toml`). Souls are not consumed past the cap. The Enchanter itself already respected each enchantment's normal max level, so only the Catalyst's overenchant path needed limiting.
+
+## [21.1.16]
+
+### Changed
+- No ores generate in the overworld anymore (Sky Archipelago islands included). A custom NeoForge biome modifier (`remove_overworld_ores`) strips every ore-type placed feature (`minecraft:ore`/`scattered_ore` whose target block is an ore) from all `#minecraft:is_overworld` biomes, so islands no longer carry ore veins. Stone/dirt/gravel blobs are kept; only ore features are removed. Future-proof across mods (matches by feature type + target name, not a hand-maintained list).
+
 ## [21.1.15]
 
 ### Changed
