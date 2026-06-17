@@ -8,11 +8,14 @@ import dev.ftb.mods.ftbskies2aerocompanion.basebuffer.BaseExclusionConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.bucket.ModBucketComponents;
 import dev.ftb.mods.ftbskies2aerocompanion.bucket.WoodenBucketFluidHandler;
 import dev.ftb.mods.ftbskies2aerocompanion.client.ClientBootstrap;
+import dev.ftb.mods.ftbskies2aerocompanion.compat.arscaelum.GeoreRituals;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddon;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddonConfig;
+import dev.ftb.mods.ftbskies2aerocompanion.compat.oritech.OritechCatalystConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.network.ModPayloads;
 import dev.ftb.mods.ftbskies2aerocompanion.ship.ShipSavedTeleportHooks;
+import dev.ftb.mods.ftbskies2aerocompanion.worldgen.ModBiomeModifierSerializers;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.ModSkyboundAnchorBlocks;
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.SkyboundAnchorConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.registry.ModFeatures;
@@ -45,10 +48,13 @@ public class FTBSkies2AeroCompanion {
         CnaAddon.register(eventBus);
         ModCreativeTabs.register(eventBus);
         ModFeatures.register(eventBus);
+        ModBiomeModifierSerializers.register(eventBus);
+        GeoreRituals.register(eventBus);
 
         container.registerConfig(ModConfig.Type.SERVER, SkyboundAnchorConfig.SPEC);
         container.registerConfig(ModConfig.Type.SERVER, BaseExclusionConfig.SPEC, "ftbskies2aerocompanion-base-exclusion.toml");
         container.registerConfig(ModConfig.Type.SERVER, CnaAddonConfig.SPEC, "ftbskies2aerocompanion-create-new-age.toml");
+        container.registerConfig(ModConfig.Type.SERVER, OritechCatalystConfig.SPEC, "ftbskies2aerocompanion-oritech.toml");
 
         eventBus.addListener(FTBSkies2AeroCompanion::onRegisterCapabilities);
         eventBus.addListener(FTBSkies2AeroCompanion::onCommonSetup);
