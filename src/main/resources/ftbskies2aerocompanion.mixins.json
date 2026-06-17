@@ -27,6 +27,7 @@
     "compat.integrateddynamics.StructureTemplatePlaceMixin",
     "compat.integrateddynamics.VoxelShapeComponentsSubLevelMixin",
     "compat.jade.BlockAccessorImplSubLevelMixin",
+    "compat.randombonemealflowers.RandomBonemealVanillaFlowersMixin",
     "compat.sable.SubLevelAssemblyHelperCableNetworkMixin",
     "compat.sable.SubLevelPlayerChunkSenderMixin",
     "compat.sky_archipelago.ForcedIslandRegistryMixin",

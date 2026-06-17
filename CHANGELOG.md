@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.15]
+
+### Changed
+- Random Bone Meal Flowers now only generates vanilla (`minecraft`) flowers. The mod detects flowers by the `FlowerBlock` class and only supports a blacklist (no whitelist), so modded flowers (e.g. `irregular_implements:pitcher_plant`, tropicraft/flourish/ars_elemental flowers) kept slipping through. A mixin now filters the mod's flower list to the `minecraft` namespace after it's built — complete and future-proof regardless of which flower mods are installed. The mod's existing `blacklist.txt` still applies first, so excluded vanilla flowers (wither rose, torchflower) stay excluded.
+
 ## [21.1.14]
 
 ### Added
