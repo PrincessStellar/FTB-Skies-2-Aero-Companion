@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.22]
+
+### Fixed
+- Connecting to a server no longer crashes / disconnects when the world's saved item registry has an orphaned or renamed id (a null hole in `MappedRegistry.byId`, left behind by mod churn over the world's life). The three ways code reaches registry entries now all tolerate null slots: `byId(int)` returns null (so defaulted registries like items fall back to `air`), `iterator()` skips holes, and `holders()` filters them out — instead of throwing `NullPointerException` on `Holder.value()`/`Holder.Reference.value()`. One fix covers every symptom that hit the same hole: Malum's spirit-repair recipe decode, Irregular Implements' lubricate-boot static init, the registry data-map sync, and JEI's grindstone/disenchant recipe builder during `onRecipesUpdated`.
+
+## [21.1.20]
+
+### Fixed
+- Connecting to a server no longer crashes via SG Economy. Its `ServerConfig.bakeConfig()` unconditionally broadcasts a `SyncServerConfigS2C` packet with `PacketDistributor.sendToAllPlayers`; when a client receives the synced server config on connect, the `ModConfigEvent.Reloading` fires `bakeConfig` on the client (where no server exists), throwing `Cannot send clientbound payloads on the client`. A `@WrapOperation` now performs the broadcast only when a server is actually running (`ServerLifecycleHooks.getCurrentServer() != null`); the client still bakes the values and just skips the broadcast. Replaces the previous mixin, which targeted an `onLoad(ModConfigEvent)` signature SG Economy 1.0.5 no longer has (so it had silently stopped applying).
+
+## [21.1.19]
+
+### Fixed
+- Connecting to a server no longer crashes when Sable's UDP side-channel fails to establish. `ClientboundSableUDPActivationPacket.handle` called `channel.eventLoop()` on the UDP channel with no null check, so when the channel was null (UDP couldn't bind, e.g. the server's UDP port isn't reachable) it threw an NPE that cascaded into a fatal render crash. Two `@WrapOperation` mixins now no-op the UDP activation when the channel is null, so UDP networking stays enabled and degrades gracefully to TCP instead of crashing. No config change needed; `attempt_udp_networking` can remain on.
+
 ## [21.1.18]
 
 ### Added
