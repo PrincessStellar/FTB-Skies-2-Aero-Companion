@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.23]
+
+### Fixed
+- The 25 GeOre conjuring ritual tablets now have proper names. `RitualTablet`'s name override isn't used in every display context (JEI, search, etc.), so the raw translation keys (`item.ars_caelum.ritual_conjure_island_*`) were showing through. The companion now ships `assets/ars_caelum/lang/en_us.json` with a name for each tablet matching the ritual's own `langName` (e.g. "Conjure Island: Uranium", "Conjure Island: Diamond (Nether)").
+
 ## [21.1.22]
 
 ### Fixed
