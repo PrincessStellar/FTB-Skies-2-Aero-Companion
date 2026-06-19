@@ -11,6 +11,7 @@
     "ServerPlayerMixin",
     "TeleportPosShipMixin",
     "compat.bucketlib.BucketLibEnchantmentMixin",
+    "compat.chancecubes.RewardsUtilFluidSphereMixin",
     "compat.compactmachines.RoomHelperCaptureMixin",
     "compat.create.AllSoundEventsPrepareMixin",
     "compat.create.SmartBlockEntityVoidGuardMixin",

@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.24]
+
+### Fixed
+- Chance Cubes giant fluid sphere rewards no longer place invisible "invalid" blocks. `RewardsUtil.getRandomFluid` picks any fluid from the registry, and the `FluidSphereReward` / `MixedFluidSphereReward` then place `fluid.defaultFluidState().createLegacyBlock()`; for the many modded/tank-only fluids that have no `LiquidBlock` (Mekanism, Create, IE, Oritech, and the pack's own KubeJS fluids) that call returns `AIR`, so the sphere was full of invisible air blocks. A `@ModifyReturnValue` mixin now re-rolls any picked fluid whose `createLegacyBlock()` is air to a random placeable source fluid (falling back to water), so spheres are always made of real, visible fluid. {#3900}
+
 ## [21.1.23]
 
 ### Fixed
