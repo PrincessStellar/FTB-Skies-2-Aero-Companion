@@ -47,9 +47,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * loot, lure speed, luck, and rod retrieve all behave exactly as they do over water.
  */
 @Mixin(FishingHook.class)
-public abstract class FishingHookMixin {
+public abstract class FishingHookMixin implements VoidFishingHook {
     @Shadow
     public abstract Player getPlayerOwner();
+
+    @Override
+    public boolean ftbskies2aero$isVoidFishing() {
+        return ftbskies2aero$voidFishing;
+    }
+
+    @Override
+    public boolean ftbskies2aero$isVoidDeliveryPending() {
+        return ftbskies2aero$voidDeliveryPending;
+    }
+
+    @Override
+    public void ftbskies2aero$setVoidDeliveryPending(boolean pending) {
+        ftbskies2aero$voidDeliveryPending = pending;
+    }
 
     @Unique
     private static final double VOID_BOB_AMPLITUDE = 0.08;
@@ -59,6 +74,9 @@ public abstract class FishingHookMixin {
 
     @Unique
     private boolean ftbskies2aero$voidFishing = false;
+
+    @Unique
+    private boolean ftbskies2aero$voidDeliveryPending = false;
 
     @Unique
     private double ftbskies2aero$voidFishY = 0.0;

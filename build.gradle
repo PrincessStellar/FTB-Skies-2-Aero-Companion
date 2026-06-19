@@ -167,6 +167,7 @@ dependencies {
 	compileOnly "curse.maven:sable-1312371:8242682"
 	compileOnly "curse.maven:create-sifting-661938:7329807"
 	compileOnly "curse.maven:jade-324717:7545219"
+	compileOnly "curse.maven:fishing-overhaul-491332:6297564"
 
 	compileOnly "mekanism:Mekanism:${mekanism_version}"
 	compileOnly "maven.modrinth:modern-industrialization:${modern_industrialization_version}"

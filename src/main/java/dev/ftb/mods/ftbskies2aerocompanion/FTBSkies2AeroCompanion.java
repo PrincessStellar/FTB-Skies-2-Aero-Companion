@@ -11,6 +11,7 @@ import dev.ftb.mods.ftbskies2aerocompanion.client.ClientBootstrap;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.arscaelum.GeoreRituals;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddon;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddonConfig;
+import dev.ftb.mods.ftbskies2aerocompanion.compat.fishingoverhaul.FishingOverhaulVoidDelivery;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.oritech.OritechCatalystConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
 import dev.ftb.mods.ftbskies2aerocompanion.network.ModPayloads;
@@ -26,6 +27,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -61,6 +63,10 @@ public class FTBSkies2AeroCompanion {
         eventBus.addListener(ModPayloads::register);
 
         NeoForge.EVENT_BUS.addListener(ModPayloads::onPlayerLoggedIn);
+
+        if (ModList.get().isLoaded("fishingoverhaul")) {
+            FishingOverhaulVoidDelivery.register();
+        }
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             ClientBootstrap.init(eventBus);
