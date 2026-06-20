@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.compat.fishingoverhaul;
 
-import dev.ftb.mods.ftbskies2aerocompanion.mixin.VoidFishingHook;
+import dev.ftb.mods.ftbskies2aerocompanion.loot.VoidFishingHook;
 import github.pitbox46.fishingoverhaul.ItemFishedEventPre;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

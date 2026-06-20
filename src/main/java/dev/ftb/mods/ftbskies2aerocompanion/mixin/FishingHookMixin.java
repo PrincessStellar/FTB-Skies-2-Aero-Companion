@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion.mixin;
 
 import dev.ftb.mods.ftbskies2aerocompanion.item.ModItems;
+import dev.ftb.mods.ftbskies2aerocompanion.loot.VoidFishingHook;
 import dev.ftb.mods.ftbskies2aerocompanion.loot.VoidFishingLootTables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
