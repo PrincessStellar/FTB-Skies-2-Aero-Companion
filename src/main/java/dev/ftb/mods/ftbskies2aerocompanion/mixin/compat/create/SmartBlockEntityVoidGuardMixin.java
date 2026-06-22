@@ -22,7 +22,7 @@ public abstract class SmartBlockEntityVoidGuardMixin {
             return;
         }
         BlockState worldState = level.getBlockState(self.getBlockPos());
-        if (worldState.isAir()) {
+        if (!self.getType().isValid(worldState)) {
             FTBSKIES2AERO$LOGGER.warn(
                     "Dropping orphaned Create block entity {} at {} (world block is {}) to avoid a validateBlockState crash; likely a Sable sub-level teardown left it behind",
                     self.getType(), self.getBlockPos(), worldState);

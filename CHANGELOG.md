@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.25]
+
+### Fixed
+- Create machines (Crushing Wheels and any other `SmartBlockEntity`) no longer void their contents on Sable sub-levels (airships/islands). The `SmartBlockEntityVoidGuardMixin` orphan check used `worldState.isAir()`, which was dropping live block entities whose world block was still a valid Create block — the spam was `Dropping orphaned Create block entity ... (world block is create:crushing_wheel_controller[valid=true])` every tick, killing the in-progress crush. The guard now drops a block entity only when its type is genuinely invalid for the world block (`!getType().isValid(worldState)`), which still catches truly orphaned BEs left by a sub-level teardown (`void_air`) while leaving valid blocks alone. {#3920}
+
 ## [21.1.24]
 
 ### Fixed
