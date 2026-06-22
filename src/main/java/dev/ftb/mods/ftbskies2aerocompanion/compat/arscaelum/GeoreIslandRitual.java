@@ -17,6 +17,10 @@ public class GeoreIslandRitual extends StructureRitual {
         this.langDescription = langDescription;
     }
 
+    public GeoreIslandRitual copy() {
+        return new GeoreIslandRitual(registryName, structure, langName, langDescription);
+    }
+
     @Override
     public ResourceLocation getRegistryName() {
         return registryName;

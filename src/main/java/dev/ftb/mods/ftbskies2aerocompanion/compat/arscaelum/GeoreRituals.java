@@ -1,6 +1,7 @@
 package dev.ftb.mods.ftbskies2aerocompanion.compat.arscaelum;
 
 import com.hollingsworth.arsnouveau.api.registry.RitualRegistry;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +11,9 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GeoreRituals {
 
@@ -27,6 +30,12 @@ public class GeoreRituals {
     public static final DeferredRegister.Items AC_ITEMS = DeferredRegister.createItems("ars_caelum");
 
     private static final List<GeoreIslandRitual> ALL_RITUALS = new ArrayList<>();
+    private static final Map<ResourceLocation, GeoreIslandRitual> RITUAL_BY_ID = new HashMap<>();
+
+    public static AbstractRitual createFresh(ResourceLocation id) {
+        GeoreIslandRitual base = RITUAL_BY_ID.get(id);
+        return base == null ? null : base.copy();
+    }
 
     static {
         for (String ore : OVERWORLD_ORES) {
@@ -49,6 +58,7 @@ public class GeoreRituals {
 
         GeoreIslandRitual ritual = new GeoreIslandRitual(ritualId, structure, langName, langDesc);
         ALL_RITUALS.add(ritual);
+        RITUAL_BY_ID.put(ritualId, ritual);
         AC_ITEMS.register(itemId, () -> new RitualTablet(ritual));
     }
 

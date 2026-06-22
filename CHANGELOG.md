@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.26]
+
+### Fixed
+- The GeOre "Conjure Island" ritual tablets now actually spawn their islands. Ars Nouveau's `RitualRegistry.getRitual()` reinstantiates a registered ritual per cast by reflecting its **no-arg** constructor (`getClass().getDeclaredConstructor().newInstance()`); `GeoreIslandRitual` is a single parameterized class with only a 4-arg constructor, so that reflection threw `NoSuchMethodException` and `getRitual` returned null — the brazier consumed the tablet but had no ritual to run (no casting state, no island). A `@Inject` mixin on `getRitual` now returns a freshly-copied `GeoreIslandRitual` for the pack's `ars_caelum:ritual_conjure_island_*` IDs (via `GeoreRituals.createFresh`), leaving every other ritual to the vanilla reflection path. {#3917}
+
 ## [21.1.25]
 
 ### Fixed
