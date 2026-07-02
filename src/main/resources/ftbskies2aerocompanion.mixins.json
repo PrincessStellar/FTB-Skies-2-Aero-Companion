@@ -6,6 +6,7 @@
   "mixins": [
     "EntityCollisionGuardMixin",
     "MappedRegistryByIdGuardMixin",
+    "StructureStartPlaceGuardMixin",
     "FishingHookMixin",
     "FishingRodItemMixin",
     "ServerPlayerMixin",
