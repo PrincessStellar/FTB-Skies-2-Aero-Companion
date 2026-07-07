@@ -10,12 +10,16 @@ import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.VoidConversionRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.registration.IIngredientAliasRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -170,5 +174,30 @@ public class JEIPlugin implements IModPlugin {
         if (ModList.get().isLoaded(MekanismLasersOreGen.MOD_ID)) {
             registration.addRecipeCatalyst(MekanismLasersOreGen.oreGeneratorStack(), ORE_GENERATOR_TYPE);
         }
+    }
+
+    @Override
+    public void registerIngredientAliases(IIngredientAliasRegistration registration) {
+        if (!ModList.get().isLoaded("tropicraft")) return;
+        ItemStack pinaColada = pinaColadaStack();
+        if (!pinaColada.isEmpty()) {
+            registration.addAlias(VanillaTypes.ITEM_STACK, pinaColada, "Pina Colada");
+        }
+    }
+
+    private static ItemStack pinaColadaStack() {
+        if (Minecraft.getInstance().level == null) return ItemStack.EMPTY;
+        CompoundTag tag = new CompoundTag();
+        tag.putString("id", "tropicraft:cocktail");
+        tag.putInt("count", 1);
+        CompoundTag components = new CompoundTag();
+        CompoundTag cocktail = new CompoundTag();
+        cocktail.putString("drink", "tropicraft:pina_colada");
+        components.put("tropicraft:cocktail", cocktail);
+        tag.put("components", components);
+        return ItemStack.CODEC
+                .parse(Minecraft.getInstance().level.registryAccess().createSerializationContext(NbtOps.INSTANCE), tag)
+                .result()
+                .orElse(ItemStack.EMPTY);
     }
 }
