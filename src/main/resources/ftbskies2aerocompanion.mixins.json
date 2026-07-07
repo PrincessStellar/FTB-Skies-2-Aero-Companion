@@ -37,7 +37,6 @@
     "compat.sable.ClientboundSableUDPActivationPacketMixin",
     "compat.sable.SubLevelAssemblyHelperCableNetworkMixin",
     "compat.sable.SubLevelPlayerChunkSenderMixin",
-    "compat.sky_archipelago.ForcedIslandRegistryMixin",
     "compat.oritech.EnchantmentCatalystLevelCapMixin",
     "compat.mi.MISteamHelperMixin",
     "compat.mi.MISteamHeaterComponentMixin",
@@ -47,6 +46,7 @@
     "compat.mi.MIEuProductionMapBuilderMixin",
     "compat.sg_economy.SGEconomyServerConfigMixin",
     "compat.simulated.SimAssemblyHelperDisassembleMixin",
+    "compat.simulated.SimAssemblyHelperShipHomeMixin",
     "compat.titanium.TileEntityLocatorSubLevelMixin"
   ],
   "client": [

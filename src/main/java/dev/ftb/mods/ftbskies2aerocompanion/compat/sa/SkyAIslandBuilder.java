@@ -22,12 +22,14 @@ import org.sathrek.sky_archipelago.worldgen.generator.field.IslandField;
 import org.sathrek.sky_archipelago.worldgen.generator.field.TerrainColumn;
 import org.sathrek.sky_archipelago.worldgen.generator.terrain.SkyIslandColumnMaterialPlan;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public final class SkyAIslandBuilder {
     private static final ConcurrentMap<Long, IslandField> FIELDS = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Long, IslandField.IslandPreview> SOURCES = new ConcurrentHashMap<>();
 
     private SkyAIslandBuilder() {}
 
@@ -37,20 +39,24 @@ public final class SkyAIslandBuilder {
         long layoutSeed = level.getSeed();
         IslandField field = FIELDS.computeIfAbsent(layoutSeed, IslandField::new);
 
-        int minRadius = Math.max(8, targetRadius - 2);
-        int maxRadius = targetRadius + 2;
-        ForcedArchetypeContext.set(IslandArchetypeSelector.pick(settings, seedTag));
-        try {
-            field.injectForcedHostIsland(center.getX(), center.getY(), center.getZ(), minRadius, maxRadius, seedTag, settings);
-        } finally {
-            ForcedArchetypeContext.clear();
+        long sourceKey = layoutSeed * 1099511628211L + seedTag;
+        IslandField.IslandPreview source = SOURCES.get(sourceKey);
+        if (source == null) {
+            source = findSourceIsland(field, settings, seedTag, targetRadius);
+            if (source == null) return false;
+            if (SOURCES.size() > 1024) SOURCES.clear();
+            SOURCES.put(sourceKey, source);
         }
+
+        int dy = center.getY() - source.y();
+        int bandBottom = source.y() - source.hangDepth();
+        int bandTop = source.y() + source.plateauHeight();
 
         Holder<Biome> skyBiome = level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(biomeKey);
         BlockState topBlockState = BiomeSurfaceResolver.topBlock(skyBiome);
         BlockState subSurfaceState = BiomeSurfaceResolver.subSurfaceBlock(skyBiome);
 
-        int scanRadius = maxRadius + 48;
+        int scanRadius = targetRadius + 50;
         int minX = Math.max(center.getX() - scanRadius, writeBox.minX());
         int maxX = Math.min(center.getX() + scanRadius, writeBox.maxX());
         int minZ = Math.max(center.getZ() - scanRadius, writeBox.minZ());
@@ -69,7 +75,16 @@ public final class SkyAIslandBuilder {
 
         for (int worldX = minX; worldX <= maxX; worldX++) {
             for (int worldZ = minZ; worldZ <= maxZ; worldZ++) {
-                List<TerrainColumn> segments = field.sampleSolidSegments(worldX, worldZ, settings);
+                int srcX = source.x() + (worldX - center.getX());
+                int srcZ = source.z() + (worldZ - center.getZ());
+                List<TerrainColumn> rawSegments = field.sampleSolidSegments(srcX, srcZ, settings);
+                if (rawSegments.isEmpty()) continue;
+
+                List<TerrainColumn> segments = new ArrayList<>(rawSegments.size());
+                for (TerrainColumn column : rawSegments) {
+                    if (!column.intersectsInclusive(bandBottom, bandTop)) continue;
+                    segments.add(new TerrainColumn(column.bottomY() + dy, column.topY() + dy));
+                }
                 if (segments.isEmpty()) continue;
 
                 SkyIslandColumnMaterialPlan plan = SkyIslandColumnMaterialPlan.create(
@@ -110,6 +125,31 @@ public final class SkyAIslandBuilder {
             }
         }
         return placedAny;
+    }
+
+    private static IslandField.IslandPreview findSourceIsland(IslandField field, SkyIslandSettings settings,
+                                                              long seedTag, int targetRadius) {
+        long hx = Math.floorMod(seedTag * 0x9E3779B97F4A7C15L, 100000L);
+        long hz = Math.floorMod((seedTag ^ 0x2545F4914F6CDD1DL) * 0xBF58476D1CE4E5B9L, 100000L);
+        int searchX = 100000 + (int) hx;
+        int searchZ = 100000 + (int) hz;
+        int maxRadius = targetRadius + 40;
+
+        for (int searchRadius = 256; searchRadius <= 1024; searchRadius *= 2) {
+            List<IslandField.IslandPreview> previews = field.collectIslandPreviewsInRadius(searchX, searchZ, searchRadius, settings);
+            IslandField.IslandPreview best = null;
+            int bestDiff = Integer.MAX_VALUE;
+            for (IslandField.IslandPreview preview : previews) {
+                if (preview.radius() > maxRadius) continue;
+                int diff = Math.abs(preview.radius() - targetRadius);
+                if (diff < bestDiff) {
+                    bestDiff = diff;
+                    best = preview;
+                }
+            }
+            if (best != null) return best;
+        }
+        return null;
     }
 
     private static void overrideBiomeQuart(ChunkAccess chunk, int worldX, int worldY, int worldZ, Holder<Biome> biome) {
