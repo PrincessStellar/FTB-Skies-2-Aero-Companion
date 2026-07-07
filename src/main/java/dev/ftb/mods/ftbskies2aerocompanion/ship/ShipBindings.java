@@ -44,14 +44,14 @@ public final class ShipBindings {
             LOGGER.debug("[capture] sable subLevel uuid={} local={} worldPos={} subYawNow={} storedDeltaYaw={}",
                     sub.getUniqueId(), local, worldPos, subYawNow, storedYaw);
             return Optional.of(new ShipBinding(sub.getUniqueId(), player.level().dimension(),
-                    local, storedYaw, pitch, worldPos));
+                    local, storedYaw, pitch, worldPos, false));
         }
         Entity root = player.getRootVehicle();
         if (root != player && root instanceof AbstractContraptionEntity contraption) {
             Vec3 local = contraption.toLocalVector(worldPos, 0f);
             LOGGER.debug("[capture] AbstractContraption fallback uuid={} local={}", contraption.getUUID(), local);
             return Optional.of(new ShipBinding(contraption.getUUID(), contraption.level().dimension(),
-                    local, yaw, pitch, worldPos));
+                    local, yaw, pitch, worldPos, false));
         }
         LOGGER.debug("[capture] player not on a sub-level or contraption — no binding");
         return Optional.empty();
@@ -131,9 +131,40 @@ public final class ShipBindings {
             return Optional.of(new Resolved(world, binding.yaw(), binding.pitch()));
         }
 
-        LOGGER.warn("[resolveAnchor] anchor uuid={} unresolved (sub-level missing from active container, holding chunk map, and AbstractContraption) — caller will use world-spawn fallback",
+        Vec3 lastKnown = binding.lastKnownPos();
+        if (lastKnown != null && !Vec3.ZERO.equals(lastKnown)) {
+            float yaw = binding.grounded() ? binding.yaw() : 0f;
+            ensureChunkLoaded(level, BlockPos.containing(lastKnown));
+            LOGGER.debug("[resolveAnchor] uuid={} resolved via lastKnownPos fallback grounded={} world={} yaw={}",
+                    binding.shipUuid(), binding.grounded(), lastKnown, yaw);
+            return Optional.of(new Resolved(lastKnown, yaw, binding.pitch()));
+        }
+
+        LOGGER.warn("[resolveAnchor] anchor uuid={} unresolved (no active sub-level, holding record, contraption, or last-known position)",
                 binding.shipUuid());
         return Optional.empty();
+    }
+
+    public static void onSubLevelDisassembled(MinecraftServer server, SubLevel subLevel) {
+        if (server == null || subLevel == null) return;
+        UUID id = subLevel.getUniqueId();
+        Pose3dc pose;
+        try {
+            pose = subLevel.logicalPose();
+        } catch (Throwable t) {
+            LOGGER.error("[disassemble] failed to read pose for sub-level {}", id, t);
+            return;
+        }
+        float subYawNow = (float) yawFromOrientation(pose.orientation());
+        ShipHomeData data = ShipHomeData.get(server);
+        int updated = data.groundBindingsForShip(id, b -> {
+            Vec3 world = pose.transformPosition(b.localOffset());
+            float absYaw = b.yaw() + subYawNow;
+            return b.groundedAt(world, absYaw);
+        });
+        if (updated > 0) {
+            LOGGER.debug("[disassemble] grounded {} ship-home binding(s) for sub-level {}", updated, id);
+        }
     }
 
     public static void ensureChunkLoaded(ServerLevel level, BlockPos pos) {

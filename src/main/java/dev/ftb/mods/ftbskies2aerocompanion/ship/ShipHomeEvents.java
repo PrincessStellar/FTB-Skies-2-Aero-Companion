@@ -1,7 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.ship;
 
 import dev.ftb.mods.ftbskies2aerocompanion.FTBSkies2AeroCompanion;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -70,15 +69,17 @@ public final class ShipHomeEvents {
             }
             return;
         }
-        VANILLA_RESPAWN.remove(player.getUUID());
+        DimensionTransition vanilla = VANILLA_RESPAWN.remove(player.getUUID());
         Optional<ShipBindings.Resolved> resolved = ShipBindings.resolveAnchor(server, binding.get());
         if (resolved.isEmpty()) {
-            ServerLevel overworld = server.overworld();
-            BlockPos spawn = overworld.getSharedSpawnPos();
-            LOGGER.warn("[respawnEvent] FALLBACK INVOKED — anchor uuid={} could not be resolved, sending player to world spawn {} (note: in this pack, world spawn is the FTB Team Bases lobby)",
-                    binding.get().shipUuid(), spawn);
-            event.setDimensionTransition(new DimensionTransition(
-                    overworld, Vec3.atCenterOf(spawn), Vec3.ZERO, 0f, 0f, DimensionTransition.DO_NOTHING));
+            if (vanilla != null) {
+                LOGGER.debug("[respawnEvent] anchor uuid={} unresolved — restoring vanilla bed/anchor respawn -> {}@{}",
+                        binding.get().shipUuid(), vanilla.newLevel().dimension().location(), vanilla.pos());
+                event.setDimensionTransition(vanilla);
+            } else {
+                LOGGER.warn("[respawnEvent] anchor uuid={} unresolved and no vanilla respawn captured — leaving current respawn target unchanged",
+                        binding.get().shipUuid());
+            }
             return;
         }
         ServerLevel shipLevel = server.getLevel(binding.get().shipDimension());

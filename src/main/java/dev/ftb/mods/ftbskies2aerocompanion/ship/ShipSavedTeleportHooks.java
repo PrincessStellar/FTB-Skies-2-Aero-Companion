@@ -5,7 +5,6 @@ import dev.ftb.mods.ftbessentials.api.TeleportDestination;
 import dev.ftb.mods.ftbessentials.api.event.SavedTeleportEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -94,11 +93,7 @@ public final class ShipSavedTeleportHooks implements SavedTeleportEvent {
             return CompoundEventResult.interruptTrue(dest.success(shipDest));
         }
 
-        ServerLevel overworld = server.overworld();
-        BlockPos spawn = overworld.getSharedSpawnPos();
-        LOG.warn("[teleport] anchor uuid={} unresolved — diverting to world spawn {}", b.shipUuid(), spawn);
-        TeleportDestination spawnDest = new TeleportDestination(
-                overworld.dimension(), spawn, Optional.empty(), Optional.empty(), null);
-        return CompoundEventResult.interruptTrue(dest.success(spawnDest));
+        LOG.debug("[teleport] anchor uuid={} unresolved — using vanilla saved destination", b.shipUuid());
+        return CompoundEventResult.pass();
     }
 }

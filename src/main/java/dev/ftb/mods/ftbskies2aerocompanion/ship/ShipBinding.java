@@ -15,8 +15,13 @@ public record ShipBinding(
         Vec3 localOffset,
         float yaw,
         float pitch,
-        Vec3 lastKnownPos
+        Vec3 lastKnownPos,
+        boolean grounded
 ) {
+    public ShipBinding groundedAt(Vec3 worldPos, float absoluteYaw) {
+        return new ShipBinding(shipUuid, shipDimension, localOffset, absoluteYaw, pitch, worldPos, true);
+    }
+
     public CompoundTag write() {
         CompoundTag tag = new CompoundTag();
         tag.putUUID("ship", shipUuid);
@@ -29,6 +34,7 @@ public record ShipBinding(
         tag.putDouble("lkx", lastKnownPos.x);
         tag.putDouble("lky", lastKnownPos.y);
         tag.putDouble("lkz", lastKnownPos.z);
+        tag.putBoolean("grounded", grounded);
         return tag;
     }
 
@@ -42,7 +48,8 @@ public record ShipBinding(
                 new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z")),
                 tag.getFloat("yaw"),
                 tag.getFloat("pitch"),
-                lastKnown
+                lastKnown,
+                tag.getBoolean("grounded")
         );
     }
 }

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 
 public class ShipHomeData extends SavedData {
     private static final String FILE_NAME = "ftbskies2aero_ship_homes";
@@ -87,6 +88,26 @@ public class ShipHomeData extends SavedData {
         if (warpBindings.remove(name) != null) {
             setDirty();
         }
+    }
+
+    public int groundBindingsForShip(UUID shipUuid, UnaryOperator<ShipBinding> updater) {
+        int[] count = {0};
+        bedBindings.replaceAll((k, b) -> remapIfMatch(shipUuid, b, updater, count));
+        homeBindings.values().forEach(m -> m.replaceAll((k, b) -> remapIfMatch(shipUuid, b, updater, count)));
+        warpBindings.replaceAll((k, b) -> remapIfMatch(shipUuid, b, updater, count));
+        compactReturnBindings.replaceAll((k, b) -> remapIfMatch(shipUuid, b, updater, count));
+        if (count[0] > 0) {
+            setDirty();
+        }
+        return count[0];
+    }
+
+    private static ShipBinding remapIfMatch(UUID shipUuid, ShipBinding b, UnaryOperator<ShipBinding> updater, int[] count) {
+        if (b != null && shipUuid.equals(b.shipUuid())) {
+            count[0]++;
+            return updater.apply(b);
+        }
+        return b;
     }
 
     public Optional<ShipBinding> getCompactReturn(UUID player) {
