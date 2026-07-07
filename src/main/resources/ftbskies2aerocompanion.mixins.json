@@ -14,6 +14,7 @@
     "compat.arsnouveau.RitualRegistryGeoreMixin",
     "compat.bucketlib.BucketLibEnchantmentMixin",
     "compat.chancecubes.RewardsUtilFluidSphereMixin",
+    "compat.cognition.ProtectionSalveItemMixin",
     "compat.compactmachines.RoomHelperCaptureMixin",
     "compat.create.AllSoundEventsPrepareMixin",
     "compat.create.SmartBlockEntityVoidGuardMixin",
