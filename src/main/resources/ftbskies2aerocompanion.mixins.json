@@ -27,6 +27,7 @@
     "compat.enderio.RedstoneConduitMixin",
     "compat.functionalstorage.ControllerInventoryHandlerPerfMixin",
     "compat.functionalstorage.DrawerSlotSubLevelMixin",
+    "compat.ironsspellbooks.ChainLightningNullVictimMixin",
     "compat.integrateddynamics.BlockEntityCableConnectableInventoryMixin",
     "compat.integrateddynamics.BlockSqueezerSubLevelMixin",
     "compat.integrateddynamics.BlockEntityDryingBasinMixin",

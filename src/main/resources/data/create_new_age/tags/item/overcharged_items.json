@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "ftbskies2aerocompanion:overcharged_copper",
+    "ftbskies2aerocompanion:overcharged_copper_sheet",
+    "ftbskies2aerocompanion:overcharged_copper_wire",
+    "create_new_age:overcharged_iron",
+    "create_new_age:overcharged_iron_sheet",
+    "create_new_age:overcharged_iron_wire",
+    "create_new_age:overcharged_gold",
+    "create_new_age:overcharged_golden_sheet",
+    "create_new_age:overcharged_golden_wire",
+    "create_new_age:overcharged_diamond",
+    "ftbskies2aerocompanion:overcharged_diamond_sheet",
+    "create_new_age:overcharged_diamond_wire",
+    "ftbskies2aerocompanion:overcharged_netherite",
+    "ftbskies2aerocompanion:overcharged_netherite_sheet",
+    "ftbskies2aerocompanion:overcharged_netherite_wire",
+    "ftbskies2aerocompanion:overcharged_platinum",
+    "ftbskies2aerocompanion:overcharged_platinum_sheet",
+    "ftbskies2aerocompanion:overcharged_platinum_wire",
+    "ftbskies2aerocompanion:overcharged_titanium",
+    "ftbskies2aerocompanion:overcharged_titanium_sheet",
+    "ftbskies2aerocompanion:overcharged_titanium_wire"
+  ]
+}

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.35]
+
+### Added
+- Overcharged item tags for automation, now shipped natively instead of via pack KubeJS overrides: `c:plates` (adds the Create: New Age iron/gold overcharged sheets alongside the companion sheets), `c:gems/overcharged_diamond`, `create_new_age:overcharged_items`, and the `ftb:overcharged_sheets` / `ftb:overcharged_ingots` / `ftb:overcharged_wires` groupings. {#4033}
+
+### Fixed
+- Iron's Spellbooks Chain Lightning no longer crashes the server after a dimension transition. `ChainLightning.tick()` damages its `initialVictim` on the first tick, but that field is transient (never written to NBT), so when the entity is rebuilt by a dimension transition (Sable sub-level/ship crossing, portals) it is null while `tickCount` resets to 0. The mod's `doHurt(initialVictim)` call has no null check and throws `NullPointerException` in `DamageSources.applyDamage`, killing the server thread. Guarding only `doHurt` is insufficient: with a non-null owner (owner UUID *is* in save-data and survives the rebuild) the same tick then dereferences `initialVictim` again in the particle block (`initialVictim.position()`), so `ChainLightningNullVictimMixin` instead cancels the whole tick at HEAD and discards the entity when a server-side chain lightning has a null `initialVictim` — the rebuilt entity has lost its victim state and is inert anyway. The guard is server-gated because client-side chain lightnings always have a null `initialVictim` (built from the spawn packet) and must keep rendering. Remove once fixed upstream.
+- The Quantum Energiser is now mineable. It was missing from the `minecraft:mineable/pickaxe` and `minecraft:mineable/axe` block tags that its netherite/platinum/titanium siblings already carried, so it broke slowly with any tool. {#4033}
+- Right-clicking certain entities (e.g. a Draconic Evolution Guardian Crystal in The End) no longer crashes the server. Cognition's `EventHandler.onPlayerRightClickEntity` unconditionally calls `ProtectionSalveItem.handleEntity` on every `EntityInteractSpecific`, and that method is leftover debug code that force-serializes the target with `entity.save()` and dumps the NBT to `System.out` — no held-item or entity-type guard. The Guardian Crystal's `addAdditionalSaveData` writes a null owner UUID via `CompoundTag.putUUID`, so the forced save threw `NullPointerException` mid-interaction. `ProtectionSalveItemMixin` now cancels `handleEntity` at HEAD, which also stops the per-interaction entity serialization and console NBT spam it caused on every entity right-click.
+
 ## [21.1.26]
 
 ### Fixed
