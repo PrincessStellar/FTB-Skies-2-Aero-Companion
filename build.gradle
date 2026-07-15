@@ -3,7 +3,7 @@ plugins {
 	id 'idea'
 	id 'maven-publish'
 	id 'net.neoforged.moddev' version '2.0.140'
-	id "dev.ftb.plugins.ashwing" version "0.2.1"
+	id "dev.ftb.plugins.ashwing" version "0.2.2"
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -24,7 +24,7 @@ ashwing {
 		releaseFromString(providers.environmentVariable("TAG").getOrElse(""))
 		minecraftVersion(project.minecraft_version)
 
-		maven {}
+		withMaven()
 
 		modProject {
 			fileFromTask(project, "jar")
