@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "create_new_age:overcharged_diamond"
+    }
+  ],
+  "results": [
+    {
+      "id": "ftbskies2aerocompanion:overcharged_diamond_sheet"
+    }
+  ]
+}

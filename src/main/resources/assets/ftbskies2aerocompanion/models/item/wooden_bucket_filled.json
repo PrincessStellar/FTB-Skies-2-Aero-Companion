@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "ftbskies2aerocompanion:item/wooden_bucket_filled"
+  }
+}

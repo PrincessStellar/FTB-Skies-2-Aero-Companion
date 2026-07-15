@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "ftbskies2aerocompanion:overcharged_copper_sheet",
+    "create_new_age:overcharged_iron_sheet",
+    "create_new_age:overcharged_golden_sheet",
+    "ftbskies2aerocompanion:overcharged_diamond_sheet",
+    "ftbskies2aerocompanion:overcharged_netherite_sheet",
+    "ftbskies2aerocompanion:overcharged_platinum_sheet",
+    "ftbskies2aerocompanion:overcharged_titanium_sheet"
+  ]
+}

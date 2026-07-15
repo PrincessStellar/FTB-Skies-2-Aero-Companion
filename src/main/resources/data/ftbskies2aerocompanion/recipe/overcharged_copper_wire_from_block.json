@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ftbskies2aerocompanion:overcharged_copper_wire_block"
+    }
+  ],
+  "result": {
+    "id": "ftbskies2aerocompanion:overcharged_copper_wire",
+    "count": 4
+  }
+}

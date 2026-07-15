@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "ftbskies2aerocompanion:block/overcharged_netherite_wire_block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "ftbskies2aerocompanion:block/overcharged_netherite_wire_block"
+    },
+    "axis=z": {
+      "model": "ftbskies2aerocompanion:block/overcharged_netherite_wire_block",
+      "x": 90
+    }
+  }
+}

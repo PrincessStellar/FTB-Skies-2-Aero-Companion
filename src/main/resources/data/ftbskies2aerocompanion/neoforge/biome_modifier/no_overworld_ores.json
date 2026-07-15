@@ -1,0 +1,4 @@
+{
+  "type": "ftbskies2aerocompanion:remove_overworld_ores",
+  "biomes": "#minecraft:is_overworld"
+}

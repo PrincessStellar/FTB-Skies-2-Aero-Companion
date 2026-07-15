@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": { "model": "ftbskies2aerocompanion:block/air_filter/block" },
+    "facing=south": { "model": "ftbskies2aerocompanion:block/air_filter/block", "y": 180 },
+    "facing=east":  { "model": "ftbskies2aerocompanion:block/air_filter/block", "y": 90 },
+    "facing=west":  { "model": "ftbskies2aerocompanion:block/air_filter/block", "y": 270 },
+    "facing=up":    { "model": "ftbskies2aerocompanion:block/air_filter/block", "x": 270 },
+    "facing=down":  { "model": "ftbskies2aerocompanion:block/air_filter/block", "x": 90 }
+  }
+}

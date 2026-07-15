@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "ftbskies2aerocompanion:floating_island",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1741295273,
+    "spacing": 44,
+    "separation": 11
+  }
+}

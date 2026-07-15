@@ -1,0 +1,14 @@
+{
+  "type": "create_new_age:energising",
+  "energy_needed": 8000,
+  "ingredients": [
+    {
+      "item": "minecraft:netherite_ingot"
+    }
+  ],
+  "results": [
+    {
+      "id": "ftbskies2aerocompanion:overcharged_netherite_sheet"
+    }
+  ]
+}

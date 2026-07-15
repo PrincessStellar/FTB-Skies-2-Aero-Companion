@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "ftbskies2aerocompanion:overcharged_copper"
+    }
+  ],
+  "results": [
+    {
+      "id": "ftbskies2aerocompanion:overcharged_copper_sheet"
+    }
+  ]
+}

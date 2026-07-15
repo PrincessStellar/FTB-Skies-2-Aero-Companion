@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "MBM",
+    " M "
+  ],
+  "key": {
+    "B": {
+      "item": "ftb:iron_mesh"
+    },
+    "M": {
+      "tag": "c:ingots/gold"
+    }
+  },
+  "result": {
+    "id": "ftb:gold_mesh",
+    "count": 1
+  }
+}

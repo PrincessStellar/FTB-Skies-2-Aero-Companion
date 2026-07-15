@@ -1,0 +1,14 @@
+{
+  "type": "ftbskies2aerocompanion:aeroscoop",
+  "mesh": {
+    "item": "ftb:blazing_mesh"
+  },
+  "biome": "ANY",
+  "results": [
+    {
+      "item": "ftbstuff:dust",
+      "count": 1,
+      "chance": 1.0
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "irregular_implements:blaze_fire",
+      "required": false
+    }
+  ]
+}

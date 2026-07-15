@@ -19,3 +19,41 @@ mandatory = true
 versionRange = "${mod_loader_range}"
 ordering = "NONE"
 side="BOTH"
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId = "jei"
+type = "optional"
+versionRange = "[19.0.0,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.${mod_id}]]
+modId = "ftbessentials"
+type = "required"
+versionRange = "[2101,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create"
+type = "required"
+versionRange = "[6.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "createsifter"
+type = "required"
+versionRange = "[0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create_new_age"
+type = "required"
+versionRange = "[1.1.7,)"
+ordering = "AFTER"
+side = "BOTH"
