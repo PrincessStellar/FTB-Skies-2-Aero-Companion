@@ -10,18 +10,6 @@ Please feel free to contribute to the project but **always** open an issue first
 
 Companion mods are provided `as is`. If you opt to use this mod inside another modpack, we **will not** provide support and any issues opened regarding problems due to use in another modpack will be closed.
 
-## Building
-
-Standard NeoForge / Gradle workflow:
-
-```bash
-./gradlew build       # produce the mod jar in build/libs/
-./gradlew runClient   # launch a dev client
-./gradlew runServer   # launch a dev server
-```
-
-Targets Minecraft 1.21.1 on NeoForge (Java 21).
-
 ## AeroScoop Recipes
 
 AeroScoop recipes are datapack-driven JSON files under `data/<namespace>/recipe/aeroscoop/`. Each recipe picks a mesh ingredient, an optional biome filter, and a list of weighted result drops.
