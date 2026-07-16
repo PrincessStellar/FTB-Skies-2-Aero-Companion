@@ -31,7 +31,8 @@ public abstract class DrawerSlotSubLevelMixin {
                                                   @Local(argsOnly = true) BlockPos pos,
                                                   @Local(argsOnly = true) Player player,
                                                   @Local(argsOnly = true) BlockHitResult hit) {
-        if (Sable.HELPER.getContaining(player) == null) {
+        if (Sable.HELPER.getContaining(player) == null
+                && Sable.HELPER.getTrackingOrVehicleSubLevel(player) == null) {
             return slot;
         }
         Vec3 rel = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());

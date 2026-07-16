@@ -18,6 +18,7 @@
     "compat.compactmachines.RoomHelperCaptureMixin",
     "compat.create.AllSoundEventsPrepareMixin",
     "compat.create.SmartBlockEntityVoidGuardMixin",
+    "compat.create.RedstoneLinkSubLevelNetworkMixin",
     "compat.createnewage.BlockEntityTypeMixin",
     "compat.createnewage.EnergiserBlockEntityMixin",
     "compat.createnewage.EnergiserBlockMixin",
