@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.37]
+
+### Added
+
+- Void sea floor for airships. Ships that fall into the void, in any dimension including the Nether, are now caught and held at a configurable void sea level instead of sinking away unrecoverably. Configurable in `ftbskies2aerocompanion-void-sea.toml`.
+
 ## [21.1.36]
 
 ### Fixed
