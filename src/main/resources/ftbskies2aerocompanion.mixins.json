@@ -12,6 +12,7 @@
     "ServerPlayerMixin",
     "TeleportPosShipMixin",
     "compat.arsnouveau.RitualRegistryGeoreMixin",
+    "compat.bitsnbobs.CogwheelChainBlockEntityMixin",
     "compat.bucketlib.BucketLibEnchantmentMixin",
     "compat.chancecubes.RewardsUtilFluidSphereMixin",
     "compat.cognition.ProtectionSalveItemMixin",
@@ -39,6 +40,7 @@
     "compat.randombonemealflowers.RandomBonemealVanillaFlowersMixin",
     "compat.sable.ClientboundSableUDPActivationPacketMixin",
     "compat.sable.SubLevelAssemblyHelperCableNetworkMixin",
+    "compat.sable.SubLevelAssemblyHelperCogwheelChainMixin",
     "compat.sable.SubLevelPlayerChunkSenderMixin",
     "compat.oritech.EnchantmentCatalystLevelCapMixin",
     "compat.mi.MISteamHelperMixin",
@@ -48,6 +50,7 @@
     "compat.mi.MISingleBlockCraftingMachinesMixin",
     "compat.mi.MIEuProductionMapBuilderMixin",
     "compat.sg_economy.SGEconomyServerConfigMixin",
+    "compat.simulated.SimAssemblyHelperCogwheelChainMixin",
     "compat.simulated.SimAssemblyHelperDisassembleMixin",
     "compat.simulated.SimAssemblyHelperShipHomeMixin",
     "compat.titanium.TileEntityLocatorSubLevelMixin"

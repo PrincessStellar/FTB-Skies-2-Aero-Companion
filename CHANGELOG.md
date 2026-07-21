@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.38]
+
+### Fixed
+
+- Bits N' Bobs cogwheel chains no longer duplicate when an airship carrying them is assembled and disassembled. Only the chain's automatic self-destruct is suppressed on ships and during the move; breaking a chain by hand still refunds it normally. {#12709}
+
 ## [21.1.37]
 
 ### Added
