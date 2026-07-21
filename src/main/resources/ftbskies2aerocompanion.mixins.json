@@ -6,6 +6,7 @@
   "mixins": [
     "EntityCollisionGuardMixin",
     "HandleMoveVehicleBoundingBoxMixin",
+    "InvalidBlockEntityLoadGuardMixin",
     "MappedRegistryByIdGuardMixin",
     "StructureStartPlaceGuardMixin",
     "FishingHookMixin",
@@ -41,6 +42,7 @@
     "compat.integrateddynamics.VoxelShapeComponentsSubLevelMixin",
     "compat.jade.BlockAccessorImplSubLevelMixin",
     "compat.randombonemealflowers.RandomBonemealVanillaFlowersMixin",
+    "compat.sable.BlockAttachedEntitySubLevelMixin",
     "compat.sable.ClientboundSableUDPActivationPacketMixin",
     "compat.sable.PlayerPoseSubLevelMixin",
     "compat.sable.SubLevelEntityGetterLogSpamMixin",

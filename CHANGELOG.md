@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended Industrialization Solar Boilers now output Mekanism steam instead of MI steam. {#12723}
 - Fixed server log flooding caused by a ridden flying Happy Ghast. {#12739}
 - Crafting Station items no longer duplicate when a station holding items is assembled into an airship. {#12714}
+- Item frames on an airship no longer drop and duplicate their held item when the ship is assembled or disassembled. {#12763}
+- A base whose ship assembly corrupted a block entity no longer crashes the server when its chunk loads. {#12763}
 
 ## [21.1.36]
 
