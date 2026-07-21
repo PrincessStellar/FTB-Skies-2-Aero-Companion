@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bits N' Bobs cogwheel chains no longer duplicate when an airship carrying them is assembled and disassembled. Only the chain's automatic self-destruct is suppressed on ships and during the move; breaking a chain by hand still refunds it normally. {#12709}
 - Placing a composter (or other non-full-cube block) on an assembled airship no longer visually breaks crouch. The player pose fit-check now ignores the ship's own blocks while on a sub-level, so client and server agree. Trade-off: pose no longer auto-lowers under a ship's low ceilings. {#12710}
 - Extended Industrialization Solar Boilers now output Mekanism steam instead of MI steam, so their steam works with the rest of the pack's machines. {#12723}
+- Fixed server log flooding caused by a ridden flying Happy Ghast. Its bounding box comes through as infinite, so the vehicle-move collision check queried entities with a near-infinite box every tick and Sable error-logged the aborted query (with a stack trace) each time. The vehicle-move check now sanitizes a non-finite or oversized vehicle box to a finite one, stopping the query at its source; Sable's abort log is also throttled to once a minute as a backstop. The ghast's invalid box itself is an upstream bug. {#12739}
 
 ## [21.1.36]
 
