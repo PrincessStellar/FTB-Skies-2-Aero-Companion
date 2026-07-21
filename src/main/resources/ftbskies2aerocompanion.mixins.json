@@ -39,6 +39,7 @@
     "compat.jade.BlockAccessorImplSubLevelMixin",
     "compat.randombonemealflowers.RandomBonemealVanillaFlowersMixin",
     "compat.sable.ClientboundSableUDPActivationPacketMixin",
+    "compat.sable.PlayerPoseSubLevelMixin",
     "compat.sable.SubLevelAssemblyHelperCableNetworkMixin",
     "compat.sable.SubLevelAssemblyHelperCogwheelChainMixin",
     "compat.sable.SubLevelPlayerChunkSenderMixin",
