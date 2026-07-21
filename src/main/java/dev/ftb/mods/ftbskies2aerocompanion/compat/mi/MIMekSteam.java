@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbskies2aerocompanion.compat.mi;
 
 import aztech.modern_industrialization.MIFluids;
 import aztech.modern_industrialization.definition.FluidDefinition;
+import aztech.modern_industrialization.thirdparty.fabrictransfer.api.fluid.FluidVariant;
 import mekanism.common.registries.MekanismFluids;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
@@ -21,6 +22,13 @@ public final class MIMekSteam {
             return mekSteamFluid();
         }
         return def.asFluid();
+    }
+
+    public static FluidVariant swapVariantIfMiSteam(FluidDefinition def) {
+        if (def == MIFluids.STEAM) {
+            return FluidVariant.of(mekSteamFluid());
+        }
+        return def.variant();
     }
 
     public static ResourceLocation swapId(ResourceLocation key) {

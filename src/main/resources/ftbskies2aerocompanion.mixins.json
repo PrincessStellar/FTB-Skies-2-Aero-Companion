@@ -27,6 +27,7 @@
     "compat.createnewage.WireTypeInvoker",
     "compat.createnewage.WireTypeMixin",
     "compat.enderio.RedstoneConduitMixin",
+    "compat.extendedindustrialization.SolarBoilerSteamMixin",
     "compat.functionalstorage.ControllerInventoryHandlerPerfMixin",
     "compat.functionalstorage.DrawerSlotSubLevelMixin",
     "compat.ironsspellbooks.ChainLightningNullVictimMixin",
