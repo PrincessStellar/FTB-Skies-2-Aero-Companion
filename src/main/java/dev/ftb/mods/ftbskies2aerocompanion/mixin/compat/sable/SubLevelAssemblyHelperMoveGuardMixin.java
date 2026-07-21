@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.mixin.compat.sable;
 
-import dev.ftb.mods.ftbskies2aerocompanion.compat.bitsnbobs.CogwheelChainMoveGuard;
+import dev.ftb.mods.ftbskies2aerocompanion.compat.sable.SubLevelMoveGuard;
 import dev.ryanhcode.sable.api.SubLevelAssemblyHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -10,15 +10,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = SubLevelAssemblyHelper.class, remap = false)
-public abstract class SubLevelAssemblyHelperCogwheelChainMixin {
+public abstract class SubLevelAssemblyHelperMoveGuardMixin {
 
     @Inject(method = "moveBlocks", at = @At("HEAD"))
-    private static void ftbskies2aero$beginCogwheelChainMove(ServerLevel level, SubLevelAssemblyHelper.AssemblyTransform transform, Iterable<BlockPos> blocks, CallbackInfo ci) {
-        CogwheelChainMoveGuard.enter();
+    private static void ftbskies2aero$beginSubLevelMove(ServerLevel level, SubLevelAssemblyHelper.AssemblyTransform transform, Iterable<BlockPos> blocks, CallbackInfo ci) {
+        SubLevelMoveGuard.enter();
     }
 
     @Inject(method = "moveBlocks", at = @At("RETURN"))
-    private static void ftbskies2aero$endCogwheelChainMove(ServerLevel level, SubLevelAssemblyHelper.AssemblyTransform transform, Iterable<BlockPos> blocks, CallbackInfo ci) {
-        CogwheelChainMoveGuard.exit();
+    private static void ftbskies2aero$endSubLevelMove(ServerLevel level, SubLevelAssemblyHelper.AssemblyTransform transform, Iterable<BlockPos> blocks, CallbackInfo ci) {
+        SubLevelMoveGuard.exit();
     }
 }

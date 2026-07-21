@@ -1,6 +1,6 @@
 package dev.ftb.mods.ftbskies2aerocompanion.mixin.compat.bitsnbobs;
 
-import dev.ftb.mods.ftbskies2aerocompanion.compat.bitsnbobs.CogwheelChainMoveGuard;
+import dev.ftb.mods.ftbskies2aerocompanion.compat.sable.SubLevelMoveGuard;
 import dev.ryanhcode.sable.Sable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -53,7 +53,7 @@ public abstract class CogwheelChainBlockEntityMixin {
             return;
         }
         try {
-            if (CogwheelChainMoveGuard.isActive()) {
+            if (SubLevelMoveGuard.isActive()) {
                 cir.setReturnValue(ItemStack.EMPTY);
                 return;
             }
