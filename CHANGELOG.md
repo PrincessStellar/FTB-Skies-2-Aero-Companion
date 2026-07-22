@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Crafting Station items no longer duplicate when a station holding items is assembled into an airship. {#12714}
 - Item frames on an airship no longer drop and duplicate their held item when the ship is assembled or disassembled. {#12763}
 - A base whose ship assembly corrupted a block entity no longer crashes the server when its chunk loads. {#12763}
+- Removing a block on a parked airship, such as opening a gravestone with a key, no longer leaves an invisible solid ghost block. {#12779}
 
 ## [21.1.36]
 
