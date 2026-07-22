@@ -57,3 +57,10 @@ type = "required"
 versionRange = "[1.1.7,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "sky_archipelago"
+type = "required"
+versionRange = "[1.3.5,)"
+ordering = "AFTER"
+side = "BOTH"

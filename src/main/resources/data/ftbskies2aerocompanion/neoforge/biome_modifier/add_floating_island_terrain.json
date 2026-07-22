@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "ftbskies2aerocompanion:floating_island_terrain",
+  "step": "surface_structures"
+}

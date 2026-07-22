@@ -12,20 +12,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Bits N' Bobs cogwheel chains dupe when an airship carrying them is assembled/disassembled.
- * {@code CogwheelChain.checkIntegrity} locates each cogwheel by a fixed {@code localPos} offset
- * (and axis) captured in the ship's build frame; Sable can assemble the ship at a different
- * rotation, so those offsets no longer resolve and {@code lazyTick} calls {@code destroyChain},
- * which refunds the spanning chain items and tears the connection down. The chain re-forms from
- * the moved blocks, so each cycle drops another set of refund chains.
- *
- * <p>Suppress {@code destroyChain} only for that spurious teardown: while a sub-level move is in
- * progress (the removal on both ends of the move), and when {@code lazyTick}'s integrity check
- * trips while the block sits on a sub-level. A genuine player break routes through {@code destroy}
- * rather than {@code lazyTick}, so breaking a cogwheel chain still refunds normally, on the ground
- * or on a ship.
- */
 @Mixin(targets = "com.kipti.bnb.content.cogwheel_chain.block.CogwheelChainBlockEntity", remap = false)
 public abstract class CogwheelChainBlockEntityMixin {
 

@@ -9,13 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-/**
- * A Crafting Station holding items dupes when assembled into an airship: its {@code onRemove}
- * drops the input container whenever the block changes and does not check the piston/move flag, so
- * Sable's assembly (which clears the origin block) drops the items while the sub-level copy keeps
- * them from NBT. Skip the drop while a sub-level move is in progress; a genuine break still drops
- * normally.
- */
 @Mixin(targets = "com.leclowndu93150.craftingstationjei.block.CraftingStationBlock", remap = false)
 public abstract class CraftingStationDropGuardMixin {
 

@@ -1,6 +1,5 @@
 package dev.ftb.mods.ftbskies2aerocompanion.worldgen.structure;
 
-import dev.ftb.mods.ftbskies2aerocompanion.compat.sa.SkyAIslandBuilder;
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.registry.ModFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -18,19 +17,22 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
 public class FloatingIslandPiece extends StructurePiece {
-    private static final int VERTICAL_HALO = 256;
+    private static final int MARKER_NEG_EXTENT = 8;
+    private static final int MARKER_POS_EXTENT = 7;
 
     private final BlockPos center;
     private final int radius;
     private final long seedTag;
     private final ResourceKey<Biome> biomeKey;
+    private final int reach;
 
-    public FloatingIslandPiece(BlockPos center, int radius, long seedTag, ResourceKey<Biome> biomeKey) {
-        super(ModFeatures.FLOATING_ISLAND_PIECE.get(), 0, computeBoundingBox(center, radius));
+    public FloatingIslandPiece(BlockPos center, int radius, long seedTag, ResourceKey<Biome> biomeKey, int reach) {
+        super(ModFeatures.FLOATING_ISLAND_PIECE.get(), 0, computeBoundingBox(center));
         this.center = center;
         this.radius = radius;
         this.seedTag = seedTag;
         this.biomeKey = biomeKey;
+        this.reach = reach;
     }
 
     public FloatingIslandPiece(StructurePieceSerializationContext ctx, CompoundTag tag) {
@@ -39,20 +41,19 @@ public class FloatingIslandPiece extends StructurePiece {
         this.radius = tag.getInt("R");
         this.seedTag = tag.getLong("Seed");
         this.biomeKey = ResourceKey.create(Registries.BIOME, ResourceLocation.parse(tag.getString("Biome")));
+        this.reach = tag.getInt("Reach");
     }
 
-    private static BoundingBox computeBoundingBox(BlockPos center, int radius) {
-        int scan = radius + 64;
+    private static BoundingBox computeBoundingBox(BlockPos center) {
         return new BoundingBox(
-                center.getX() - scan, center.getY() - VERTICAL_HALO, center.getZ() - scan,
-                center.getX() + scan, center.getY() + VERTICAL_HALO, center.getZ() + scan
+                center.getX() - MARKER_NEG_EXTENT, center.getY() - MARKER_NEG_EXTENT, center.getZ() - MARKER_NEG_EXTENT,
+                center.getX() + MARKER_POS_EXTENT, center.getY() + MARKER_POS_EXTENT, center.getZ() + MARKER_POS_EXTENT
         );
     }
 
     @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator,
-                            RandomSource random, BoundingBox writeBox, ChunkPos chunkPos, BlockPos pivot) {
-        SkyAIslandBuilder.buildSlice(level, random, center, radius, seedTag, biomeKey, writeBox);
+                             RandomSource random, BoundingBox writeBox, ChunkPos chunkPos, BlockPos pivot) {
     }
 
     @Override
@@ -63,5 +64,6 @@ public class FloatingIslandPiece extends StructurePiece {
         tag.putInt("R", radius);
         tag.putLong("Seed", seedTag);
         tag.putString("Biome", biomeKey.location().toString());
+        tag.putInt("Reach", reach);
     }
 }
