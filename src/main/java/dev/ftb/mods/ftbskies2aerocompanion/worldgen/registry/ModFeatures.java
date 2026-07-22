@@ -2,6 +2,7 @@ package dev.ftb.mods.ftbskies2aerocompanion.worldgen.registry;
 
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.feature.FloatingIslandTerrainFeature;
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.feature.IslandPlacementResolver;
+import dev.ftb.mods.ftbskies2aerocompanion.worldgen.feature.IslandStructureExclusion;
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.structure.FloatingIslandPiece;
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.structure.FloatingIslandStructure;
 import net.minecraft.core.registries.Registries;
@@ -28,6 +29,8 @@ public final class ModFeatures {
         STRUCTURE_PIECE_TYPES.register(bus);
         FEATURES.register(bus);
         NeoForge.EVENT_BUS.addListener(IslandPlacementResolver::onServerStopped);
+        NeoForge.EVENT_BUS.addListener(IslandStructureExclusion::onServerAboutToStart);
+        NeoForge.EVENT_BUS.addListener(IslandStructureExclusion::onServerStopped);
     }
 
     private ModFeatures() {

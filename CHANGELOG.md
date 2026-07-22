@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [21.1.37]
 
-### Added
+### Changed
 
-- Void sea floor for airships. Ships that fall into the void, in any dimension including the Nether, are now caught and held at a configurable void sea level instead of sinking away unrecoverably. Configurable in `ftbskies2aerocompanion-void-sea.toml`.
+- Floating islands now spawn across a wider range of heights so fewer sit high enough to turn snowy. The height band is configurable under `island_spawning` in the config.
 
 ### Fixed
 
@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Item frames on an airship no longer drop and duplicate their held item when the ship is assembled or disassembled. {#12763}
 - A base whose ship assembly corrupted a block entity no longer crashes the server when its chunk loads. {#12763}
 - Floating islands no longer generate with flat cut-off edges, and large islands now paint their full intended size instead of clipping past ~128 blocks.
+- Sky villages and other custom floating structures no longer generate overlapping a Sky Archipelago island. A configurable exclusion zone under `structure_exclusion` keeps them clear.
+- Item frames and paintings on an airship no longer log an "invalid position" error and lose their attachment when their chunk reloads.
 
 ## [21.1.36]
 

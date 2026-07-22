@@ -24,9 +24,7 @@ public final class IslandPlacementResolver {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final int MIN_RADIUS = 77;
-    private static final int MAX_RADIUS = 230;
-    private static final int MIN_Y = 110;
-    private static final int MAX_Y = 200;
+    public static final int MAX_RADIUS = 230;
 
     public static final int MAX_COPY_REACH = 1024;
 
@@ -68,7 +66,9 @@ public final class IslandPlacementResolver {
         random.setLargeFeatureSeed(worldSeed, chunkPos.x, chunkPos.z);
 
         int radius = MIN_RADIUS + random.nextInt(MAX_RADIUS - MIN_RADIUS + 1);
-        int centerY = MIN_Y + random.nextInt(MAX_Y - MIN_Y + 1);
+        int minY = BaseExclusionConfig.ISLAND_MIN_Y.get();
+        int maxY = Math.max(minY, BaseExclusionConfig.ISLAND_MAX_Y.get());
+        int centerY = minY + random.nextInt(maxY - minY + 1);
 
         double spawnChance = BaseExclusionConfig.ISLAND_SPAWN_CHANCE.get();
         if (spawnChance < 1.0 && random.nextFloat() >= spawnChance) {
@@ -111,6 +111,8 @@ public final class IslandPlacementResolver {
         result = 31 * result + BaseExclusionConfig.BASE_SEPARATION_REGIONS.get();
         result = 31 * result + BaseExclusionConfig.MAX_REGION_X.get();
         result = 31 * result + Double.hashCode(BaseExclusionConfig.ISLAND_SPAWN_CHANCE.get());
+        result = 31 * result + BaseExclusionConfig.ISLAND_MIN_Y.get();
+        result = 31 * result + BaseExclusionConfig.ISLAND_MAX_Y.get();
         result = 31 * result + SkyIslandConfig.current().hashCode();
         return result;
     }

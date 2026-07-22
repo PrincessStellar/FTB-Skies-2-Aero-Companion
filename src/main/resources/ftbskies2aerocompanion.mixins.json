@@ -8,6 +8,7 @@
     "HandleMoveVehicleBoundingBoxMixin",
     "InvalidBlockEntityLoadGuardMixin",
     "MappedRegistryByIdGuardMixin",
+    "StructurePlacementIslandExclusionMixin",
     "StructureStartPlaceGuardMixin",
     "FishingHookMixin",
     "FishingRodItemMixin",

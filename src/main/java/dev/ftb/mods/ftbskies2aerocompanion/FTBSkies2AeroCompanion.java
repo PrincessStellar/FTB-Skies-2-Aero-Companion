@@ -21,7 +21,6 @@ import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.ModSkyboundAnchorBloc
 import dev.ftb.mods.ftbskies2aerocompanion.skybound_anchor.SkyboundAnchorConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.worldgen.registry.ModFeatures;
 import dev.ftb.mods.ftbskies2aerocompanion.voidconversion.ModRecipes;
-import dev.ftb.mods.ftbskies2aerocompanion.voidsea.VoidSeaConfig;
 import net.minecraft.resources.ResourceLocation;
 
 import net.neoforged.api.distmarker.Dist;
@@ -58,7 +57,6 @@ public class FTBSkies2AeroCompanion {
         container.registerConfig(ModConfig.Type.SERVER, BaseExclusionConfig.SPEC, "ftbskies2aerocompanion-base-exclusion.toml");
         container.registerConfig(ModConfig.Type.SERVER, CnaAddonConfig.SPEC, "ftbskies2aerocompanion-create-new-age.toml");
         container.registerConfig(ModConfig.Type.SERVER, OritechCatalystConfig.SPEC, "ftbskies2aerocompanion-oritech.toml");
-        container.registerConfig(ModConfig.Type.SERVER, VoidSeaConfig.SPEC, "ftbskies2aerocompanion-void-sea.toml");
 
         eventBus.addListener(FTBSkies2AeroCompanion::onRegisterCapabilities);
         eventBus.addListener(FTBSkies2AeroCompanion::onCommonSetup);
