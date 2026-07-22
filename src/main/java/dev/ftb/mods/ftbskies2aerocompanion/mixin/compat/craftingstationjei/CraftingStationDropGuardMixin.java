@@ -9,7 +9,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(targets = "com.leclowndu93150.craftingstationjei.block.CraftingStationBlock", remap = false)
+@Mixin(targets = {
+        "com.leclowndu93150.craftingstationjei.block.CraftingStationBlock",
+        "com.leclowndu93150.craftingstationjei.block.CraftingStationSlabBlock"
+}, remap = false)
 public abstract class CraftingStationDropGuardMixin {
 
     @Redirect(

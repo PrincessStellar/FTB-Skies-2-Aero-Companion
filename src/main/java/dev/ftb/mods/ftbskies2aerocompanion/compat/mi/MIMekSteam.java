@@ -31,6 +31,10 @@ public final class MIMekSteam {
         return def.variant();
     }
 
+    public static Fluid swapIfMiSteamFluid(Fluid fluid) {
+        return fluid == MIFluids.STEAM.asFluid() ? mekSteamFluid() : fluid;
+    }
+
     public static ResourceLocation swapId(ResourceLocation key) {
         return MI_STEAM_ID.equals(key) ? MEK_STEAM_ID : key;
     }

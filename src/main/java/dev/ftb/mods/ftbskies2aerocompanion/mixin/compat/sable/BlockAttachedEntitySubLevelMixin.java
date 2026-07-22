@@ -23,9 +23,23 @@ public abstract class BlockAttachedEntitySubLevelMixin {
     )
     private boolean ftbskies2aero$survivesOnSubLevel(BlockAttachedEntity self) {
         try {
-            if (!self.level().isClientSide && Sable.HELPER.getContaining(self) != null) {
+            if (self.level().isClientSide) {
+                return self.survives();
+            }
+            if (Sable.HELPER.getContaining(self) != null) {
                 return true;
             }
+            boolean real = self.survives();
+            if (real) {
+                if (self.getPersistentData().contains("ftbskies2aero:ship_bound")) {
+                    self.getPersistentData().remove("ftbskies2aero:ship_bound");
+                }
+                return true;
+            }
+            if (self.getPersistentData().getBoolean("ftbskies2aero:ship_bound")) {
+                return true;
+            }
+            return false;
         } catch (Throwable ignored) {
         }
         return self.survives();

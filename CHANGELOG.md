@@ -16,8 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bits N' Bobs cogwheel chains no longer duplicate when an airship carrying them is assembled and disassembled. {#12709}
 - Placing a composter (or other non full cube block) on an assembled airship no longer visually breaks crouch. {#12710}
 - Extended Industrialization Solar Boilers now output Mekanism steam instead of MI steam. {#12723}
+- Extended Industrialization's Bronze and Steel steam machines, such as the Bending Machine, now run on the pack's steam instead of requiring the unavailable MI steam. {#12795}
 - Fixed server log flooding caused by a ridden flying Happy Ghast. {#12739}
-- Crafting Station items no longer duplicate when a station holding items is assembled into an airship. {#12714}
+- Crafting Stations, including the slab variant, no longer duplicate their items when a station holding items is assembled into an airship. {#12714}
 - Item frames on an airship no longer drop and duplicate their held item when the ship is assembled or disassembled. {#12763}
 - A base whose ship assembly corrupted a block entity no longer crashes the server when its chunk loads. {#12763}
 - Floating islands no longer generate with flat cut-off edges, and large islands now paint their full intended size instead of clipping past ~128 blocks.
