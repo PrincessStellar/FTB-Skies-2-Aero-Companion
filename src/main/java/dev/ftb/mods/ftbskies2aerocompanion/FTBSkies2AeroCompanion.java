@@ -9,6 +9,7 @@ import dev.ftb.mods.ftbskies2aerocompanion.bucket.ModBucketComponents;
 import dev.ftb.mods.ftbskies2aerocompanion.bucket.WoodenBucketFluidHandler;
 import dev.ftb.mods.ftbskies2aerocompanion.client.ClientBootstrap;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.arscaelum.GeoreRituals;
+import dev.ftb.mods.ftbskies2aerocompanion.compat.arsnouveau.ShipSpellGuard;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddon;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.createnewage.CnaAddonConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.compat.fishingoverhaul.FishingOverhaulVoidDelivery;
@@ -66,6 +67,10 @@ public class FTBSkies2AeroCompanion {
 
         if (ModList.get().isLoaded("fishingoverhaul")) {
             FishingOverhaulVoidDelivery.register();
+        }
+
+        if (ModList.get().isLoaded("ars_nouveau")) {
+            ShipSpellGuard.register();
         }
 
         if (FMLEnvironment.dist == Dist.CLIENT) {

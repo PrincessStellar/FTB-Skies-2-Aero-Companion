@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Floating islands no longer generate with flat cut-off edges, and large islands now paint their full intended size instead of clipping past ~128 blocks.
 - Sky villages and other custom floating structures no longer generate overlapping a Sky Archipelago island. A configurable exclusion zone under `structure_exclusion` keeps them clear.
 - Item frames and paintings on an airship no longer log an "invalid position" error and lose their attachment when their chunk reloads.
+- Ars Nouveau spell effects no longer resolve on airship structural entities, so spells like Blink and Bubble can't teleport a ship to its far-away plot coordinates or lag the server trying. {#12745} {#12785}
 
 ## [21.1.36]
 
