@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Squat Grow now works while standing on an airship. It scanned for crops around the player's world position, but a ship's blocks are stored at its sub-level plot coordinates, so the scan origin is now transformed into the ship's block space when the player is on one. {#4066}
+- Squat Grow now works while standing on an airship. It scanned for crops around the player's world position, but a ship's blocks are stored at its sub-level plot coordinates, so the scan origin is now transformed into the ship's block space when the player is on one. FTBTesting/Testing-Issues#4066
+- Further hardening against item frame duplication on ship assembly/disassembly: the vanilla move/push kill-and-drop paths are now suppressed for frames on ships, and frames placed while the ship was already assembled now get the same drop protection during disassembly that assembled frames already had. FTBTesting/Testing-Issues#4076
 
 ## [21.1.37]
 
@@ -19,19 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Bits N' Bobs cogwheel chains no longer duplicate when an airship carrying them is assembled and disassembled. {#12709}
-- Placing a composter (or other non full cube block) on an assembled airship no longer visually breaks crouch. {#12710}
-- Extended Industrialization Solar Boilers now output Mekanism steam instead of MI steam. {#12723}
-- Extended Industrialization's Bronze and Steel steam machines, such as the Bending Machine, now run on the pack's steam instead of requiring the unavailable MI steam. {#12795}
-- Fixed server log flooding caused by a ridden flying Happy Ghast. {#12739}
-- Crafting Stations, including the slab variant, no longer duplicate their items when a station holding items is assembled into an airship. {#12714}
-- Item frames on an airship no longer drop and duplicate their held item when the ship is assembled or disassembled. {#12763}
-- A base whose ship assembly corrupted a block entity no longer crashes the server when its chunk loads. {#12763}
+- Bits N' Bobs cogwheel chains no longer duplicate when an airship carrying them is assembled and disassembled. FTBTeam/FTB-Modpack-Issues#12709
+- Placing a composter (or other non full cube block) on an assembled airship no longer visually breaks crouch. FTBTeam/FTB-Modpack-Issues#12710
+- Extended Industrialization Solar Boilers now output Mekanism steam instead of MI steam. FTBTeam/FTB-Modpack-Issues#12723
+- Extended Industrialization's Bronze and Steel steam machines, such as the Bending Machine, now run on the pack's steam instead of requiring the unavailable MI steam. FTBTeam/FTB-Modpack-Issues#12795
+- Fixed server log flooding caused by a ridden flying Happy Ghast. FTBTeam/FTB-Modpack-Issues#12739
+- Crafting Stations, including the slab variant, no longer duplicate their items when a station holding items is assembled into an airship. FTBTeam/FTB-Modpack-Issues#12714
+- Item frames on an airship no longer drop and duplicate their held item when the ship is assembled or disassembled. FTBTeam/FTB-Modpack-Issues#12763
+- A base whose ship assembly corrupted a block entity no longer crashes the server when its chunk loads. FTBTeam/FTB-Modpack-Issues#12763
 - Floating islands no longer generate with flat cut-off edges, and large islands now paint their full intended size instead of clipping past ~128 blocks.
 - Sky villages and other custom floating structures no longer generate overlapping a Sky Archipelago island. A configurable exclusion zone under `structure_exclusion` keeps them clear.
 - Item frames and paintings on an airship no longer log an "invalid position" error and lose their attachment when their chunk reloads.
-- Ars Nouveau spell effects no longer resolve on airship structural entities, so spells like Blink and Bubble can't teleport a ship to its far-away plot coordinates or lag the server trying. {#12745} {#12785}
-- Tiered Void Fishing Rods can now be enchanted: all six tiers were missing from the enchantable item tags, and the unbreakable Supremium tiers additionally lacked the max damage component vanilla's enchantability check requires. {#12769}
+- Ars Nouveau spell effects no longer resolve on airship structural entities, so spells like Blink and Bubble can't teleport a ship to its far-away plot coordinates or lag the server trying. FTBTeam/FTB-Modpack-Issues#12745 FTBTeam/FTB-Modpack-Issues#12785
+- Tiered Void Fishing Rods can now be enchanted: all six tiers were missing from the enchantable item tags, and the unbreakable Supremium tiers additionally lacked the max damage component vanilla's enchantability check requires. FTBTeam/FTB-Modpack-Issues#12769
 
 ## [21.1.36]
 
@@ -43,28 +44,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [21.1.35]
 
 ### Added
-- Overcharged item tags for automation, now shipped natively instead of via pack KubeJS overrides: `c:plates` (adds the Create: New Age iron/gold overcharged sheets alongside the companion sheets), `c:gems/overcharged_diamond`, `create_new_age:overcharged_items`, and the `ftb:overcharged_sheets` / `ftb:overcharged_ingots` / `ftb:overcharged_wires` groupings. {#4033}
+- Overcharged item tags for automation, now shipped natively instead of via pack KubeJS overrides: `c:plates` (adds the Create: New Age iron/gold overcharged sheets alongside the companion sheets), `c:gems/overcharged_diamond`, `create_new_age:overcharged_items`, and the `ftb:overcharged_sheets` / `ftb:overcharged_ingots` / `ftb:overcharged_wires` groupings. FTBTesting/Testing-Issues#4033
 
 ### Fixed
 
 - Iron's Spellbooks Chain Lightning no longer crashes the server after a dimension transition. `ChainLightning.tick()` damages its `initialVictim` on the first tick, but that field is transient (never written to NBT), so when the entity is rebuilt by a dimension transition (Sable sub-level/ship crossing, portals) it is null while `tickCount` resets to 0. The mod's `doHurt(initialVictim)` call has no null check and throws `NullPointerException` in `DamageSources.applyDamage`, killing the server thread. Guarding only `doHurt` is insufficient: with a non-null owner (owner UUID *is* in save-data and survives the rebuild) the same tick then dereferences `initialVictim` again in the particle block (`initialVictim.position()`), so `ChainLightningNullVictimMixin` instead cancels the whole tick at HEAD and discards the entity when a server-side chain lightning has a null `initialVictim` — the rebuilt entity has lost its victim state and is inert anyway. The guard is server-gated because client-side chain lightnings always have a null `initialVictim` (built from the spawn packet) and must keep rendering. Remove once fixed upstream.
-- The Quantum Energiser is now mineable. It was missing from the `minecraft:mineable/pickaxe` and `minecraft:mineable/axe` block tags that its netherite/platinum/titanium siblings already carried, so it broke slowly with any tool. {#4033}
+- The Quantum Energiser is now mineable. It was missing from the `minecraft:mineable/pickaxe` and `minecraft:mineable/axe` block tags that its netherite/platinum/titanium siblings already carried, so it broke slowly with any tool. FTBTesting/Testing-Issues#4033
 - Right-clicking certain entities (e.g. a Draconic Evolution Guardian Crystal in The End) no longer crashes the server. Cognition's `EventHandler.onPlayerRightClickEntity` unconditionally calls `ProtectionSalveItem.handleEntity` on every `EntityInteractSpecific`, and that method is leftover debug code that force-serializes the target with `entity.save()` and dumps the NBT to `System.out` — no held-item or entity-type guard. The Guardian Crystal's `addAdditionalSaveData` writes a null owner UUID via `CompoundTag.putUUID`, so the forced save threw `NullPointerException` mid-interaction. `ProtectionSalveItemMixin` now cancels `handleEntity` at HEAD, which also stops the per-interaction entity serialization and console NBT spam it caused on every entity right-click.
 
 ## [21.1.26]
 
 ### Fixed
-- The GeOre "Conjure Island" ritual tablets now actually spawn their islands. Ars Nouveau's `RitualRegistry.getRitual()` reinstantiates a registered ritual per cast by reflecting its **no-arg** constructor (`getClass().getDeclaredConstructor().newInstance()`); `GeoreIslandRitual` is a single parameterized class with only a 4-arg constructor, so that reflection threw `NoSuchMethodException` and `getRitual` returned null — the brazier consumed the tablet but had no ritual to run (no casting state, no island). A `@Inject` mixin on `getRitual` now returns a freshly-copied `GeoreIslandRitual` for the pack's `ars_caelum:ritual_conjure_island_*` IDs (via `GeoreRituals.createFresh`), leaving every other ritual to the vanilla reflection path. {#3917}
+- The GeOre "Conjure Island" ritual tablets now actually spawn their islands. Ars Nouveau's `RitualRegistry.getRitual()` reinstantiates a registered ritual per cast by reflecting its **no-arg** constructor (`getClass().getDeclaredConstructor().newInstance()`); `GeoreIslandRitual` is a single parameterized class with only a 4-arg constructor, so that reflection threw `NoSuchMethodException` and `getRitual` returned null — the brazier consumed the tablet but had no ritual to run (no casting state, no island). A `@Inject` mixin on `getRitual` now returns a freshly-copied `GeoreIslandRitual` for the pack's `ars_caelum:ritual_conjure_island_*` IDs (via `GeoreRituals.createFresh`), leaving every other ritual to the vanilla reflection path. FTBTesting/Testing-Issues#3917
 
 ## [21.1.25]
 
 ### Fixed
-- Create machines (Crushing Wheels and any other `SmartBlockEntity`) no longer void their contents on Sable sub-levels (airships/islands). The `SmartBlockEntityVoidGuardMixin` orphan check used `worldState.isAir()`, which was dropping live block entities whose world block was still a valid Create block — the spam was `Dropping orphaned Create block entity ... (world block is create:crushing_wheel_controller[valid=true])` every tick, killing the in-progress crush. The guard now drops a block entity only when its type is genuinely invalid for the world block (`!getType().isValid(worldState)`), which still catches truly orphaned BEs left by a sub-level teardown (`void_air`) while leaving valid blocks alone. {#3920}
+- Create machines (Crushing Wheels and any other `SmartBlockEntity`) no longer void their contents on Sable sub-levels (airships/islands). The `SmartBlockEntityVoidGuardMixin` orphan check used `worldState.isAir()`, which was dropping live block entities whose world block was still a valid Create block — the spam was `Dropping orphaned Create block entity ... (world block is create:crushing_wheel_controller[valid=true])` every tick, killing the in-progress crush. The guard now drops a block entity only when its type is genuinely invalid for the world block (`!getType().isValid(worldState)`), which still catches truly orphaned BEs left by a sub-level teardown (`void_air`) while leaving valid blocks alone. FTBTesting/Testing-Issues#3920
 
 ## [21.1.24]
 
 ### Fixed
-- Chance Cubes giant fluid sphere rewards no longer place invisible "invalid" blocks. `RewardsUtil.getRandomFluid` picks any fluid from the registry, and the `FluidSphereReward` / `MixedFluidSphereReward` then place `fluid.defaultFluidState().createLegacyBlock()`; for the many modded/tank-only fluids that have no `LiquidBlock` (Mekanism, Create, IE, Oritech, and the pack's own KubeJS fluids) that call returns `AIR`, so the sphere was full of invisible air blocks. A `@ModifyReturnValue` mixin now re-rolls any picked fluid whose `createLegacyBlock()` is air to a random placeable source fluid (falling back to water), so spheres are always made of real, visible fluid. {#3900}
+- Chance Cubes giant fluid sphere rewards no longer place invisible "invalid" blocks. `RewardsUtil.getRandomFluid` picks any fluid from the registry, and the `FluidSphereReward` / `MixedFluidSphereReward` then place `fluid.defaultFluidState().createLegacyBlock()`; for the many modded/tank-only fluids that have no `LiquidBlock` (Mekanism, Create, IE, Oritech, and the pack's own KubeJS fluids) that call returns `AIR`, so the sphere was full of invisible air blocks. A `@ModifyReturnValue` mixin now re-rolls any picked fluid whose `createLegacyBlock()` is air to a random placeable source fluid (falling back to water), so spheres are always made of real, visible fluid. FTBTesting/Testing-Issues#3900
 
 ## [21.1.23]
 
@@ -114,12 +115,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [21.1.13]
 
 ### Fixed
-- Entering a Compact Machine from a moving airship no longer strands you. The companion captures a ship binding when you enter a room from a sub-level (`RoomHelper.teleportPlayerIntoRoom`) and, when you leave the compact dimension back to the ship's dimension, re-ejects you onto the ship's current position instead of the stale entry coordinates — the same ship-aware teleport used for homes/warps/respawn. Persisted across logout, and falls back to the original coordinates if the ship is gone. {#3878}
+- Entering a Compact Machine from a moving airship no longer strands you. The companion captures a ship binding when you enter a room from a sub-level (`RoomHelper.teleportPlayerIntoRoom`) and, when you leave the compact dimension back to the ship's dimension, re-ejects you onto the ship's current position instead of the stale entry coordinates — the same ship-aware teleport used for homes/warps/respawn. Persisted across logout, and falls back to the original coordinates if the ship is gone. FTBTesting/Testing-Issues#3878
 
 ## [21.1.12]
 
 ### Fixed
-- The Integrated Dynamics Squeezer now works on Create: Aeronautics / Sable airships. When a player jumps on a squeezer that sits on a sub-level, its `updateEntityAfterFallOn` was flooring the player's world coordinates and never finding the block in the sub-level plot region. The companion now redirects those coordinate lookups into the sub-level frame (mirroring Sable's own per-block fall-on compat for Create's Basin/Saw/Seat), so jumping squeezes again. {#3877}
+- The Integrated Dynamics Squeezer now works on Create: Aeronautics / Sable airships. When a player jumps on a squeezer that sits on a sub-level, its `updateEntityAfterFallOn` was flooring the player's world coordinates and never finding the block in the sub-level plot region. The companion now redirects those coordinate lookups into the sub-level frame (mirroring Sable's own per-block fall-on compat for Create's Basin/Saw/Seat), so jumping squeezes again. FTBTesting/Testing-Issues#3877
 
 ## [21.1.11]
 

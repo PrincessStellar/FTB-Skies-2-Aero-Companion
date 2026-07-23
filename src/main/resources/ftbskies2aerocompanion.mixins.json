@@ -64,6 +64,7 @@
     "compat.tesseract.SingleBlockCraftingMachineSteamSlotMixin",
     "compat.simulated.SimAssemblyHelperMoveGuardMixin",
     "compat.simulated.SimAssemblyHelperDisassembleMixin",
+    "compat.simulated.SimAssemblyHelperFrameFlagMixin",
     "compat.simulated.SimAssemblyHelperShipHomeMixin",
     "compat.titanium.TileEntityLocatorSubLevelMixin"
   ],

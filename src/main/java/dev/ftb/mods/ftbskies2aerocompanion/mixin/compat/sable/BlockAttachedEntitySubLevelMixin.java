@@ -3,7 +3,9 @@ package dev.ftb.mods.ftbskies2aerocompanion.mixin.compat.sable;
 import dev.ryanhcode.sable.Sable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.decoration.BlockAttachedEntity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,6 +45,33 @@ public abstract class BlockAttachedEntitySubLevelMixin {
         } catch (Throwable ignored) {
         }
         return self.survives();
+    }
+
+    @Inject(method = "move", at = @At("HEAD"), cancellable = true)
+    private void ftbskies2aero$noDropOnShipMove(MoverType type, Vec3 vec, CallbackInfo ci) {
+        BlockAttachedEntity self = (BlockAttachedEntity) (Object) this;
+        if (!self.level().isClientSide && ftbskies2aero$onShip(self)) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "push(DDD)V", at = @At("HEAD"), cancellable = true)
+    private void ftbskies2aero$noDropOnShipPush(double x, double y, double z, CallbackInfo ci) {
+        BlockAttachedEntity self = (BlockAttachedEntity) (Object) this;
+        if (!self.level().isClientSide && ftbskies2aero$onShip(self)) {
+            ci.cancel();
+        }
+    }
+
+    private static boolean ftbskies2aero$onShip(BlockAttachedEntity self) {
+        try {
+            if (Sable.HELPER.getContaining(self) != null) {
+                return true;
+            }
+            return self.getPersistentData().getBoolean("ftbskies2aero:ship_bound");
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"), cancellable = true)
