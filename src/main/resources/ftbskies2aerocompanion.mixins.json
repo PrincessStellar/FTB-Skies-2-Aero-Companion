@@ -60,6 +60,7 @@
     "compat.mi.MISingleBlockCraftingMachinesMixin",
     "compat.mi.MIEuProductionMapBuilderMixin",
     "compat.sg_economy.SGEconomyServerConfigMixin",
+    "compat.squatgrow.SquatActionSubLevelMixin",
     "compat.tesseract.SingleBlockCraftingMachineSteamSlotMixin",
     "compat.simulated.SimAssemblyHelperMoveGuardMixin",
     "compat.simulated.SimAssemblyHelperDisassembleMixin",

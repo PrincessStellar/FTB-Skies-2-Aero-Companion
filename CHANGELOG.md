@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [21.1.38]
+
+### Fixed
+
+- Squat Grow now works while standing on an airship. It scanned for crops around the player's world position, but a ship's blocks are stored at its sub-level plot coordinates, so the scan origin is now transformed into the ship's block space when the player is on one. {#4066}
+
 ## [21.1.37]
 
 ### Changed
