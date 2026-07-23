@@ -1,6 +1,12 @@
 {
   "replace": false,
   "values": [
-    "ftbskies2aerocompanion:void_fishing_rod"
+    "ftbskies2aerocompanion:void_fishing_rod",
+    "ftbskies2aerocompanion:inferium_void_fishing_rod",
+    "ftbskies2aerocompanion:prudentium_void_fishing_rod",
+    "ftbskies2aerocompanion:tertium_void_fishing_rod",
+    "ftbskies2aerocompanion:imperium_void_fishing_rod",
+    "ftbskies2aerocompanion:supremium_void_fishing_rod",
+    "ftbskies2aerocompanion:awakened_supremium_void_fishing_rod"
   ]
 }

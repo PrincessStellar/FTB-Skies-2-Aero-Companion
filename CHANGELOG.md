@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sky villages and other custom floating structures no longer generate overlapping a Sky Archipelago island. A configurable exclusion zone under `structure_exclusion` keeps them clear.
 - Item frames and paintings on an airship no longer log an "invalid position" error and lose their attachment when their chunk reloads.
 - Ars Nouveau spell effects no longer resolve on airship structural entities, so spells like Blink and Bubble can't teleport a ship to its far-away plot coordinates or lag the server trying. {#12745} {#12785}
+- Tiered Void Fishing Rods can now be enchanted: all six tiers were missing from the enchantable item tags, and the unbreakable Supremium tiers additionally lacked the max damage component vanilla's enchantability check requires. {#12769}
 
 ## [21.1.36]
 

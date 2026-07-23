@@ -56,7 +56,7 @@ public final class ModItems {
     private static Item.Properties propertiesFor(VoidFishingRodTier tier) {
         Item.Properties props = new Item.Properties().stacksTo(1);
         if (tier.unbreakable()) {
-            props.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
+            props.durability(1).component(DataComponents.UNBREAKABLE, new Unbreakable(true));
         } else {
             props.durability(tier.durability());
         }
