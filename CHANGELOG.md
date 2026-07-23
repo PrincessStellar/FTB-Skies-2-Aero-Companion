@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Squat Grow now works while standing on an airship. It scanned for crops around the player's world position, but a ship's blocks are stored at its sub-level plot coordinates, so the scan origin is now transformed into the ship's block space when the player is on one. FTBTesting/Testing-Issues#4066
 - Further hardening against item frame duplication on ship assembly/disassembly: the vanilla move/push kill-and-drop paths are now suppressed for frames on ships, and frames placed while the ship was already assembled now get the same drop protection during disassembly that assembled frames already had. FTBTesting/Testing-Issues#4076
 - Taking items out of Functional Storage drawers now works on assembled airships.
+- Reduced lag spikes during world saves on servers with airships
 
 ## [21.1.37]
 

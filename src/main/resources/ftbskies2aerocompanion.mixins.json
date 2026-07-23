@@ -48,6 +48,7 @@
     "compat.sable.ClientboundSableUDPActivationPacketMixin",
     "compat.sable.PlayerPoseSubLevelMixin",
     "compat.sable.SubLevelBlockChangeWakeMixin",
+    "compat.sable.SubLevelStorageFileFsyncMixin",
     "compat.sable.SubLevelEntityGetterLogSpamMixin",
     "compat.sable.SubLevelAssemblyHelperCableNetworkMixin",
     "compat.sable.SubLevelAssemblyHelperMoveGuardMixin",
