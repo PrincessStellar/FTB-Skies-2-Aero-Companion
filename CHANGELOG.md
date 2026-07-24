@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Further hardening against item frame duplication on ship assembly/disassembly: the vanilla move/push kill-and-drop paths are now suppressed for frames on ships, and frames placed while the ship was already assembled now get the same drop protection during disassembly that assembled frames already had. FTBTesting/Testing-Issues#4076
 - Taking items out of Functional Storage drawers now works on assembled airships.
 - Reduced lag spikes during world saves on servers with airships
+- New team bases are no longer flung tens of thousands of blocks out when terrain near spawn has been pregenerated or explored. FTB Team Bases skips any candidate region that has an .mca file on disk, but this pack pastes bases as structures into worldgen-excluded regions, so generated terrain is not an obstacle; region occupancy is now judged by actual live/archived base records instead. Added `/ftbskies2aerocompanion resetbasegenpos` so servers already affected can reset the stored allocation pointer.
 
 ## [21.1.37]
 

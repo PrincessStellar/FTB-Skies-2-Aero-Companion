@@ -4,6 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import dev.ftb.mods.ftbskies2aerocompanion.basebuffer.BaseExclusionConfig;
 import dev.ftb.mods.ftbskies2aerocompanion.basebuffer.TeamBaseGrid;
+import dev.ftb.mods.ftbskies2aerocompanion.mixin.compat.ftbteambases.BaseInstanceManagerAccessor;
+import dev.ftb.mods.ftbteambases.data.bases.BaseInstanceManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -40,6 +42,19 @@ public final class BaseExclusionCommands {
                                     ctx.getSource().sendSuccess(() -> Component.literal(sb.toString()), false);
                                     return 1;
                                 })))
+                .then(Commands.literal("resetbasegenpos")
+                        .executes(ctx -> {
+                            BaseInstanceManager mgr = BaseInstanceManager.get(ctx.getSource().getServer());
+                            BaseInstanceManagerAccessor acc = (BaseInstanceManagerAccessor) mgr;
+                            int cleared = acc.ftbskies2aero$storedGenPos().size();
+                            acc.ftbskies2aero$storedGenPos().clear();
+                            acc.ftbskies2aero$storedZoffset().clear();
+                            mgr.setDirty();
+                            ctx.getSource().sendSuccess(() -> Component.literal(
+                                    "Cleared " + cleared + " stored base generation position(s). "
+                                            + "The next base will be allocated from the start of the pattern, skipping regions occupied by existing bases."), true);
+                            return 1;
+                        }))
                 .then(Commands.literal("checkexclusion")
                         .then(Commands.argument("x", IntegerArgumentType.integer())
                                 .then(Commands.argument("z", IntegerArgumentType.integer())

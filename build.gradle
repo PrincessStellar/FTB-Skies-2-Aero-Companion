@@ -157,6 +157,8 @@ dependencies {
 	compileOnly "curse.maven:cyclops-core-232758:8006281"
 	compileOnly "curse.maven:integrated-dynamics-236307:8039124"
 	compileOnly "curse.maven:sky-archipelago-1528077:8383558"
+	compileOnly "curse.maven:ftb-team-bases-1197857:8443296"
+	compileOnly "curse.maven:ftb-teams-404468:7878281"
 	compileOnly "curse.maven:productivebees-377897:8022994"
 	compileOnly "maven.modrinth:enderio:v8.2.10-beta"
 }
