@@ -31,6 +31,7 @@
     "compat.createnewage.WireTypeInvoker",
     "compat.createnewage.WireTypeMixin",
     "compat.enderio.RedstoneConduitMixin",
+    "compat.excessiveutilities.DivisionSigilMidnightMixin",
     "compat.extendedindustrialization.SolarBoilerSteamMixin",
     "compat.ftbteambases.BaseInstanceManagerAccessor",
     "compat.ftbteambases.BaseInstanceManagerMCAScanMixin",

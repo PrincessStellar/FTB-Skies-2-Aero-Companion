@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Taking items out of Functional Storage drawers now works on assembled airships.
 - Reduced lag spikes during world saves on servers with airships
 - New team bases are no longer flung tens of thousands of blocks out when terrain near spawn has been pregenerated or explored. FTB Team Bases skips any candidate region that has an .mca file on disk, but this pack pastes bases as structures into worldgen-excluded regions, so generated terrain is not an obstacle; region occupancy is now judged by actual live/archived base records instead. Added `/ftbskies2aerocompanion resetbasegenpos` so servers already affected can reset the stored allocation pointer.
+- The Excessive Utilities Division Sigil activation ritual now is more forgiving in its requirements
 
 ## [21.1.37]
 
